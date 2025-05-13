@@ -12,14 +12,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.IntStream.range;
 
 public class SlideControl {
-    public static final int MAX = 2;
-
     private int current = 1;
 
     private final ImageView screen;
@@ -42,7 +40,7 @@ public class SlideControl {
     }
 
     void next() {
-        if (current == MAX) {
+        if (!new File(slideFolder(current + 1)).exists()) {
             return;
         }
         current++;
@@ -50,7 +48,24 @@ public class SlideControl {
     }
 
     private void reload() {
-        String slideFolder = String.format("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/%03d", current);
+        String slideFolder = slideFolder(current);
+
+        System.out.println("===== SWITCHED TO " + current + " =====");
+
+        try {
+            var p = Runtime.getRuntime().exec(
+                    new String[] { "./prepare.sh" },
+                    new String[] { "PATH=" + System.getenv("PATH")},
+                    new File(slideFolder));
+            p.waitFor();
+
+            String output = new String(p.getInputStream().readAllBytes());
+            String error = new String(p.getErrorStream().readAllBytes());
+            System.out.println(output);
+            System.out.println(error);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         loadImage(slideFolder);
 
@@ -59,15 +74,20 @@ public class SlideControl {
         loadFolder(slideFolder);
     }
 
+    private String slideFolder(int no) {
+        return String.format("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/%03d", no);
+    }
+
     private void loadImage(String slideFolder) {
-        Image image = new Image("file:" + slideFolder + "/screen.png");
+        Image image = new Image("file:" + slideFolder + "/out/screen.png");
         screen.setImage(image);
     }
 
     private void loadTerminal(String slideFolder) {
         try {
-            String text = Files.readString(Path.of(slideFolder + "/command.txt"));
-            terminalText.setText(text);
+            List<String> commands = Files.readAllLines(Path.of(slideFolder + "/prepare.sh"));
+            List<String> visible = commands.subList(commands.lastIndexOf("") + 1, commands.size());
+            terminalText.setText(String.join("\n", visible));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -77,19 +97,23 @@ public class SlideControl {
         Image folderIcon = new Image("file:" + slideFolder + "/../main/jar.png");
         List<String> jars = Arrays.stream(requireNonNull(new File(slideFolder + "/lib").listFiles())).map(File::getName).toList();
 
+        var lwjglCount = jars.stream().filter(j -> j.startsWith("lwjgl-")).count();
+        var filtered = Stream.concat(jars.stream().filter(j -> !j.startsWith("lwjgl-")), Stream.of("LWJGL (" + lwjglCount + " JARs)"))
+                .map(s -> s.replace("commons-", "")).toList();
+
         folderGrid.getChildren().clear();
 
         // Add icon and text to the grid
-        range(0, jars.size()).forEachOrdered(i -> {
-            String jarName = jars.get(i);
+        range(0, filtered.size()).forEachOrdered(i -> {
+            String jarName = filtered.get(i);
             ImageView iconView = new ImageView(folderIcon);
             StackPane iconContainer = new StackPane(iconView);
             iconView.setFitWidth(50);
             iconView.setFitHeight(50);
             Text jarText = new Text(jarName);
-            jarText.setWrappingWidth(95);
-            int row = i / 5;
-            int col = i % 5;
+            jarText.setWrappingWidth(120);
+            int row = i / 4;
+            int col = i % 4;
             folderGrid.add(iconContainer, col, row * 2); // Icon in the first row of the cell
             folderGrid.add(jarText, col, row * 2 + 1); // Text in the second row of the cell
         });

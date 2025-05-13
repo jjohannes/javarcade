@@ -73,8 +73,8 @@ public class App extends Application {
     private ImageView imageView(StackPane box) {
         ImageView imageView = new ImageView();
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(box.getPrefWidth());
-        imageView.setFitHeight(box.getPrefHeight());
+        imageView.setFitWidth(box.getPrefWidth() - SPACE);
+        imageView.setFitHeight(box.getPrefHeight() - SPACE);
         box.getChildren().add(imageView);
         return imageView;
     }
