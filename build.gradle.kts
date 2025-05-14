@@ -1,21 +1,28 @@
+import org.openjfx.gradle.JavaFXModule
+import org.openjfx.gradle.metadatarule.JavaFXComponentMetadataRule
+
 plugins {
     id("org.gradlex.java-module-dependencies") version "1.9"
-    id("org.openjfx.javafxplugin") version "0.1.0"
+    id("org.openjfx.javafxplugin") version "0.1.0" apply false
     id("application")
 }
 
 repositories { mavenCentral() }
 
-application { mainClass = "app.javarcade.presentation.App" }
-
-javafx { modules("javafx.graphics") }
+application {
+    mainModule = "app.javarcade.presentation"
+    mainClass = "app.javarcade.presentation.App"
+}
 
 dependencies.constraints {
     implementation("org.openjfx:javafx-graphics:21.0.7")
     testImplementation("org.assertj:assertj-core:3.22.0")
 }
 
-// For sources download
+JavaFXModule.values().forEach { javaFXModule ->
+    dependencies.components.withModule<JavaFXComponentMetadataRule>("org.openjfx:" + javaFXModule.artifactName)
+}
+
 configurations.configureEach {
     if (isCanBeResolved) {
         attributes {

@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -21,11 +22,13 @@ public class SlideControl {
     private int current = 1;
 
     private final ImageView screen;
+    private final Text screenError;
     private final Text terminalText;
     private final GridPane folderGrid;
 
-    public SlideControl(ImageView screen, Text terminalText, GridPane folderGrid) {
+    public SlideControl(ImageView screen, Text screenError, Text terminalText, GridPane folderGrid) {
         this.screen = screen;
+        this.screenError = screenError;
         this.terminalText = terminalText;
         this.folderGrid = folderGrid;
         reload();
@@ -63,6 +66,8 @@ public class SlideControl {
             String error = new String(p.getErrorStream().readAllBytes());
             System.out.println(output);
             System.out.println(error);
+
+            screenError.setText(trimError(output, error));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -74,13 +79,29 @@ public class SlideControl {
         loadFolder(slideFolder);
     }
 
+    private String trimError(String output, String error) {
+        String all = output + error;
+        Optional<String> noClassDefFound = Arrays.stream(all.split("\n")).filter(l -> l.contains("NoClassDefFoundError")).findFirst();
+        Optional<String> moduleFindException = Arrays.stream(all.split("\n")).filter(l -> l.contains("FindException")).findFirst();
+
+        return noClassDefFound.orElse(moduleFindException.orElse(all));
+    }
+
     private String slideFolder(int no) {
         return String.format("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/%03d", no);
     }
 
     private void loadImage(String slideFolder) {
-        Image image = new Image("file:" + slideFolder + "/out/screen.png");
-        screen.setImage(image);
+        var imaageFile = new File(slideFolder + "/out/screen.png");
+        if (imaageFile.exists()) {
+            Image image = new Image(imaageFile.toURI().toString());
+            screen.setImage(image);
+            screen.setVisible(true);
+            screenError.setVisible(false);
+        } else {
+            screen.setVisible(false);
+            screenError.setVisible(true);
+        }
     }
 
     private void loadTerminal(String slideFolder) {

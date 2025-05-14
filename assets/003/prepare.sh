@@ -1,6 +1,7 @@
 export INSTALL_DIR=/Users/jendrik/projects/gradle/howto/javarcade/apps/app-retro/build/install/app-retro/lib
 export PRESENTATION_FOLDER=out
 
+rm -rf out
 rm -rf lib
 mkdir lib
 
