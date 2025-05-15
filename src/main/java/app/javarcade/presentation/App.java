@@ -3,6 +3,7 @@ package app.javarcade.presentation;
 import javafx.application.Application;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -11,9 +12,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -37,13 +41,13 @@ public class App extends Application {
 
     public static final int SPACE = 40 / RATIO;
 
-    private static final Map<String, List<String>> dependencyGraph = Map.ofEntries(
+    static final Map<String, List<String>> DEPENDENCY_GRAPH = Map.ofEntries(
         Map.entry("base-model.jar", List.of()),
         Map.entry("base-engine.jar", List.of("base-model.jar", "slf4j-api-2.0.17.jar", "slf4j-simple-2.0.17.jar")),
         Map.entry("classic-assets.jar", List.of("base-model.jar", "commons-io-2.18.0.jar")),
         Map.entry("classic-levels.jar", List.of("base-model.jar")),
         Map.entry("classic-items.jar", List.of("base-model.jar", "commons-csv-1.14.0.jar")),
-        Map.entry("renderer-lwjgl.jar", List.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jul-2.0.17.jar", "lwjgl-3.3.6.jar", "lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
+        Map.entry("renderer-lwjgl.jar", List.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jdk14-2.0.17.jar", "lwjgl-3.3.6.jar", "lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
         Map.entry("slf4j-api-2.0.17.jar", List.of("")),
         Map.entry("slf4j-simple-2.0.17.jar", List.of("slf4j-api-2.0.17")),
         Map.entry("slf4j-jdk14-2.0.17.jar", List.of("slf4j-api-2.0.17")),
@@ -153,15 +157,12 @@ public class App extends Application {
 
     private Map<String, HBox> gridPane(StackPane box) {
         GridPane grid = new GridPane();
+        Pane overlay = new Pane();
         grid.setHgap(10);
         grid.setVgap(10);
+        overlay.setPickOnBounds(false); // Let mouse events pass through
+        box.getChildren().add(new StackPane(grid, overlay));
 
-        box.getChildren().add(grid);
-
-        return gridCells(grid);
-    }
-    
-    private Map<String, HBox> gridCells(GridPane grid) {
         Map<String, HBox> jarCells = new HashMap<>();
         
         grid.add(jarCell("base-model.jar", jarCells), 1, 0);
@@ -181,9 +182,9 @@ public class App extends Application {
         grid.add(jarCell("commons-codec-1.18.0.jar", jarCells), 2, 3);
         grid.add(jarCell("commons-io-2.16.1.jar", jarCells), 3, 3);
 
-        grid.add(jarCell("lwjgl-3.3.6.jar", jarCells), 0, 4);
-        grid.add(jarCell("lwjgl-3.3.6-natives-macos-arm64.jar", jarCells), 1, 4);
-        grid.add(jarCell("lwjgl-3.3.6-natives-windows-x86.jar", jarCells), 2, 4);
+        grid.add(jarCell("lwjgl-3.3.6.jar", jarCells), 3, 4);
+        grid.add(jarCell("lwjgl-3.3.6-natives-macos-arm64.jar", jarCells), 2, 4);
+        grid.add(jarCell("lwjgl-3.3.6-natives-windows-x86.jar", jarCells), 1, 4);
         
         return jarCells;
     }
@@ -209,4 +210,5 @@ public class App extends Application {
         
         return box;
     }
+
 }
