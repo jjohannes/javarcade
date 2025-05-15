@@ -2,64 +2,88 @@ package app.javarcade.presentation;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.IntStream.range;
+import java.util.Set;
 
 public class SlideControl {
-    private int current = 1;
+    private static final Path WORK_FOLDER =
+            Path.of("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/work");
+
+    private static final Path APP_INSTALL_FOLDER =
+            Path.of("/Users/jendrik/projects/gradle/howto/javarcade/apps/app-retro/build/install/app-retro/lib");
+
+    private static final String RUN_MODULE_PATH_CMD =
+            "java --module-path lib --module app.javarcade.base.engine";
+    private static final String RUN_CLASS_PATH_CMD =
+            "java --class-path  lib/*        app.javarcade.base.engine.Engine";
 
     private final ImageView screen;
     private final Text screenError;
-    private final Text terminalText;
-    private final GridPane folderGrid;
+    private final List<Text> terminal;
+    private final Map<String, HBox> jars;
+    private final Set<String> activeJars = new HashSet<>();
 
-    public SlideControl(ImageView screen, Text screenError, Text terminalText, GridPane folderGrid) {
+    public SlideControl(ImageView screen, Text screenError, List<Text> terminal, Map<String, HBox> jars) {
         this.screen = screen;
         this.screenError = screenError;
-        this.terminalText = terminalText;
-        this.folderGrid = folderGrid;
-        reload();
+        this.terminal = terminal;
+        this.jars = jars;
+
+        terminal.get(0).setText(RUN_MODULE_PATH_CMD);
+        terminal.get(1).setText(RUN_CLASS_PATH_CMD);
+
+        terminal.forEach(cmd -> cmd.setOnMouseClicked(event ->
+                execute(((Text)event.getTarget()).getText())));
+
+        activeJars.add("lwjgl-glfw-3.3.6.jar");
+        activeJars.add("lwjgl-glfw-3.3.6-natives-macos-arm64.jar");
+        activeJars.add("lwjgl-opengl-3.3.6.jar");
+        activeJars.add("lwjgl-opengl-3.3.6-natives-macos-arm64.jar");
+        activeJars.add("lwjgl-stb-3.3.6.jar");
+        activeJars.add("lwjgl-stb-3.3.6-natives-macos-arm64.jar");
+
+        // TODO
+        activeJars.add("base-model.jar");
+        activeJars.add("base-engine.jar");
+        activeJars.add("renderer-lwjgl.jar");
+        activeJars.add("slf4j-api-2.0.17.jar");
+        activeJars.add("slf4j-simple-2.0.17.jar");
+        activeJars.add("lwjgl-3.3.6.jar");
+        activeJars.add("lwjgl-3.3.6-natives-macos-arm64.jar");
     }
 
-    void prev() {
-        if (current == 1) {
-            return;
-        }
-        current--;
-        reload();
-    }
-
-    void next() {
-        if (!new File(slideFolder(current + 1)).exists()) {
-            return;
-        }
-        current++;
-        reload();
-    }
-
-    private void reload() {
-        String slideFolder = slideFolder(current);
-
-        System.out.println("===== SWITCHED TO " + current + " =====");
+    private void execute(String cmd) {
 
         try {
+            Path lib = WORK_FOLDER.resolve("lib");
+            //noinspection resource
+            for (Path file : Files.list(lib).toList()) {
+                Files.deleteIfExists(file);
+            }
+            Files.createDirectories(lib);
+            for (String jar : activeJars) {
+                Files.copy(APP_INSTALL_FOLDER.resolve(jar), lib.resolve(jar));
+            }
+
             var p = Runtime.getRuntime().exec(
-                    new String[] { "./prepare.sh" },
-                    new String[] { "PATH=" + System.getenv("PATH")},
-                    new File(slideFolder));
+                    cmd.split("\\s+"),
+                    new String[] {
+                            "PATH=" + System.getenv("PATH"),
+                            "PRESENTATION_FOLDER=out"
+                    },
+                    WORK_FOLDER.toFile());
             p.waitFor();
 
             String output = new String(p.getInputStream().readAllBytes());
@@ -68,15 +92,11 @@ public class SlideControl {
             System.out.println(error);
 
             screenError.setText(trimError(output, error));
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        loadImage(slideFolder);
-
-        loadTerminal(slideFolder);
-
-        loadFolder(slideFolder);
+        loadImage(WORK_FOLDER);
     }
 
     private String trimError(String output, String error) {
@@ -87,14 +107,10 @@ public class SlideControl {
         return noClassDefFound.orElse(moduleFindException.orElse(all));
     }
 
-    private String slideFolder(int no) {
-        return String.format("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/%03d", no);
-    }
-
-    private void loadImage(String slideFolder) {
-        var imaageFile = new File(slideFolder + "/out/screen.png");
-        if (imaageFile.exists()) {
-            Image image = new Image(imaageFile.toURI().toString());
+    private void loadImage(Path workFolder) {
+        var imageFile = workFolder.resolve("out/screen.png").toFile();
+        if (imageFile.exists()) {
+            Image image = new Image(imageFile.toURI().toString());
             screen.setImage(image);
             screen.setVisible(true);
             screenError.setVisible(false);
@@ -102,41 +118,5 @@ public class SlideControl {
             screen.setVisible(false);
             screenError.setVisible(true);
         }
-    }
-
-    private void loadTerminal(String slideFolder) {
-        try {
-            List<String> commands = Files.readAllLines(Path.of(slideFolder + "/prepare.sh"));
-            List<String> visible = commands.subList(commands.lastIndexOf("") + 1, commands.size());
-            terminalText.setText(String.join("\n", visible));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void loadFolder(String slideFolder) {
-        Image folderIcon = new Image("file:" + slideFolder + "/../main/jar.png");
-        List<String> jars = Arrays.stream(requireNonNull(new File(slideFolder + "/lib").listFiles())).map(File::getName).toList();
-
-        var lwjglCount = jars.stream().filter(j -> j.startsWith("lwjgl-")).count();
-        var filtered = Stream.concat(jars.stream().filter(j -> !j.startsWith("lwjgl-")), Stream.of("LWJGL (" + lwjglCount + " JARs)"))
-                .map(s -> s.replace("commons-", "")).toList();
-
-        folderGrid.getChildren().clear();
-
-        // Add icon and text to the grid
-        range(0, filtered.size()).forEachOrdered(i -> {
-            String jarName = filtered.get(i);
-            ImageView iconView = new ImageView(folderIcon);
-            StackPane iconContainer = new StackPane(iconView);
-            iconView.setFitWidth(50);
-            iconView.setFitHeight(50);
-            Text jarText = new Text(jarName);
-            jarText.setWrappingWidth(120);
-            int row = i / 4;
-            int col = i % 4;
-            folderGrid.add(iconContainer, col, row * 2); // Icon in the first row of the cell
-            folderGrid.add(jarText, col, row * 2 + 1); // Text in the second row of the cell
-        });
     }
 }

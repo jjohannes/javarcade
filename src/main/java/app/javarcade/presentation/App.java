@@ -3,20 +3,27 @@ package app.javarcade.presentation;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class App extends Application {
 
@@ -30,6 +37,7 @@ public class App extends Application {
     public static final int SPACE = 40 / RATIO;
 
     private SlideControl slideControl;
+    private SlideShow slideShow;
 
     @Override
     public void start(Stage stage) {
@@ -45,13 +53,14 @@ public class App extends Application {
         StackPane topRightBox = createBox(topBox, WIDTH - SCREEN_DIM - SPACE*3, SCREEN_DIM);
         StackPane terminalBox = createBox(bottomBox, WIDTH - SPACE*2.0, HEIGHT - SCREEN_DIM - SPACE*3.0);
 
-        slideControl = new SlideControl(imageView(topLeftBox), errorTextView(topLeftBox), textView(terminalBox), gridPane(topRightBox));
+        slideControl = new SlideControl(imageView(topLeftBox), errorTextView(topLeftBox), terminalView(terminalBox), gridPane(topRightBox));
+        slideShow = new SlideShow();
 
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case LEFT -> slideControl.prev();
-                case RIGHT -> slideControl.next();
+                case LEFT -> slideShow.prev();
+                case RIGHT -> slideShow.next();
             }
         });
 
@@ -98,23 +107,82 @@ public class App extends Application {
         return text;
     }
 
-    private Text textView(StackPane box) {
-        Text terminalText = new Text();
-        terminalText.setFont(Font.font("Monospaced", FontWeight.BOLD, 42 / RATIO));
+    private List<Text> terminalView(StackPane box) {
+        Text terminalCmd1 = new Text();
+        terminalCmd1.setFont(Font.font("Monospaced", FontWeight.BOLD, 42 / RATIO));
+        Text terminalCmd2 = new Text();
+        terminalCmd2.setFont(Font.font("Monospaced", FontWeight.BOLD, 42 / RATIO));
 
-        TextFlow textFlow = new TextFlow(terminalText);
-        textFlow.setLineSpacing(10); // Adjust the value for desired spacing
-        box.setAlignment(Pos.CENTER_LEFT);
-        box.getChildren().add(textFlow);
+        TextFlow textFlow1 = new TextFlow(terminalCmd1);
+        textFlow1.setLineSpacing(10); // Adjust the value for desired spacing
+        TextFlow textFlow2 = new TextFlow(terminalCmd2);
+        textFlow2.setLineSpacing(10); // Adjust the value for desired spacing
 
-        return terminalText;
+        VBox vBox = new VBox(textFlow1, textFlow2);
+        vBox.setSpacing(SPACE);
+        vBox.setAlignment(Pos.CENTER_LEFT);
+
+        box.getChildren().add(vBox);
+
+        return List.of(terminalCmd1, terminalCmd2);
     }
 
-    private GridPane gridPane(StackPane box) {
+    private Map<String, HBox> gridPane(StackPane box) {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
+
         box.getChildren().add(grid);
-        return grid;
+
+        return gridCells(grid);
+    }
+    
+    private Map<String, HBox> gridCells(GridPane grid) {
+        Map<String, HBox> jarCells = new HashMap<>();
+        
+        grid.add(jarCell("base-model.jar", jarCells), 1, 0);
+        grid.add(jarCell("base-engine.jar", jarCells), 3, 0);
+
+        grid.add(jarCell("classic-assets.jar", jarCells), 0, 1);
+        grid.add(jarCell("classic-levels.jar", jarCells), 1, 1);
+        grid.add(jarCell("classic-items.jar", jarCells), 2, 1);
+        grid.add(jarCell("renderer-lwjgl.jar", jarCells), 3, 1);
+
+        grid.add(jarCell("slf4j-api-2.0.17.jar", jarCells), 0, 2);
+        grid.add(jarCell("slf4j-simple-2.0.17.jar", jarCells), 1, 2);
+        grid.add(jarCell("slf4j-jul-2.0.17.jar", jarCells), 2, 2);
+
+        grid.add(jarCell("commons-io-2.18.0.jar", jarCells), 0, 3);
+        grid.add(jarCell("commons-csv-1.14.0.jar", jarCells), 1, 3);
+        grid.add(jarCell("commons-codec-1.18.0.jar", jarCells), 2, 3);
+        grid.add(jarCell("commons-io-2.16.1", jarCells), 3, 3);
+
+        grid.add(jarCell("lwjgl-3.3.6.jar", jarCells), 0, 4);
+        grid.add(jarCell("lwjgl-3.3.6-macos.jar", jarCells), 1, 4);
+        grid.add(jarCell("lwjgl-3.3.6-windows.jar", jarCells), 2, 4);
+        
+        return jarCells;
+    }
+    
+    private Node jarCell(String jarName, Map<String, HBox> jarCells) {
+        String iconName = jarName.replace(".jar", "");
+        if (iconName.contains(".")) { // external with version
+            iconName = jarName.substring(0, jarName.indexOf('-'));
+        }
+        Image icon = new Image("file:/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/%s.png".formatted(iconName));
+
+        ImageView iconView = new ImageView(icon);
+        iconView.setFitWidth(50);
+        iconView.setFitHeight(50);
+        Text text = new Text(jarName.replace("-", "-\n"));
+        text.setTextAlignment(TextAlignment.CENTER);
+        HBox box = new HBox(iconView, text);
+        box.setPrefWidth(140 / RATIO);
+        box.setPrefHeight(140 / RATIO);
+        box.setAlignment(Pos.CENTER);
+        
+        jarCells.put(jarName, box);
+        
+        return box;
     }
 }
