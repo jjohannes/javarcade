@@ -40,8 +40,9 @@ public class App extends Application {
     public static final int WIDTH = 1920 / RATIO;
     public static final int HEIGHT = 1080 / RATIO;
     public static final int SCREEN_DIM = 720 / RATIO;
+    public static final int WARNING_DIM = 610 / RATIO;
 
-    public static final int SPACE = 40 / RATIO;
+    public static final int SPACE = 20 / RATIO;
 
     static final Map<String, List<String>> DEPENDENCY_GRAPH = Map.ofEntries(
             Map.entry("base-model.jar", List.of()),
@@ -76,11 +77,15 @@ public class App extends Application {
         root.setBottom(bottomBox);
 
         StackPane runningApp = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
-        StackPane dependencyGraph = createBox(topBox, WIDTH - SCREEN_DIM - SPACE * 3, SCREEN_DIM);
-        StackPane terminalBox = createBox(bottomBox, WIDTH - SPACE * 2.0, HEIGHT - SCREEN_DIM - SPACE * 3.0);
+        StackPane dependencyGraph = createBox(topBox, WIDTH - SCREEN_DIM - SPACE * 6, SCREEN_DIM);
         StackPane projectStructure = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
 
-        topBox.setTranslateX(-SCREEN_DIM - SPACE);
+        StackPane terminalBox = createBox(bottomBox, WIDTH - WARNING_DIM, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane warningBox = createBox(bottomBox, WARNING_DIM - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+
+        warningGrid(warningBox);
+
+        // topBox.setTranslateX(-SCREEN_DIM - SPACE);
         showProjectStructure(projectStructure);
 
         slideControl = new SlideControl(imageView(runningApp), errorTextView(runningApp), terminalView(terminalBox), gridPane(dependencyGraph));
@@ -99,7 +104,38 @@ public class App extends Application {
         stage.show();
     }
 
-    private StackPane createBox(HBox parent, double width, double height) {
+    private void warningGrid(StackPane warningBox) {
+        GridPane grid = new GridPane();
+        grid.setHgap(10 / RATIO);
+        grid.setVgap(10 / RATIO);
+
+        grid.add(warningText("Dependency Definition"), 0, 0);
+        grid.add(warningText("Module Version Management"), 1, 0);
+        grid.add(warningText("Retrieving JARs"), 2, 0);
+
+        grid.add(warningText("Version Conflict Management"), 0, 1);
+        grid.add(warningText("Variant Conflict Management"), 1, 1);
+        grid.add(warningText("Version Update Management"), 2, 1);
+
+        warningBox.getChildren().add(grid);
+    }
+
+    private Node warningText(String title) {
+        Text text = new Text(title);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setWrappingWidth(150 / RATIO); // Enable wrapping
+
+        StackPane pane = new StackPane(text);
+        pane.setAlignment(Pos.CENTER);
+        pane.setPadding(new Insets(SPACE / 4));
+        pane.setMinHeight(124 / RATIO);
+
+        pane.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 4; -fx-background-radius: 4;");
+
+        return pane;
+    }
+
+    private StackPane createBox(Pane parent, double width, double height) {
         StackPane inner = new StackPane();
         inner.setPadding(new Insets(SPACE * 0.5));
         inner.setPrefWidth(width - SPACE);
@@ -143,17 +179,15 @@ public class App extends Application {
 
     private List<Text> terminalView(StackPane box) {
         Text terminalCmd1 = new Text();
-        terminalCmd1.setFont(Font.font("Monospaced", FontWeight.BOLD, 42 / RATIO));
+        terminalCmd1.setFont(Font.font("Monospaced", FontWeight.BOLD, 36 / RATIO));
         Text terminalCmd2 = new Text();
-        terminalCmd2.setFont(Font.font("Monospaced", FontWeight.BOLD, 42 / RATIO));
+        terminalCmd2.setFont(Font.font("Monospaced", FontWeight.BOLD, 36 / RATIO));
 
         TextFlow textFlow1 = new TextFlow(terminalCmd1);
-        textFlow1.setLineSpacing(10);
         TextFlow textFlow2 = new TextFlow(terminalCmd2);
-        textFlow2.setLineSpacing(10);
 
         VBox vBox = new VBox(textFlow1, textFlow2);
-        vBox.setSpacing(SPACE);
+        vBox.setSpacing(SPACE / 2);
         vBox.setAlignment(Pos.CENTER_LEFT);
 
         box.getChildren().add(vBox);

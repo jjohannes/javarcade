@@ -34,9 +34,9 @@ public class SlideControl {
             Path.of("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/jars");
 
     private static final String RUN_MODULE_PATH_CMD =
-            "java --module-path lib --module app.javarcade.base.engine";
+            "java --module-path lib   --module app.javarcade.base.engine";
     private static final String RUN_CLASS_PATH_CMD =
-            "java --class-path  lib/*        app.javarcade.base.engine.Engine";
+            "java --class-path  lib/*   app.javarcade.base.engine.Engine";
 
     private final ImageView screen;
     private final Text screenError;
