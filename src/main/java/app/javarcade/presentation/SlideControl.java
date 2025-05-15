@@ -83,7 +83,7 @@ public class SlideControl {
         }
         updateGrid();
         screen.setVisible(false);
-        screenError.setVisible(false);
+        screenError.setText("");
         updateTerminal(null);
     }
 
@@ -133,7 +133,7 @@ public class SlideControl {
         Optional<String> noClassDefFound = Arrays.stream(all.split("\n")).filter(l -> l.contains("NoClassDefFoundError")).findFirst();
         Optional<String> moduleFindException = Arrays.stream(all.split("\n")).filter(l -> l.contains("FindException")).findFirst();
 
-        return noClassDefFound.orElse(moduleFindException.orElse(all));
+        return noClassDefFound.orElse(moduleFindException.orElse(all.trim()));
     }
 
     private void loadImage(Path workFolder) {
@@ -142,10 +142,8 @@ public class SlideControl {
             Image image = new Image(imageFile.toURI().toString());
             screen.setImage(image);
             screen.setVisible(true);
-            screenError.setVisible(false);
         } else {
             screen.setVisible(false);
-            screenError.setVisible(true);
         }
     }
 }

@@ -1,6 +1,7 @@
 package app.javarcade.presentation;
 
 import javafx.application.Application;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -35,6 +36,25 @@ public class App extends Application {
     public static final int SCREEN_DIM = 720 / RATIO;
 
     public static final int SPACE = 40 / RATIO;
+
+    private static final Map<String, List<String>> dependencyGraph = Map.ofEntries(
+        Map.entry("base-model.jar", List.of()),
+        Map.entry("base-engine.jar", List.of("base-model.jar", "slf4j-api-2.0.17.jar", "slf4j-simple-2.0.17.jar")),
+        Map.entry("classic-assets.jar", List.of("base-model.jar", "commons-io-2.18.0.jar")),
+        Map.entry("classic-levels.jar", List.of("base-model.jar")),
+        Map.entry("classic-items.jar", List.of("base-model.jar", "commons-csv-1.14.0.jar")),
+        Map.entry("renderer-lwjgl.jar", List.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jul-2.0.17.jar", "lwjgl-3.3.6.jar", "lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
+        Map.entry("slf4j-api-2.0.17.jar", List.of("")),
+        Map.entry("slf4j-simple-2.0.17.jar", List.of("slf4j-api-2.0.17")),
+        Map.entry("slf4j-jdk14-2.0.17.jar", List.of("slf4j-api-2.0.17")),
+        Map.entry("commons-io-2.18.0.jar", List.of("")),
+        Map.entry("commons-csv-1.14.0.jar", List.of("commons-io-2.18.0.jar", "commons-codec-1.18.0.jar")),
+        Map.entry("commons-codec-1.18.0.jar", List.of("")),
+        Map.entry("commons-io-2.16.1.jar", List.of("")),
+        Map.entry("lwjgl-3.3.6.jar", List.of("")),
+        Map.entry("lwjgl-3.3.6-natives-macos-arm64.jar", List.of("")),
+        Map.entry("lwjgl-3.3.6-natives-windows-x86.jar", List.of(""))
+    );
 
     private SlideControl slideControl;
     private SlideShow slideShow;
@@ -97,11 +117,15 @@ public class App extends Application {
     private Text errorTextView(StackPane box) {
         Text text = new Text();
         text.setFont(Font.font("Monospaced", FontWeight.BOLD, 32 / RATIO));
-        text.setFill(Color.DARKRED);
+        text.setFill(Color.WHITE);
+        Rectangle background = new Rectangle();
+        background.setFill(Color.web("#FF7F7FBB"));
+        background.widthProperty().bind(text.layoutBoundsProperty().map(Bounds::getWidth));
+        background.heightProperty().bind(text.layoutBoundsProperty().map(Bounds::getHeight));
 
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setLineSpacing(10); // Adjust the value for desired spacing
-        box.setAlignment(Pos.CENTER_LEFT);
+        box.setAlignment(Pos.TOP_LEFT);
+        box.getChildren().add(background);
         box.getChildren().add(textFlow);
 
         return text;
@@ -114,9 +138,9 @@ public class App extends Application {
         terminalCmd2.setFont(Font.font("Monospaced", FontWeight.BOLD, 42 / RATIO));
 
         TextFlow textFlow1 = new TextFlow(terminalCmd1);
-        textFlow1.setLineSpacing(10); // Adjust the value for desired spacing
+        textFlow1.setLineSpacing(10);
         TextFlow textFlow2 = new TextFlow(terminalCmd2);
-        textFlow2.setLineSpacing(10); // Adjust the value for desired spacing
+        textFlow2.setLineSpacing(10);
 
         VBox vBox = new VBox(textFlow1, textFlow2);
         vBox.setSpacing(SPACE);
@@ -150,7 +174,7 @@ public class App extends Application {
 
         grid.add(jarCell("slf4j-api-2.0.17.jar", jarCells), 0, 2);
         grid.add(jarCell("slf4j-simple-2.0.17.jar", jarCells), 1, 2);
-        grid.add(jarCell("slf4j-jul-2.0.17.jar", jarCells), 2, 2);
+        grid.add(jarCell("slf4j-jdk14-2.0.17.jar", jarCells), 2, 2);
 
         grid.add(jarCell("commons-io-2.18.0.jar", jarCells), 0, 3);
         grid.add(jarCell("commons-csv-1.14.0.jar", jarCells), 1, 3);
