@@ -7,6 +7,8 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -42,22 +44,22 @@ public class App extends Application {
     public static final int SPACE = 40 / RATIO;
 
     static final Map<String, List<String>> DEPENDENCY_GRAPH = Map.ofEntries(
-        Map.entry("base-model.jar", List.of()),
-        Map.entry("base-engine.jar", List.of("base-model.jar", "slf4j-api-2.0.17.jar", "slf4j-simple-2.0.17.jar")),
-        Map.entry("classic-assets.jar", List.of("base-model.jar", "commons-io-2.18.0.jar")),
-        Map.entry("classic-levels.jar", List.of("base-model.jar")),
-        Map.entry("classic-items.jar", List.of("base-model.jar", "commons-csv-1.14.0.jar")),
-        Map.entry("renderer-lwjgl.jar", List.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jdk14-2.0.17.jar", "lwjgl-3.3.6.jar", "lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
-        Map.entry("slf4j-api-2.0.17.jar", List.of("")),
-        Map.entry("slf4j-simple-2.0.17.jar", List.of("slf4j-api-2.0.17")),
-        Map.entry("slf4j-jdk14-2.0.17.jar", List.of("slf4j-api-2.0.17")),
-        Map.entry("commons-io-2.18.0.jar", List.of("")),
-        Map.entry("commons-csv-1.14.0.jar", List.of("commons-io-2.18.0.jar", "commons-codec-1.18.0.jar")),
-        Map.entry("commons-codec-1.18.0.jar", List.of("")),
-        Map.entry("commons-io-2.16.1.jar", List.of("")),
-        Map.entry("lwjgl-3.3.6.jar", List.of("")),
-        Map.entry("lwjgl-3.3.6-natives-macos-arm64.jar", List.of("")),
-        Map.entry("lwjgl-3.3.6-natives-windows-x86.jar", List.of(""))
+            Map.entry("base-model.jar", List.of()),
+            Map.entry("base-engine.jar", List.of("base-model.jar", "slf4j-api-2.0.17.jar", "slf4j-simple-2.0.17.jar")),
+            Map.entry("classic-assets.jar", List.of("base-model.jar", "commons-io-2.18.0.jar")),
+            Map.entry("classic-levels.jar", List.of("base-model.jar")),
+            Map.entry("classic-items.jar", List.of("base-model.jar", "commons-csv-1.14.0.jar")),
+            Map.entry("renderer-lwjgl.jar", List.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jdk14-2.0.17.jar", "lwjgl-3.3.6.jar", "lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
+            Map.entry("slf4j-api-2.0.17.jar", List.of("")),
+            Map.entry("slf4j-simple-2.0.17.jar", List.of("slf4j-api-2.0.17")),
+            Map.entry("slf4j-jdk14-2.0.17.jar", List.of("slf4j-api-2.0.17")),
+            Map.entry("commons-io-2.18.0.jar", List.of("")),
+            Map.entry("commons-csv-1.14.0.jar", List.of("commons-io-2.18.0.jar", "commons-codec-1.18.0.jar")),
+            Map.entry("commons-codec-1.18.0.jar", List.of("")),
+            Map.entry("commons-io-2.16.1.jar", List.of("")),
+            Map.entry("lwjgl-3.3.6.jar", List.of("")),
+            Map.entry("lwjgl-3.3.6-natives-macos-arm64.jar", List.of("")),
+            Map.entry("lwjgl-3.3.6-natives-windows-x86.jar", List.of(""))
     );
 
     private SlideControl slideControl;
@@ -73,11 +75,15 @@ public class App extends Application {
         root.setTop(topBox);
         root.setBottom(bottomBox);
 
-        StackPane topLeftBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
-        StackPane topRightBox = createBox(topBox, WIDTH - SCREEN_DIM - SPACE*3, SCREEN_DIM);
-        StackPane terminalBox = createBox(bottomBox, WIDTH - SPACE*2.0, HEIGHT - SCREEN_DIM - SPACE*3.0);
+        StackPane runningApp = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
+        StackPane dependencyGraph = createBox(topBox, WIDTH - SCREEN_DIM - SPACE * 3, SCREEN_DIM);
+        StackPane terminalBox = createBox(bottomBox, WIDTH - SPACE * 2.0, HEIGHT - SCREEN_DIM - SPACE * 3.0);
+        StackPane projectStructure = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
 
-        slideControl = new SlideControl(imageView(topLeftBox), errorTextView(topLeftBox), terminalView(terminalBox), gridPane(topRightBox));
+        topBox.setTranslateX(-SCREEN_DIM - SPACE);
+        showProjectStructure(projectStructure);
+
+        slideControl = new SlideControl(imageView(runningApp), errorTextView(runningApp), terminalView(terminalBox), gridPane(dependencyGraph));
         slideShow = new SlideShow();
 
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -164,7 +170,7 @@ public class App extends Application {
         box.getChildren().add(new StackPane(grid, overlay));
 
         Map<String, HBox> jarCells = new HashMap<>();
-        
+
         grid.add(jarCell("base-model.jar", jarCells), 1, 0);
         grid.add(jarCell("base-engine.jar", jarCells), 3, 0);
 
@@ -185,10 +191,10 @@ public class App extends Application {
         grid.add(jarCell("lwjgl-3.3.6.jar", jarCells), 3, 4);
         grid.add(jarCell("lwjgl-3.3.6-natives-macos-arm64.jar", jarCells), 2, 4);
         grid.add(jarCell("lwjgl-3.3.6-natives-windows-x86.jar", jarCells), 1, 4);
-        
+
         return jarCells;
     }
-    
+
     private Node jarCell(String jarName, Map<String, HBox> jarCells) {
         String iconName = jarName.replace(".jar", "");
         if (iconName.contains(".")) { // external with version
@@ -205,10 +211,39 @@ public class App extends Application {
         box.setPrefWidth(140 / RATIO);
         box.setPrefHeight(140 / RATIO);
         box.setAlignment(Pos.CENTER);
-        
+
         jarCells.put(jarName, box);
-        
+
         return box;
     }
 
+    private void showProjectStructure(StackPane projectStructure) {
+        TreeItem<String> rootItem = new TreeItem<>("javarcade");
+        TreeItem<String> buildTool = new TreeItem<>("gradle");
+        TreeItem<String> modules = new TreeItem<>("modules");
+        rootItem.setExpanded(true);
+
+        TreeItem<String> model = new TreeItem<>("base-model");
+        TreeItem<String> engine = new TreeItem<>("base-engine");
+        TreeItem<String> renderer = new TreeItem<>("renderer-lwjgl");
+        TreeItem<String> assets = new TreeItem<>("classic-assets");
+        TreeItem<String> levels = new TreeItem<>("classic-levels");
+        TreeItem<String> items = new TreeItem<>("classic-items");
+
+        // Build the tree structure
+        rootItem.getChildren().add(buildTool);
+        rootItem.getChildren().add(modules);
+
+        modules.getChildren().add(model);
+        modules.getChildren().add(engine);
+        modules.getChildren().add(renderer);
+        modules.getChildren().add(assets);
+        modules.getChildren().add(levels);
+        modules.getChildren().add(items);
+
+        TreeView<String> treeView = new TreeView<>(rootItem);
+        treeView.setShowRoot(true);
+
+        projectStructure.getChildren().add(treeView);
+    }
 }
