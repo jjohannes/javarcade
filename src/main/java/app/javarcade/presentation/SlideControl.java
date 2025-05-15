@@ -5,11 +5,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +20,9 @@ public class SlideControl {
 
     private static final Path APP_INSTALL_FOLDER =
             Path.of("/Users/jendrik/projects/gradle/howto/javarcade/apps/app-retro/build/install/app-retro/lib");
+
+    private static final Path EXTRA_INSTALL_FOLDER =
+            Path.of("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/jars");
 
     private static final String RUN_MODULE_PATH_CMD =
             "java --module-path lib --module app.javarcade.base.engine";
@@ -44,8 +44,8 @@ public class SlideControl {
         terminal.get(0).setText(RUN_MODULE_PATH_CMD);
         terminal.get(1).setText(RUN_CLASS_PATH_CMD);
 
-        terminal.forEach(cmd -> cmd.setOnMouseClicked(event ->
-                execute(((Text)event.getTarget()).getText())));
+        terminal.forEach(cmd -> cmd.setOnMouseClicked(event -> execute(cmd)));
+        jars.forEach((jar, cell) -> cell.setOnMouseClicked(event -> active(jar)));
 
         activeJars.add("lwjgl-glfw-3.3.6.jar");
         activeJars.add("lwjgl-glfw-3.3.6-natives-macos-arm64.jar");
@@ -62,23 +62,52 @@ public class SlideControl {
         activeJars.add("slf4j-simple-2.0.17.jar");
         activeJars.add("lwjgl-3.3.6.jar");
         activeJars.add("lwjgl-3.3.6-natives-macos-arm64.jar");
+
+        updateTerminal(null);
+        updateGrid();
     }
 
-    private void execute(String cmd) {
+    private void updateTerminal(Text active) {
+        terminal.forEach(cmd -> cmd.setOpacity(active == cmd ? 1 : 0.3));
+    }
 
+    private void updateGrid() {
+        jars.forEach((jar, cell) -> cell.setOpacity(activeJars.contains(jar) ? 1 : 0.3));
+    }
+
+    private void active(String jar) {
+        if (activeJars.contains(jar)) {
+            activeJars.remove(jar);
+        } else {
+            activeJars.add(jar);
+        }
+        updateGrid();
+        screen.setVisible(false);
+        screenError.setVisible(false);
+        updateTerminal(null);
+    }
+
+    private void execute(Text cmd) {
         try {
             Path lib = WORK_FOLDER.resolve("lib");
             //noinspection resource
             for (Path file : Files.list(lib).toList()) {
                 Files.deleteIfExists(file);
             }
+            Files.deleteIfExists(WORK_FOLDER.resolve("out").resolve("screen.png"));
             Files.createDirectories(lib);
             for (String jar : activeJars) {
-                Files.copy(APP_INSTALL_FOLDER.resolve(jar), lib.resolve(jar));
+                if (Files.exists(APP_INSTALL_FOLDER.resolve(jar))) {
+                    Files.copy(APP_INSTALL_FOLDER.resolve(jar), lib.resolve(jar));
+                } else {
+                    Files.copy(EXTRA_INSTALL_FOLDER.resolve(jar), lib.resolve(jar));
+                }
             }
 
+            updateTerminal(cmd);
+
             var p = Runtime.getRuntime().exec(
-                    cmd.split("\\s+"),
+                    cmd.getText().split("\\s+"),
                     new String[] {
                             "PATH=" + System.getenv("PATH"),
                             "PRESENTATION_FOLDER=out"

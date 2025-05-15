@@ -155,11 +155,11 @@ public class App extends Application {
         grid.add(jarCell("commons-io-2.18.0.jar", jarCells), 0, 3);
         grid.add(jarCell("commons-csv-1.14.0.jar", jarCells), 1, 3);
         grid.add(jarCell("commons-codec-1.18.0.jar", jarCells), 2, 3);
-        grid.add(jarCell("commons-io-2.16.1", jarCells), 3, 3);
+        grid.add(jarCell("commons-io-2.16.1.jar", jarCells), 3, 3);
 
         grid.add(jarCell("lwjgl-3.3.6.jar", jarCells), 0, 4);
-        grid.add(jarCell("lwjgl-3.3.6-macos.jar", jarCells), 1, 4);
-        grid.add(jarCell("lwjgl-3.3.6-windows.jar", jarCells), 2, 4);
+        grid.add(jarCell("lwjgl-3.3.6-natives-macos-arm64.jar", jarCells), 1, 4);
+        grid.add(jarCell("lwjgl-3.3.6-natives-windows-x86.jar", jarCells), 2, 4);
         
         return jarCells;
     }
