@@ -1,0 +1,13 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <!-- Omitted for readability: Parent POM Reference -->
+    <artifactId>mavenbuild-feature-repositories</artifactId>
+
+    <repositories>
+        <repository>
+            <id>MavenCentral</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+</project>

@@ -3,7 +3,6 @@ package app.javarcade.presentation;
 import javafx.application.Application;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,8 +17,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -28,9 +25,14 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class App extends Application {
 
@@ -41,6 +43,7 @@ public class App extends Application {
     public static final int HEIGHT = 1080 / RATIO;
     public static final int SCREEN_DIM = 720 / RATIO;
     public static final int WARNING_DIM = 610 / RATIO;
+    public static final int TREE_DIM = 640 / RATIO;
 
     public static final int SPACE = 20 / RATIO;
 
@@ -50,17 +53,17 @@ public class App extends Application {
             Map.entry("classic-assets.jar", List.of("base-model.jar", "commons-io-2.18.0.jar")),
             Map.entry("classic-levels.jar", List.of("base-model.jar")),
             Map.entry("classic-items.jar", List.of("base-model.jar", "commons-csv-1.14.0.jar")),
-            Map.entry("renderer-lwjgl.jar", List.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jdk14-2.0.17.jar", "lwjgl-3.3.6.jar", "lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
-            Map.entry("slf4j-api-2.0.17.jar", List.of("")),
+            Map.entry("renderer-lwjgl.jar", List.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jdk14-2.0.17.jar", "lwjgl-3.3.6.jar")),
+            Map.entry("slf4j-api-2.0.17.jar", List.of()),
             Map.entry("slf4j-simple-2.0.17.jar", List.of("slf4j-api-2.0.17")),
             Map.entry("slf4j-jdk14-2.0.17.jar", List.of("slf4j-api-2.0.17")),
-            Map.entry("commons-io-2.18.0.jar", List.of("")),
+            Map.entry("commons-io-2.18.0.jar", List.of()),
             Map.entry("commons-csv-1.14.0.jar", List.of("commons-io-2.18.0.jar", "commons-codec-1.18.0.jar")),
-            Map.entry("commons-codec-1.18.0.jar", List.of("")),
-            Map.entry("commons-io-2.16.1.jar", List.of("")),
-            Map.entry("lwjgl-3.3.6.jar", List.of("")),
-            Map.entry("lwjgl-3.3.6-natives-macos-arm64.jar", List.of("")),
-            Map.entry("lwjgl-3.3.6-natives-windows-x86.jar", List.of(""))
+            Map.entry("commons-codec-1.18.0.jar", List.of()),
+            Map.entry("commons-io-2.16.1.jar", List.of()),
+            Map.entry("lwjgl-3.3.6.jar", List.of("lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
+            Map.entry("lwjgl-3.3.6-natives-macos-arm64.jar", List.of()),
+            Map.entry("lwjgl-3.3.6-natives-windows-x86.jar", List.of())
     );
 
     private SlideControl slideControl;
@@ -78,17 +81,24 @@ public class App extends Application {
 
         StackPane runningApp = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
         StackPane dependencyGraph = createBox(topBox, WIDTH - SCREEN_DIM - SPACE * 6, SCREEN_DIM);
-        StackPane projectStructure = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
+        StackPane projectStructure = createBox(topBox, TREE_DIM, SCREEN_DIM);
+        StackPane editor = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
 
         StackPane terminalBox = createBox(bottomBox, WIDTH - WARNING_DIM, HEIGHT - SCREEN_DIM - SPACE * 4.0);
         StackPane warningBox = createBox(bottomBox, WARNING_DIM - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
         warningGrid(warningBox);
 
-        // topBox.setTranslateX(-SCREEN_DIM - SPACE);
-        showProjectStructure(projectStructure);
+        topBox.setTranslateX(-SCREEN_DIM - SCREEN_DIM);
 
-        slideControl = new SlideControl(imageView(runningApp), errorTextView(runningApp), terminalView(terminalBox), gridPane(dependencyGraph));
+        slideControl = new SlideControl(
+                imageView(runningApp),
+                errorTextView(runningApp),
+                terminalView(terminalBox),
+                gridPane(dependencyGraph),
+                projectTreeView(projectStructure)
+        );
+
         slideShow = new SlideShow();
 
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -111,7 +121,7 @@ public class App extends Application {
 
         grid.add(warningText("Dependency Definition"), 0, 0);
         grid.add(warningText("Module Version Management"), 1, 0);
-        grid.add(warningText("Retrieving JARs"), 2, 0);
+        grid.add(warningText("Retrieving and Building JARs"), 2, 0);
 
         grid.add(warningText("Version Conflict Management"), 0, 1);
         grid.add(warningText("Variant Conflict Management"), 1, 1);
@@ -234,11 +244,7 @@ public class App extends Application {
         if (iconName.contains(".")) { // external with version
             iconName = jarName.substring(0, jarName.indexOf('-'));
         }
-        Image icon = new Image("file:/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/%s.png".formatted(iconName));
-
-        ImageView iconView = new ImageView(icon);
-        iconView.setFitWidth(50);
-        iconView.setFitHeight(50);
+        ImageView iconView = jarIcon(iconName);
         Text text = new Text(jarName.replace("-", "-\n"));
         text.setTextAlignment(TextAlignment.CENTER);
         HBox box = new HBox(iconView, text);
@@ -251,33 +257,97 @@ public class App extends Application {
         return box;
     }
 
-    private void showProjectStructure(StackPane projectStructure) {
-        TreeItem<String> rootItem = new TreeItem<>("javarcade");
-        TreeItem<String> buildTool = new TreeItem<>("gradle");
-        TreeItem<String> modules = new TreeItem<>("modules");
+    private ImageView jarIcon(String iconName) {
+        Image icon = new Image("file:/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/%s.png".formatted(iconName));
+        ImageView iconView = new ImageView(icon);
+        iconView.setFitWidth(50);
+        iconView.setFitHeight(50);
+        return iconView;
+    }
+
+
+    private ImageView logoButton(String iconName) {
+        Image icon = new Image("file:/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/%s.png".formatted(iconName));
+        ImageView iconView = new ImageView(icon);
+        iconView.setPreserveRatio(true);
+        iconView.setFitHeight(30);
+        iconView.setPickOnBounds(true); // Enable clicks on transparent areas
+        return iconView;
+    }
+
+    private ProjectTree projectTreeView(StackPane projectStructure) {
+        Set<TreeItem<String>> treeItems = new HashSet<>();
+
+        TreeItem<String> rootItem = newItem("javarcade", treeItems);
         rootItem.setExpanded(true);
 
-        TreeItem<String> model = new TreeItem<>("base-model");
-        TreeItem<String> engine = new TreeItem<>("base-engine");
-        TreeItem<String> renderer = new TreeItem<>("renderer-lwjgl");
-        TreeItem<String> assets = new TreeItem<>("classic-assets");
-        TreeItem<String> levels = new TreeItem<>("classic-levels");
-        TreeItem<String> items = new TreeItem<>("classic-items");
+        TreeItem<String> buildToolConfig = newItem("gradle/plugins", treeItems); // .mvn/config
+        TreeItem<String> versions = newItem("gradle/versions", treeItems); // .mvn/versions
 
-        // Build the tree structure
-        rootItem.getChildren().add(buildTool);
+        TreeItem<String> repositories = newItem("repositories.gradle.kts", treeItems); // /pom.xml
+        TreeItem<String> dependencyRules = newItem("dependency-rules.gradle.kts", treeItems); // /pom.xml
+        TreeItem<String> javaModule = newItem("java-module.gradle.kts", treeItems); // /pom.xml
+        TreeItem<String> bom = newItem("build.gradle.kts", treeItems);
+        TreeItem<String> renovateJson = newItem("renovate.json", treeItems);
+
+        TreeItem<String> modules = newItem("modules", treeItems);
+
+        // Wenn select, show both module-info and buildFile content
+        // Modi-Switch Gradle/Maven Modules on/off --> Wenn modules on, Kommentar über Plugin im Build-File
+        Path exampleProject = Path.of("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/javarcade");
+        Path modulesFolder = exampleProject.resolve("modules");
+        try(var l = Files.list(modulesFolder)) {
+            l.forEach(moduleFolder -> {
+                TreeItem<String> module = newItem(moduleFolder.getFileName().toString(), treeItems);
+
+                TreeItem<String> moduleInfo = newItem("src/main/java/module-info.java", treeItems);
+                TreeItem<String> buildFile = newItem("build.gradle.kts", treeItems); // pom.xml
+                module.getChildren().add(moduleInfo);
+                module.getChildren().add(buildFile);
+
+                modules.getChildren().add(module);
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Image icon = new Image("file:/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/base-model.png");
+        // ImageView iconView = new ImageView(icon);
+        // iconView.setFitHeight(16);
+        // iconView.setFitWidth(16);
+
+        rootItem.getChildren().add(buildToolConfig);
+        rootItem.getChildren().add(versions);
         rootItem.getChildren().add(modules);
+        rootItem.getChildren().add(renovateJson);
 
-        modules.getChildren().add(model);
-        modules.getChildren().add(engine);
-        modules.getChildren().add(renderer);
-        modules.getChildren().add(assets);
-        modules.getChildren().add(levels);
-        modules.getChildren().add(items);
+        versions.getChildren().add(bom);
+
+        buildToolConfig.getChildren().add(repositories);
+        buildToolConfig.getChildren().add(dependencyRules);
+        buildToolConfig.getChildren().add(javaModule);
 
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setShowRoot(true);
 
-        projectStructure.getChildren().add(treeView);
+        ImageView jpmsButton = logoButton("jpms");
+        ImageView gradleButton = logoButton("gradle");
+        ImageView mavenButton = logoButton("maven");
+        ImageView renovateButton = logoButton("renovate");
+
+        HBox menuBar = new HBox(jpmsButton, gradleButton, mavenButton, renovateButton);
+        menuBar.setSpacing(SPACE * 3);
+        menuBar.setPadding(new Insets(SPACE));
+        VBox container = new VBox(menuBar, treeView);
+
+        projectStructure.getChildren().add(container);
+
+        return new ProjectTree(treeItems, jpmsButton, gradleButton, mavenButton, renovateButton);
+    }
+
+    private TreeItem<String> newItem(String name, Set<TreeItem<String>> treeItems) {
+        TreeItem<String> item = new TreeItem<>(name);
+        treeItems.add(item);
+        return item;
     }
 }

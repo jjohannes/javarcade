@@ -2,6 +2,8 @@ package app.javarcade.presentation;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -42,15 +44,20 @@ public class SlideControl {
     private final Text screenError;
     private final List<Text> terminal;
     private final Map<String, HBox> jars;
-    final Set<String> activeJars = new HashSet<>();
+    private final ProjectTree projectTree;
+    private final Set<String> activeJars = new HashSet<>();
 
     private boolean graph = false;
+    private boolean gradleNotMaven = true;
+    private boolean moduleSystem = true;
+    private boolean renovate = false;
 
-    public SlideControl(ImageView screen, Text screenError, List<Text> terminal, Map<String, HBox> jars) {
+    public SlideControl(ImageView screen, Text screenError, List<Text> terminal, Map<String, HBox> jars, ProjectTree projectTree) {
         this.screen = screen;
         this.screenError = screenError;
         this.terminal = terminal;
         this.jars = jars;
+        this.projectTree = projectTree;
 
         terminal.get(0).setText(RUN_MODULE_PATH_CMD);
         terminal.get(1).setText(RUN_CLASS_PATH_CMD);
@@ -74,8 +81,26 @@ public class SlideControl {
         activeJars.add("lwjgl-3.3.6.jar");
         activeJars.add("lwjgl-3.3.6-natives-macos-arm64.jar");
 
+        projectTree.jpmsButton().setOnMouseClicked(event -> {
+            moduleSystem = !moduleSystem;
+            updateTree();
+        });
+        projectTree.gradleButton().setOnMouseClicked(event -> {
+            gradleNotMaven = true;
+            updateTree();
+        });
+        projectTree.mavenButton().setOnMouseClicked(event -> {
+            gradleNotMaven = false;
+            updateTree();
+        });
+        projectTree.renovateButton().setOnMouseClicked(event -> {
+            renovate = !renovate;
+            updateTree();
+        });
+
         updateTerminal(null);
         updateGrid();
+        updateTree();
     }
 
     private void updateTerminal(Text active) {
@@ -212,5 +237,62 @@ public class SlideControl {
         double scale = 0.5 / Math.max(Math.abs(dx) / bounds.getWidth(), Math.abs(dy) / bounds.getHeight());
         scale = Math.min(scale, 1.0); // Clamp to not overshoot
         return new Point2D(cx + dx * scale, cy + dy * scale);
+    }
+
+    private void updateTree() {
+        if (gradleNotMaven) {
+            projectTree.gradleButton().setOpacity(1);
+            projectTree.mavenButton().setOpacity(0.3);
+        } else {
+            projectTree.gradleButton().setOpacity(0.3);
+            projectTree.mavenButton().setOpacity(1);
+        }
+        projectTree.jpmsButton().setOpacity(moduleSystem ? 1 : 0.3);
+        projectTree.renovateButton().setOpacity(renovate ? 1 : 0.3);
+        projectTree.tree().forEach(this::updateTreeItem);
+    }
+
+    private void updateTreeItem(TreeItem<String> item) {
+        item.setValue(updateTreeItemValue(item.getValue()));
+    }
+
+    private String updateTreeItemValue(String value) {
+        if (gradleNotMaven) {
+            if (value.equals("pom.xml")) {
+                return "build.gradle.kts";
+            }
+            if (value.endsWith("/pom.xml")) {
+                return value.replace("/pom.xml", ".gradle.kts");
+            }
+            if (value.equals(".mvn/config")) {
+                return "gradle/plugins";
+            }
+            if (value.equals(".mvn/versions")) {
+                return "gradle/versions";
+            }
+        } else {
+            if (value.equals("build.gradle.kts")) {
+                return "pom.xml";
+            }
+            if (value.endsWith(".gradle.kts")) {
+                return value.replace(".gradle.kts", "/pom.xml");
+            }
+            if (value.equals("gradle/plugins")) {
+                return ".mvn/config";
+            }
+            if (value.equals("gradle/versions")) {
+                return ".mvn/versions";
+            }
+        }
+
+        if (value.startsWith("src/main/java")) {
+            return moduleSystem ? "src/main/java/module-info.java" : "src/main/java/...";
+        }
+
+        if (value.equals("renovate.json") || value.isEmpty()) {
+            return renovate ? "renovate.json" : "";
+        }
+
+        return value;
     }
 }
