@@ -6,15 +6,13 @@ import javafx.scene.layout.StackPane;
 
 import java.util.Set;
 
-import static app.javarcade.presentation.App.RATIO;
-
 public record TopicGrid(Set<Topic> topics) {
     public TopicGrid(StackPane box, Set<Topic> topics) {
         this(topics);
 
         GridPane grid = new GridPane();
-        grid.setHgap(10 / RATIO);
-        grid.setVgap(10 / RATIO);
+        grid.setHgap(10);
+        grid.setVgap(10);
 
         topics.forEach(topic -> grid.add(topic.text(), topic.columnIndex(), topic.rowIndex()));
 

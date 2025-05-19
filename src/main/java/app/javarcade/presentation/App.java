@@ -1,14 +1,15 @@
 package app.javarcade.presentation;
 
-import app.javarcade.presentation.data.JavarcadeProject;
 import app.javarcade.presentation.components.ApplicationScreen;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.TopicGrid;
+import app.javarcade.presentation.data.JavarcadeProject;
 import app.javarcade.presentation.state.SlideControl;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -16,23 +17,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
-import static app.javarcade.presentation.ui.UIComponents.errorTextView;
-import static app.javarcade.presentation.ui.UIComponents.screenshotView;
+import static app.javarcade.presentation.ui.UI.HEIGHT;
+import static app.javarcade.presentation.ui.UI.SCREEN_DIM;
+import static app.javarcade.presentation.ui.UI.SPACE;
+import static app.javarcade.presentation.ui.UI.TOPICS_WIDTH;
+import static app.javarcade.presentation.ui.UI.TREE_WIDTH;
+import static app.javarcade.presentation.ui.UI.WIDTH;
 
 public class App extends Application {
-
-    public static final int RATIO = 2;
-
-    public static final int WIDTH = 1920 / RATIO;
-    public static final int HEIGHT = 1080 / RATIO;
-    public static final int SCREEN_DIM = 720 / RATIO;
-    public static final int WARNING_DIM = 610 / RATIO;
-    public static final int TREE_DIM = 640 / RATIO;
-
-    public static final int SPACE = 20 / RATIO;
 
     @Override
     public void start(Stage stage) {
@@ -46,27 +42,52 @@ public class App extends Application {
 
         StackPane runningApp = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
         StackPane moduleGraphBox = createBox(topBox, WIDTH - SCREEN_DIM - SPACE * 6, SCREEN_DIM);
-        StackPane projectStructure = createBox(topBox, TREE_DIM, SCREEN_DIM);
+        StackPane projectStructure = createBox(topBox, TREE_WIDTH, SCREEN_DIM);
         StackPane editor = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
 
-        StackPane terminalBox = createBox(bottomBox, WIDTH - WARNING_DIM, HEIGHT - SCREEN_DIM - SPACE * 4.0);
-        StackPane topicBox = createBox(bottomBox, WARNING_DIM - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane terminalBox = createBox(bottomBox, WIDTH - TOPICS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane topicBox = createBox(bottomBox, TOPICS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
         topBox.setTranslateX(-SCREEN_DIM - SCREEN_DIM); // FIXME
 
         new SlideControl(
-                new ApplicationScreen(screenshotView(runningApp), errorTextView(runningApp)),
+                new ApplicationScreen(runningApp),
                 new Terminal(terminalBox),
                 new TopicGrid(topicBox, JavarcadeProject.topics()),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
                 new ProjectTree(projectStructure, ASSET_LOCATION.resolve("../javarcade"))
         );
 
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Scene scene = scalableScene(root);
+
         // scene.setOnKeyPressed(e -> { });
         stage.setTitle("Java Modularity");
         stage.setScene(scene);
+        stage.setWidth(WIDTH * 0.5);
+        stage.setHeight(HEIGHT * 0.5);
         stage.show();
+    }
+
+    private Scene scalableScene(BorderPane root) {
+        Group scalableGroup = new Group(root);
+        Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT);
+        Scale scale = new Scale(1, 1, 0, 0);
+        scalableGroup.getTransforms().add(scale);
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double scaleX = newVal.doubleValue() / WIDTH;
+            double scaleY = scene.getHeight() / HEIGHT;
+            double scaleFactor = Math.min(scaleX, scaleY);
+            scale.setX(scaleFactor);
+            scale.setY(scaleFactor);
+        });
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
+            double scaleX = scene.getWidth() / WIDTH;
+            double scaleY = newVal.doubleValue() / HEIGHT;
+            double scaleFactor = Math.min(scaleX, scaleY);
+            scale.setX(scaleFactor);
+            scale.setY(scaleFactor);
+        });
+        return scene;
     }
 
     private StackPane createBox(Pane parent, double width, double height) {

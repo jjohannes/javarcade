@@ -4,12 +4,12 @@ import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.util.Set;
 
-import static app.javarcade.presentation.App.RATIO;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 
 public record Module(String jarName, int columnIndex, int rowIndex, Set<String> dependencies, HBox icon) {
@@ -33,15 +33,16 @@ public record Module(String jarName, int columnIndex, int rowIndex, Set<String> 
         }
         Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION, iconName));
         ImageView iconView = new ImageView(icon);
-        iconView.setFitWidth(50);
-        iconView.setFitHeight(50);
+        iconView.setFitWidth(100);
+        iconView.setFitHeight(100);
 
         Text text = new Text(jarName.replace("-", "-\n"));
         text.setTextAlignment(TextAlignment.CENTER);
+        text.setFont(new Font(24));
 
         HBox box = new HBox(iconView, text);
-        box.setPrefWidth(140 / RATIO);
-        box.setPrefHeight(140 / RATIO);
+        box.setPrefWidth(140);
+        box.setPrefHeight(140);
         box.setAlignment(Pos.CENTER);
         return box;
     }

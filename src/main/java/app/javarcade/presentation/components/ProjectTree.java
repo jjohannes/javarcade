@@ -6,6 +6,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -15,8 +16,8 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-import static app.javarcade.presentation.App.SPACE;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
+import static app.javarcade.presentation.ui.UI.SPACE;
 
 public record ProjectTree(Set<TreeItem<String>> tree,
                           ImageView jpmsButton,
@@ -79,10 +80,12 @@ public record ProjectTree(Set<TreeItem<String>> tree,
 
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setShowRoot(true);
+        treeView.setStyle("-fx-font-size: 24px;");
 
         HBox menuBar = new HBox(jpmsButton(), gradleButton(), mavenButton(), renovateButton());
         menuBar.setSpacing(SPACE * 3);
         menuBar.setPadding(new Insets(SPACE));
+        VBox.setVgrow(treeView, Priority.ALWAYS);
         VBox container = new VBox(menuBar, treeView);
 
         box.getChildren().add(container);
@@ -92,7 +95,7 @@ public record ProjectTree(Set<TreeItem<String>> tree,
         Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION, iconName));
         ImageView iconView = new ImageView(icon);
         iconView.setPreserveRatio(true);
-        iconView.setFitHeight(30);
+        iconView.setFitHeight(60);
         iconView.setPickOnBounds(true); // Enable clicks on transparent areas
         return iconView;
     }

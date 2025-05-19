@@ -16,24 +16,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static app.javarcade.presentation.App.RATIO;
-import static app.javarcade.presentation.App.SPACE;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_INSTALL_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.EXTRA_INSTALL_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.WORK_FOLDER;
+import static app.javarcade.presentation.ui.UI.SPACE;
 
 public record Terminal(List<Text> commands) {
 
     public Terminal(StackPane box) {
         this(List.of(new Text(), new Text()));
 
-        commands.get(0).setFont(Font.font("Monospaced", FontWeight.BOLD, 36 / RATIO));
-        commands.get(1).setFont(Font.font("Monospaced", FontWeight.BOLD, 36 / RATIO));
+        commands.get(0).setFont(Font.font("Monospaced", FontWeight.BOLD, 36));
+        commands.get(1).setFont(Font.font("Monospaced", FontWeight.BOLD, 36));
         TextFlow textFlow1 = new TextFlow(commands.get(0));
         TextFlow textFlow2 = new TextFlow(commands.get(1));
 
         VBox vBox = new VBox(textFlow1, textFlow2);
-        vBox.setSpacing(SPACE / 2);
+        vBox.setSpacing(SPACE * 3);
         vBox.setAlignment(Pos.CENTER_LEFT);
 
         box.getChildren().add(vBox);
