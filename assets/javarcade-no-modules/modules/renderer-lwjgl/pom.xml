@@ -1,0 +1,26 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <relativePath>../../../javarcade/.mvn/config/java-module</relativePath>
+    <artifactId>mavenbuild-java-module</artifactId>
+    <groupId>app.javarcade</groupId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>engine-lwjgl</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>app.javarcade</groupId>
+      <artifactId>base-engine</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+  </dependencies>
+</project>

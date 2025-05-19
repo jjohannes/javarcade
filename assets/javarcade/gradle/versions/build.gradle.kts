@@ -1,5 +1,7 @@
 plugins { id("java-platform") }
 
+javaPlatform { allowDependencies() }
+
 dependencies {
   api(platform("org.lwjgl:lwjgl-bom:3.3.6"))
   api(platform("org.slf4j:slf4j-bom:2.0.17"))

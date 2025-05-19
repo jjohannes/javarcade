@@ -1,0 +1,11 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <relativePath>../../../javarcade/.mvn/config/java-module</relativePath>
+    <artifactId>mavenbuild-java-module</artifactId>
+    <groupId>app.javarcade</groupId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>base-model</artifactId>
+
+</project>

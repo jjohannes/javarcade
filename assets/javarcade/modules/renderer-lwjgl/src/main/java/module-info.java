@@ -1,8 +1,5 @@
 open module app.javarcade.renderer.lwjgl {
   requires app.javarcade.base.engine;
-  requires org.lwjgl.glfw;
-  requires org.lwjgl.opengl;
-  requires org.lwjgl.stb;
   requires org.lwjgl;
   requires org.slf4j;
 
