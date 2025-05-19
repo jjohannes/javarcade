@@ -1,7 +1,11 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <packaging>pom</packaging>
-  <!-- Omitted for readability: Parent POM Reference -->
+  <parent>
+    <relativePath>../../.mvn/config/java-module</relativePath>
+    <artifactId>mavenbuild-java-module</artifactId>
+    <groupId>app.javarcade</groupId>
+    <version>${revision}</version>
+  </parent>
   <artifactId>classic-levels</artifactId>
 
   <!-- org.gradlex:java-module-dependencies-maven-extension activated -->
