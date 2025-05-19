@@ -1,6 +1,7 @@
 package app.javarcade.presentation;
 
 import app.javarcade.presentation.components.ApplicationScreen;
+import app.javarcade.presentation.components.Editors;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.Terminal;
@@ -11,16 +12,18 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
+import static app.javarcade.presentation.ui.UI.GRAPH_WIDTH;
 import static app.javarcade.presentation.ui.UI.HEIGHT;
 import static app.javarcade.presentation.ui.UI.SCREEN_DIM;
 import static app.javarcade.presentation.ui.UI.SPACE;
@@ -33,29 +36,38 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         HBox topBox = new HBox(SPACE);
+        topBox.setPrefWidth(WIDTH);
+        ScrollPane topScrollPane = new ScrollPane(topBox);
+        topScrollPane.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-insets: 0;");
+        topScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        topScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        topScrollPane.setFitToHeight(true);
+        topScrollPane.setFitToWidth(false);
+
         HBox bottomBox = new HBox(SPACE);
+        VBox root = new VBox(topScrollPane, bottomBox);
         topBox.setPadding(new Insets(SPACE));
         bottomBox.setPadding(new Insets(0, SPACE, SPACE, SPACE));
-        BorderPane root = new BorderPane();
-        root.setTop(topBox);
-        root.setBottom(bottomBox);
 
-        StackPane runningApp = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
-        StackPane moduleGraphBox = createBox(topBox, WIDTH - SCREEN_DIM - SPACE * 6, SCREEN_DIM);
-        StackPane projectStructure = createBox(topBox, TREE_WIDTH, SCREEN_DIM);
-        StackPane editor = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
+        // Boxes in the top row (scrollable)
+        StackPane applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
+        StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
+        StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM);
+        StackPane editorsBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
 
+        // Boxes in the bottom row
         StackPane terminalBox = createBox(bottomBox, WIDTH - TOPICS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
         StackPane topicBox = createBox(bottomBox, TOPICS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
-        topBox.setTranslateX(-SCREEN_DIM - SCREEN_DIM); // FIXME
+        // topBox.setTranslateX(-SCREEN_DIM - SCREEN_DIM); // FIXME
 
         new SlideControl(
-                new ApplicationScreen(runningApp),
-                new Terminal(terminalBox),
-                new TopicGrid(topicBox, JavarcadeProject.topics()),
+                new ApplicationScreen(applicationBox),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
-                new ProjectTree(projectStructure, ASSET_LOCATION.resolve("../javarcade"))
+                new ProjectTree(projectStructureBox, ASSET_LOCATION.resolve("../javarcade")),
+                new Editors(editorsBox, ASSET_LOCATION.resolve("..")),
+                new Terminal(terminalBox),
+                new TopicGrid(topicBox, JavarcadeProject.topics())
         );
 
         Scene scene = scalableScene(root);
@@ -63,12 +75,10 @@ public class App extends Application {
         // scene.setOnKeyPressed(e -> { });
         stage.setTitle("Java Modularity");
         stage.setScene(scene);
-        stage.setWidth(WIDTH * 0.5);
-        stage.setHeight(HEIGHT * 0.5);
         stage.show();
     }
 
-    private Scene scalableScene(BorderPane root) {
+    private Scene scalableScene(VBox root) {
         Group scalableGroup = new Group(root);
         Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT);
         Scale scale = new Scale(1, 1, 0, 0);

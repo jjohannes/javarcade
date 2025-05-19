@@ -19,7 +19,8 @@ import java.util.Set;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 import static app.javarcade.presentation.ui.UI.SPACE;
 
-public record ProjectTree(Set<TreeItem<String>> tree,
+public record ProjectTree(TreeView<String> tree,
+                          Set<TreeItem<String>> items,
                           ImageView jpmsButton,
                           ImageView gradleButton,
                           ImageView mavenButton,
@@ -30,7 +31,7 @@ public record ProjectTree(Set<TreeItem<String>> tree,
     // Modi-Switch Gradle/Maven Modules on/off --> Wenn modules on, Kommentar über Plugin im Build-File
     
     public ProjectTree(StackPane box, Path projectLocation) {
-        this(new HashSet<>(), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
+        this(new TreeView<>(), new HashSet<>(), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
 
         TreeItem<String> rootItem = newItem(projectLocation.getFileName().toString());
         rootItem.setExpanded(true);
@@ -78,15 +79,15 @@ public record ProjectTree(Set<TreeItem<String>> tree,
         buildToolConfig.getChildren().add(dependencyRules);
         buildToolConfig.getChildren().add(javaModule);
 
-        TreeView<String> treeView = new TreeView<>(rootItem);
-        treeView.setShowRoot(true);
-        treeView.setStyle("-fx-font-size: 24px;");
+        tree().setRoot(rootItem);
+        tree().setShowRoot(true);
+        tree().setStyle("-fx-font-size: 24px;");
 
         HBox menuBar = new HBox(jpmsButton(), gradleButton(), mavenButton(), renovateButton());
         menuBar.setSpacing(SPACE * 3);
         menuBar.setPadding(new Insets(SPACE));
-        VBox.setVgrow(treeView, Priority.ALWAYS);
-        VBox container = new VBox(menuBar, treeView);
+        VBox.setVgrow(tree(), Priority.ALWAYS);
+        VBox container = new VBox(menuBar, tree());
 
         box.getChildren().add(container);
     }
@@ -102,7 +103,7 @@ public record ProjectTree(Set<TreeItem<String>> tree,
 
     private TreeItem<String> newItem(String name) {
         TreeItem<String> item = new TreeItem<>(name);
-        tree().add(item);
+        items().add(item);
         return item;
     }
 
@@ -116,7 +117,7 @@ public record ProjectTree(Set<TreeItem<String>> tree,
         }
         jpmsButton().setOpacity(moduleSystem ? 1 : 0.3);
         renovateButton().setOpacity(renovate ? 1 : 0.3);
-        tree().forEach(item -> item.setValue(updateTreeItemValue(item.getValue(), gradleNotMaven, moduleSystem, renovate)));
+        items().forEach(item -> item.setValue(updateTreeItemValue(item.getValue(), gradleNotMaven, moduleSystem, renovate)));
     }
 
     private String updateTreeItemValue(String value, boolean gradleNotMaven, boolean moduleSystem, boolean renovate) {

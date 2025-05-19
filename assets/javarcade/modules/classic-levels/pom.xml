@@ -1,6 +1,8 @@
 <project>
-    <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <!-- Omitted for readability: Parent POM Reference -->
-    <artifactId>classic-levels</artifactId>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+  <!-- Omitted for readability: Parent POM Reference -->
+  <artifactId>classic-levels</artifactId>
+
+  <!-- org.gradlex:java-module-dependencies-maven-extension activated -->
 </project>

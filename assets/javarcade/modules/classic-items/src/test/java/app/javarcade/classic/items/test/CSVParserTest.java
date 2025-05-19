@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 class CSVParserTest {
 
-    @Test
-    void asset_information_is_parsed_from_csv_file() {
-        var itemSet = new ClassicItemSet();
+  @Test
+  void asset_information_is_parsed_from_csv_file() {
+    var itemSet = new ClassicItemSet();
 
-        assertThat(itemSet.items())
-                .contains(new Item('➟', Set.of(new PlayerPropertyModifier(PlayerProperty.SPEED, 1))));
-    }
+    assertThat(itemSet.items())
+        .contains(new Item('➟', Set.of(new PlayerPropertyModifier(PlayerProperty.SPEED, 1))));
+  }
 }

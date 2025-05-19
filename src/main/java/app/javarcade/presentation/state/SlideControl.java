@@ -1,11 +1,13 @@
 package app.javarcade.presentation.state;
 
 import app.javarcade.presentation.components.ApplicationScreen;
+import app.javarcade.presentation.components.Editors;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.TopicGrid;
 import app.javarcade.presentation.components.model.Module;
+import javafx.scene.control.TreeItem;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,8 +23,9 @@ public class SlideControl {
     private boolean gradleNotMaven = true;
     private boolean moduleSystem = true;
     private boolean renovate = false;
+    private TreeItem<String> selectedItem = null;
 
-    public SlideControl(ApplicationScreen applicationScreen, Terminal terminal, TopicGrid topicGrid, ModuleGraph moduleGraph, ProjectTree projectTree) {
+    public SlideControl(ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, TopicGrid topicGrid) {
         terminal.commands().get(0).setText(RUN_MODULE_PATH_CMD);
         terminal.commands().get(1).setText(RUN_CLASS_PATH_CMD);
         activeModules.addAll(initialState(moduleGraph));
@@ -36,20 +39,27 @@ public class SlideControl {
         projectTree.jpmsButton().setOnMouseClicked(event -> {
             moduleSystem = !moduleSystem;
             projectTree.update(gradleNotMaven, moduleSystem, renovate);
+            editors.open(selectedItem);
         });
         projectTree.gradleButton().setOnMouseClicked(event -> {
             gradleNotMaven = true;
             projectTree.update(true, moduleSystem, renovate);
+            editors.open(selectedItem);
         });
         projectTree.mavenButton().setOnMouseClicked(event -> {
             gradleNotMaven = false;
             projectTree.update(false, moduleSystem, renovate);
+            editors.open(selectedItem);
         });
         projectTree.renovateButton().setOnMouseClicked(event -> {
             renovate = !renovate;
             projectTree.update(gradleNotMaven, moduleSystem, renovate);
+            editors.open(selectedItem);
         });
-
+        projectTree.tree().setOnMouseClicked(event -> {
+            selectedItem = projectTree.tree().getSelectionModel().getSelectedItem();
+            editors.open(selectedItem);
+        });
         terminal.reset();
         moduleGraph.update(activeModules, graph);
         projectTree.update(gradleNotMaven, moduleSystem, renovate);

@@ -13,8 +13,8 @@ public interface JavarcadeProject {
     Path EXTRA_INSTALL_FOLDER = ASSET_LOCATION.resolve("jars");
     Path WORK_FOLDER = ASSET_LOCATION.resolve("../work");
 
-    String RUN_MODULE_PATH_CMD = "java --module-path lib   --module app.javarcade.base.engine";
-    String RUN_CLASS_PATH_CMD = "java --class-path  lib/*   app.javarcade.base.engine.Engine";
+    String RUN_MODULE_PATH_CMD = "java --module-path lib --module app.javarcade.base.engine";
+    String RUN_CLASS_PATH_CMD  = "java --class-path  lib/* app.javarcade.base.engine.Engine";
 
     static Set<Module> modules() {
         return Set.of(

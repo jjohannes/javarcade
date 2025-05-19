@@ -1,5 +1,5 @@
-plugins { id("org.example.gradle.component.application") }
+plugins { id("java-module") }
 
-application { mainClass = "app.javarcade.base.engine.Engine" }
+// org.gradlex.java-module-dependencies activated
 
 mainModuleInfo { runtimeOnly("org.slf4j.jul") }
