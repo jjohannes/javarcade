@@ -8,5 +8,5 @@ public interface UI {
     int SCREEN_DIM = 720;
     int TOPICS_WIDTH = 610;
     int TREE_WIDTH = 640;
-    int GRAPH_WIDTH = WIDTH - SCREEN_DIM - SPACE * 6;
+    int GRAPH_WIDTH = 900;
 }

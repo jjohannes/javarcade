@@ -3,6 +3,7 @@ package app.javarcade.presentation.components;
 import app.javarcade.presentation.components.model.Module;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -10,20 +11,26 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 import java.util.Set;
 
-public record ModuleGraph(Set<Module> modules) {
+public record ModuleGraph(Set<Module> modules, Text label) {
 
     public ModuleGraph(StackPane box, Set<Module> modules) {
-        this(modules);
+        this(modules, new Text("lib"));
 
         GridPane grid = new GridPane();
+        label().setFont(Font.font("Monospaced", FontWeight.BOLD, 36));
         Pane overlay = new Pane();
         grid.setHgap(10);
         grid.setVgap(10);
         overlay.setPickOnBounds(false); // mouse events pass through
-        box.getChildren().add(new StackPane(grid, overlay));
+        StackPane mainPane = new StackPane(grid, label(), overlay);
+        mainPane.setAlignment(Pos.TOP_LEFT);
+        box.getChildren().add(mainPane);
         modules().forEach(module -> grid.add(module.icon(), module.columnIndex(), module.rowIndex()));
     }
 
@@ -33,16 +40,19 @@ public record ModuleGraph(Set<Module> modules) {
 
     public void update(Set<Module> activeModules, boolean graph) {
         modules.forEach(module -> module.icon().setOpacity(activeModules.contains(module) ? 1 : 0.3));
+
+        Module anyModule = modules().stream().findFirst().orElseThrow();
+        StackPane parent = (StackPane) anyModule.icon().getParent().getParent();
+        Pane graphOverlay = (Pane) parent.getChildren().get(2);
+        graphOverlay.getChildren().clear();
+
         if (graph) {
-            dependencyGraph(activeModules);
+            dependencyGraph(activeModules, graphOverlay);
         }
     }
 
-    private void dependencyGraph(Set<Module> activeModules) {
-        Module anyModule = modules().stream().findFirst().orElseThrow();
-        StackPane parent = (StackPane) anyModule.icon().getParent().getParent();
-        Pane overlay = (Pane) parent.getChildren().get(1);
-        overlay.getChildren().clear();
+    private void dependencyGraph(Set<Module> activeModules, Pane overlay) {
+
 
         modules().stream().filter(activeModules::contains).forEach(from -> {
             HBox source = from.icon();

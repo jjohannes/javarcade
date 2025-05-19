@@ -4,11 +4,13 @@ import app.javarcade.presentation.components.ApplicationScreen;
 import app.javarcade.presentation.components.Editors;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
+import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.TopicGrid;
 import app.javarcade.presentation.data.JavarcadeProject;
 import app.javarcade.presentation.state.SlideControl;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -50,6 +52,7 @@ public class App extends Application {
         bottomBox.setPadding(new Insets(0, SPACE, SPACE, SPACE));
 
         // Boxes in the top row (scrollable)
+        StackPane slideBarBox = createBox(topBox, 100, SCREEN_DIM);
         StackPane applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
         StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
         StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM);
@@ -59,9 +62,8 @@ public class App extends Application {
         StackPane terminalBox = createBox(bottomBox, WIDTH - TOPICS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
         StackPane topicBox = createBox(bottomBox, TOPICS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
-        // topBox.setTranslateX(-SCREEN_DIM - SCREEN_DIM); // FIXME
-
         new SlideControl(
+                new SlideBar(slideBarBox),
                 new ApplicationScreen(applicationBox),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
                 new ProjectTree(projectStructureBox, ASSET_LOCATION.resolve("../javarcade")),

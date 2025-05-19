@@ -1,0 +1,16 @@
+- Topic Keys
+- Icons on Files
+- Renovate Screenshot
+- Summary Slide Bar
+  - Title
+  - Soapbox
+  - Cheat-Sheet for your own project
+  - That's it and promotion
+
+
+- Highlighting?
+
+- Retrieving and Building JARs:
+  - Show simplified output of build tools (?)
+  - Allow running different types of builds
+

@@ -4,6 +4,7 @@ import app.javarcade.presentation.components.ApplicationScreen;
 import app.javarcade.presentation.components.Editors;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
+import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.TopicGrid;
 import app.javarcade.presentation.components.model.Module;
@@ -25,7 +26,7 @@ public class SlideControl {
     private boolean renovate = false;
     private TreeItem<String> selectedItem = null;
 
-    public SlideControl(ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, TopicGrid topicGrid) {
+    public SlideControl(SlideBar slideBar, ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, TopicGrid topicGrid) {
         terminal.commands().get(0).setText(RUN_MODULE_PATH_CMD);
         terminal.commands().get(1).setText(RUN_CLASS_PATH_CMD);
         activeModules.addAll(initialState(moduleGraph));
@@ -33,6 +34,10 @@ public class SlideControl {
         moduleGraph.modules().forEach(module ->
                 module.icon().setOnMouseClicked(event -> active(module, moduleGraph, applicationScreen, terminal))
         );
+        moduleGraph.label().setOnMouseClicked(event -> {
+            graph = !graph;
+            moduleGraph.update(activeModules, graph);
+        });
         terminal.commands().forEach(cmd ->
                 cmd.setOnMouseClicked(event -> terminal.execute(cmd, activeModules, applicationScreen))
         );
