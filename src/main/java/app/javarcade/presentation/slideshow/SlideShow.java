@@ -1,6 +1,5 @@
-package app.javarcade.presentation;
+package app.javarcade.presentation.slideshow;
 
-import java.io.File;
 import java.util.List;
 
 public class SlideShow {
