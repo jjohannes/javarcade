@@ -27,13 +27,13 @@ public record Editors(Text top, Path projectContainer) {
         box.getChildren().add(scrollPane);
     }
 
-    public void open(TreeItem<String> item) {
+    public void open(TreeItem<String> item, boolean modules) {
         if (item == null) {
             reset();
             return;
         }
 
-        Path location = projectContainer.resolve(parentPath(item, Path.of(item.getValue())));
+        Path location = projectContainer.resolve(parentPath(item, Path.of(item.getValue()), modules));
         if (Files.isDirectory(location) || !Files.exists(location)) {
             reset();
             return;
@@ -42,12 +42,20 @@ public record Editors(Text top, Path projectContainer) {
         top().setText(readFile(location));
     }
 
-    private Path parentPath(TreeItem<String> item, Path path) {
+    private Path parentPath(TreeItem<String> item, Path path, boolean modules) {
         TreeItem<String> parent = item.getParent();
         if (parent == null) {
             return path;
         }
-        return parentPath(parent, Path.of(parent.getValue()).resolve(path));
+        String myName = path.subpath(0, 1).toString();
+        String parentName;
+        if (!modules && myName.equals("modules")) {
+            parentName = parent.getValue() + "-no-modules";
+        } else {
+            parentName = parent.getValue();
+        }
+
+        return parentPath(parent, Path.of(parentName).resolve(path), modules);
     }
 
     private void reset() {

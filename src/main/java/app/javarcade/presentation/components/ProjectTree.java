@@ -25,10 +25,6 @@ public record ProjectTree(TreeView<String> tree,
                           ImageView gradleButton,
                           ImageView mavenButton,
                           ImageView renovateButton) {
-
-    // TODO:
-    // Wenn select, show both module-info and buildFile content
-    // Modi-Switch Gradle/Maven Modules on/off --> Wenn modules on, Kommentar über Plugin im Build-File
     
     public ProjectTree(StackPane box, Path projectLocation) {
         this(new TreeView<>(), new HashSet<>(), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
@@ -49,7 +45,7 @@ public record ProjectTree(TreeView<String> tree,
 
         Path modulesFolder = projectLocation.resolve("modules");
         try(var l = Files.list(modulesFolder)) {
-            l.forEach(moduleFolder -> {
+            l.filter(f -> !f.getFileName().toString().startsWith(".")).sorted().forEach(moduleFolder -> {
                 TreeItem<String> module = newItem(moduleFolder.getFileName().toString());
 
                 TreeItem<String> moduleInfo = newItem("src/main/java/module-info.java");

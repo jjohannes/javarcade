@@ -39,26 +39,26 @@ public class SlideControl {
         projectTree.jpmsButton().setOnMouseClicked(event -> {
             moduleSystem = !moduleSystem;
             projectTree.update(gradleNotMaven, moduleSystem, renovate);
-            editors.open(selectedItem);
+            editors.open(selectedItem, moduleSystem);
         });
         projectTree.gradleButton().setOnMouseClicked(event -> {
             gradleNotMaven = true;
             projectTree.update(true, moduleSystem, renovate);
-            editors.open(selectedItem);
+            editors.open(selectedItem, moduleSystem);
         });
         projectTree.mavenButton().setOnMouseClicked(event -> {
             gradleNotMaven = false;
             projectTree.update(false, moduleSystem, renovate);
-            editors.open(selectedItem);
+            editors.open(selectedItem, moduleSystem);
         });
         projectTree.renovateButton().setOnMouseClicked(event -> {
             renovate = !renovate;
             projectTree.update(gradleNotMaven, moduleSystem, renovate);
-            editors.open(selectedItem);
+            editors.open(selectedItem, moduleSystem);
         });
         projectTree.tree().setOnMouseClicked(event -> {
             selectedItem = projectTree.tree().getSelectionModel().getSelectedItem();
-            editors.open(selectedItem);
+            editors.open(selectedItem, moduleSystem);
         });
         terminal.reset();
         moduleGraph.update(activeModules, graph);
