@@ -36,7 +36,7 @@ public record ProjectTree(TreeView<String> tree,
         TreeItem<String> rootItem = newItem(projectLocation.getFileName().toString());
         rootItem.setExpanded(true);
 
-        TreeItem<String> buildToolConfig = newItem("gradle/plugins"); // .mvn/config
+        TreeItem<String> buildToolConfig = newItem("gradle/plugins/src/main/kotlin"); // .mvn/config
         TreeItem<String> versions = newItem("gradle/versions"); // .mvn/versions
 
         TreeItem<String> repositories = newItem("repositories.gradle.kts"); // /pom.xml
@@ -129,7 +129,7 @@ public record ProjectTree(TreeView<String> tree,
                 return value.replace("/pom.xml", ".gradle.kts");
             }
             if (value.equals(".mvn/config")) {
-                return "gradle/plugins";
+                return "gradle/plugins/src/main/kotlin";
             }
             if (value.equals(".mvn/versions")) {
                 return "gradle/versions";
@@ -141,7 +141,7 @@ public record ProjectTree(TreeView<String> tree,
             if (value.endsWith(".gradle.kts")) {
                 return value.replace(".gradle.kts", "/pom.xml");
             }
-            if (value.equals("gradle/plugins")) {
+            if (value.equals("gradle/plugins/src/main/kotlin")) {
                 return ".mvn/config";
             }
             if (value.equals("gradle/versions")) {

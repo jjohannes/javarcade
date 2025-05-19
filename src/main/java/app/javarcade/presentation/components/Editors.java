@@ -8,10 +8,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 public record Editors(Text top, Path projectContainer) {
     public Editors(StackPane box, Path projectLocation) {
@@ -56,7 +56,7 @@ public record Editors(Text top, Path projectContainer) {
 
     private String readFile(Path location) {
         try {
-            return Files.readString(location);
+            return Files.readAllLines(location).stream().dropWhile(l -> l.startsWith("import ") || l.isBlank()).collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
