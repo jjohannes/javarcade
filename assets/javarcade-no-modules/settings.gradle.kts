@@ -1,5 +1,9 @@
 pluginManagement { includeBuild("../javarcade/gradle/plugins") }
 
+plugins {
+    id("com.autonomousapps.build-health") version "2.15.0"
+}
+
 File("modules").listFiles().forEach {
     if (File(it, "build.gradle.kts").exists()) {
         include(":${it.name}")
