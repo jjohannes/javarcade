@@ -19,7 +19,12 @@ gradle.lifecycle.beforeProject {
     plugins.withId("java") {
         the<JavaPluginExtension>().modularity.inferModulePath = false
         the<SourceSetContainer>().named("main") {
-            java { exclude("module-info.java") }
+            java {
+                setSrcDirs(java.sourceDirectories.map {
+                    it.absolutePath.replace("/javarcade-no-modules/", "/javarcade/")
+                })
+                exclude("module-info.java")
+            }
         }
     }
 }
