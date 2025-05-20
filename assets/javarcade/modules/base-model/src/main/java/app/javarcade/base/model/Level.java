@@ -1,3 +1,17 @@
 package app.javarcade.base.model;
 
-public interface Level {}
+import java.util.Set;
+
+public interface Level {
+    String define();
+
+    default Set<Character> blocking() {
+        return Set.of();
+    }
+    ;
+
+    default Set<Character> destructible() {
+        return Set.of();
+    }
+    ;
+}

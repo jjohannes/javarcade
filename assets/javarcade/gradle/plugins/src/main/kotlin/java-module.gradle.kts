@@ -8,8 +8,8 @@ java {
   toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
-testing.suites.named<JvmTestSuite>("test") {
-  useJUnitJupiter()
+tasks.test {
+  useJUnitPlatform()
 }
 
 dependencies {

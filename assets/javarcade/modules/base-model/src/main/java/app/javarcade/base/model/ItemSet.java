@@ -1,3 +1,8 @@
 package app.javarcade.base.model;
 
-public interface ItemSet {}
+import java.util.Set;
+
+public interface ItemSet {
+
+    Set<Item> items();
+}

@@ -2,7 +2,7 @@ package app.javarcade.base.model;
 
 import java.util.Set;
 
-public interface AssetSet {
+public interface PlayerSet {
 
-    Set<Asset> assets();
+    Set<Player> players();
 }
