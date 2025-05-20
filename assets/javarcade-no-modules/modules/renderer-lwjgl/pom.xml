@@ -16,6 +16,18 @@
     </dependency>
     <dependency>
       <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-glfw</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-opengl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-stb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl</artifactId>
     </dependency>
     <dependency>
@@ -23,4 +35,5 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
+  <build><sourceDirectory>../../../javarcade/modules/renderer-lwjgl/src/main/java</sourceDirectory></build>
 </project>

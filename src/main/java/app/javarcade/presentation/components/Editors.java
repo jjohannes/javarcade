@@ -64,7 +64,10 @@ public record Editors(Text top, Path projectContainer) {
 
     private String readFile(Path location) {
         try {
-            return Files.readAllLines(location).stream().dropWhile(l -> l.startsWith("import ") || l.isBlank()).collect(Collectors.joining("\n"));
+            return Files.readAllLines(location).stream()
+                    .dropWhile(l -> l.startsWith("import ") || l.isBlank())
+                    .filter(l -> !l.contains("<build><sourceDirectory>../../../"))
+                    .collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

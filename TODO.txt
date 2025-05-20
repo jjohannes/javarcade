@@ -14,4 +14,7 @@ Content:
 - Retrieving and Building JARs:
   - Show simplified output of build tools (?)
   - Allow running different types of builds
+- Analysis
+  - `mvn dependency:analyze`
+  - `gradle projectHealth` / `checkAllModuleInfo`
 

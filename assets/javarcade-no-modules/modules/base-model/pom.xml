@@ -7,5 +7,5 @@
     <version>${revision}</version>
   </parent>
   <artifactId>base-model</artifactId>
-
+  <build><sourceDirectory>../../../javarcade/modules/base-model/src/main/java</sourceDirectory></build>
 </project>

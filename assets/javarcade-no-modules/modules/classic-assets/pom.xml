@@ -23,4 +23,5 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
+  <build><sourceDirectory>../../../javarcade/modules/classic-assets/src/main/java</sourceDirectory></build>
 </project>

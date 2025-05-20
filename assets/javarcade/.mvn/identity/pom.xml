@@ -24,12 +24,5 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        <extensions>
-            <extension>
-                <groupId>org.gradlex</groupId>
-                <artifactId>java-module-dependencies-maven-extension</artifactId>
-                <version>0.1</version>
-            </extension>
-        </extensions>
     </build>
 </project>
