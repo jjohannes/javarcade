@@ -1,21 +1,16 @@
 pluginManagement { includeBuild("../javarcade/gradle/plugins") }
 
-include(":base-engine")
-include(":base-model")
-include(":classic-assets")
-include(":classic-items")
-include(":classic-levels")
-include(":renderer-lwjgl")
-project(":base-engine").projectDir = file("modules/base-engine")
-project(":base-model").projectDir = file("modules/base-model")
-project(":classic-assets").projectDir = file("modules/classic-assets")
-project(":classic-items").projectDir = file("modules/classic-items")
-project(":classic-levels").projectDir = file("modules/classic-levels")
-project(":renderer-lwjgl").projectDir = file("modules/renderer-lwjgl")
+File("modules").listFiles().forEach {
+    if (File(it, "build.gradle.kts").exists()) {
+        include(":${it.name}")
+        project(":${it.name}").projectDir = file(it)
+    }
+}
 
 include(":versions")
 project(":versions").projectDir = file("../javarcade/gradle/versions")
 
+// Ignore module-info.java files
 gradle.lifecycle.beforeProject {
     plugins.withId("java") {
         the<JavaPluginExtension>().modularity.inferModulePath = false
