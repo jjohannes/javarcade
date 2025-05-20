@@ -1,14 +1,15 @@
+Mechanics:
 - Topic Keys
+
+Content:
 - Icons on Files
 - Renovate Screenshot
-- Summary Slide Bar
-  - Title
-  - Soapbox
-  - Cheat-Sheet for your own project
-  - That's it and promotion
-
-
+- Slides
 - Highlighting?
+
+- Dependency analysis
+
+- Anatomy of a Jar
 
 - Retrieving and Building JARs:
   - Show simplified output of build tools (?)

@@ -10,11 +10,11 @@ import app.javarcade.presentation.components.TopicGrid;
 import app.javarcade.presentation.data.JavarcadeProject;
 import app.javarcade.presentation.state.SlideControl;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -62,8 +62,10 @@ public class App extends Application {
         StackPane terminalBox = createBox(bottomBox, WIDTH - TOPICS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
         StackPane topicBox = createBox(bottomBox, TOPICS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
+        ImageView slideView = new ImageView();
+
         new SlideControl(
-                new SlideBar(slideBarBox),
+                new SlideBar(slideBarBox, slideView),
                 new ApplicationScreen(applicationBox),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
                 new ProjectTree(projectStructureBox, ASSET_LOCATION.resolve("../javarcade")),
@@ -72,7 +74,7 @@ public class App extends Application {
                 new TopicGrid(topicBox, JavarcadeProject.topics())
         );
 
-        Scene scene = scalableScene(root);
+        Scene scene = scalableScene(root, slideView);
 
         // scene.setOnKeyPressed(e -> { });
         stage.setTitle("Java Modularity");
@@ -80,8 +82,9 @@ public class App extends Application {
         stage.show();
     }
 
-    private Scene scalableScene(VBox root) {
-        Group scalableGroup = new Group(root);
+    private Scene scalableScene(VBox root, ImageView slideView) {
+        StackPane pane = new StackPane(root, slideView);
+        Group scalableGroup = new Group(pane);
         Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT);
         Scale scale = new Scale(1, 1, 0, 0);
         scalableGroup.getTransforms().add(scale);
