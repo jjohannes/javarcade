@@ -33,12 +33,13 @@ public record ApplicationScreen(ImageView screenshot, Text error) {
         Text text = new Text();
         text.setFont(Font.font("Monospaced", FontWeight.BOLD, 32));
         text.setFill(Color.WHITE);
+        TextFlow textFlow = new TextFlow(text);
+
         Rectangle background = new Rectangle();
         background.setFill(Color.web("#FF7F7FBB"));
         background.widthProperty().bind(text.layoutBoundsProperty().map(Bounds::getWidth));
         background.heightProperty().bind(text.layoutBoundsProperty().map(Bounds::getHeight));
 
-        TextFlow textFlow = new TextFlow(text);
         box.setAlignment(Pos.TOP_LEFT);
         box.getChildren().add(background);
         box.getChildren().add(textFlow);

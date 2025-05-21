@@ -31,7 +31,7 @@ public record Module(String jarName, int columnIndex, int rowIndex, Set<String> 
         if (iconName.contains(".")) { // external with version
             iconName = jarName.substring(0, jarName.indexOf('-'));
         }
-        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION, iconName));
+        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION.resolve("main"), iconName));
         ImageView iconView = new ImageView(icon);
         iconView.setFitWidth(100);
         iconView.setFitHeight(100);

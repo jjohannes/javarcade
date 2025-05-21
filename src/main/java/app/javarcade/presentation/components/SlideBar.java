@@ -41,7 +41,7 @@ public record SlideBar(ImageView title, ImageView soap, ImageView cheatSheet, Im
     }
 
     private void loadOrUnloadSlide(ImageView slideView, String slide) {
-        var url = "file:%s/%s.jpg".formatted(ASSET_LOCATION.resolve("../slides"), slide);
+        var url = "file:%s/%s.jpg".formatted(ASSET_LOCATION.resolve("slides"), slide);
         if (slideView.getImage() == null || !url.equals(slideView.getImage().getUrl())) {
             slideView.setImage(new Image(url));
             slideView.setVisible(true);
@@ -52,7 +52,7 @@ public record SlideBar(ImageView title, ImageView soap, ImageView cheatSheet, Im
     }
 
     private static ImageView logoButton(String iconName) {
-        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION, iconName));
+        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION.resolve("main"), iconName));
         ImageView iconView = new ImageView(icon);
         iconView.setPreserveRatio(true);
         iconView.setFitWidth(60);

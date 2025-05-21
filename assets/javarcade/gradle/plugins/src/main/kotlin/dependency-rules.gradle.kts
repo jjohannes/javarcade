@@ -1,7 +1,9 @@
 import org.gradle.nativeplatform.MachineArchitecture.*
 import org.gradle.nativeplatform.OperatingSystemFamily.*
 
-plugins { id("org.gradlex.jvm-dependency-conflict-resolution") }
+plugins {
+  id("org.gradlex.jvm-dependency-conflict-resolution")
+}
 
 jvmDependencyConflicts {
   logging {

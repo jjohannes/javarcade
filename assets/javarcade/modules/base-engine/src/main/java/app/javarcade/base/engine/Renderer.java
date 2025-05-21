@@ -7,6 +7,11 @@ import org.slf4j.LoggerFactory;
 
 public interface Renderer {
     static void launch() {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            throwable.printStackTrace();
+            System.exit(1);
+        });
+
         var impl = ServiceLoader.load(Renderer.class).findFirst();
         impl.ifPresentOrElse(Renderer::run, () -> {
             LoggerFactory.getLogger(Renderer.class).warn("No renderer implementation available");

@@ -68,8 +68,8 @@ public class App extends Application {
                 new SlideBar(slideBarBox, slideView),
                 new ApplicationScreen(applicationBox),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
-                new ProjectTree(projectStructureBox, ASSET_LOCATION.resolve("../javarcade")),
-                new Editors(editorsBox, ASSET_LOCATION.resolve("..")),
+                new ProjectTree(projectStructureBox, ASSET_LOCATION.resolve("javarcade")),
+                new Editors(editorsBox, ASSET_LOCATION),
                 new Terminal(terminalBox),
                 new TopicGrid(topicBox, JavarcadeProject.topics())
         );

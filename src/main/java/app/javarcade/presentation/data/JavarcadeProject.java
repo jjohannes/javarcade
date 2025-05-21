@@ -8,10 +8,10 @@ import java.nio.file.Path;
 import java.util.Set;
 
 public interface JavarcadeProject {
-    Path ASSET_LOCATION = Path.of("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main");
-    Path APP_INSTALL_FOLDER = Path.of("/Users/jendrik/projects/gradle/howto/javarcade/apps/app-retro/build/install/app-retro/lib");
-    Path EXTRA_INSTALL_FOLDER = ASSET_LOCATION.resolve("jars");
-    Path WORK_FOLDER = ASSET_LOCATION.resolve("../work");
+    Path ASSET_LOCATION = Path.of("/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets");
+    Path APP_INSTALL_FOLDER = ASSET_LOCATION.resolve("javarcade/modules");
+    Path EXTRA_INSTALL_FOLDER = ASSET_LOCATION.resolve("main/jars");
+    Path WORK_FOLDER = ASSET_LOCATION.resolve("work");
 
     String RUN_MODULE_PATH_CMD = "java --module-path lib --module app.javarcade.base.engine";
     String RUN_CLASS_PATH_CMD  = "java --class-path  lib/* app.javarcade.base.engine.Engine";

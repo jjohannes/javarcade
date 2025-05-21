@@ -5,6 +5,10 @@ module app.javarcade.renderer.lwjgl {
   requires org.lwjgl.stb;
   requires org.lwjgl;
   requires org.slf4j;
+  requires /*runtime*/ org.lwjgl.natives;
+  requires /*runtime*/ org.lwjgl.glfw.natives;
+  requires /*runtime*/ org.lwjgl.opengl.natives;
+  requires /*runtime*/ org.lwjgl.stb.natives;
 
   exports app.javarcade.renderer.lwjgl;
 

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static app.javarcade.presentation.data.JavarcadeProject.APP_INSTALL_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.EXTRA_INSTALL_FOLDER;
@@ -52,10 +53,13 @@ public record Terminal(List<Text> commands) {
             Files.deleteIfExists(WORK_FOLDER.resolve("out").resolve("screen.png"));
             Files.createDirectories(lib);
             for (Module module : activeModules) {
-                if (Files.exists(APP_INSTALL_FOLDER.resolve(module.jarName()))) {
-                    Files.copy(APP_INSTALL_FOLDER.resolve(module.jarName()), lib.resolve(module.jarName()));
-                } else {
-                    Files.copy(EXTRA_INSTALL_FOLDER.resolve(module.jarName()), lib.resolve(module.jarName()));
+                try(Stream<Path> result = Files.find(APP_INSTALL_FOLDER, 4, (p, a) -> module.jarName().equals(p.getFileName().toString()))) {
+                    Optional<Path> jarPath = result.findFirst();
+                    if (jarPath.isPresent()) {
+                        Files.copy(jarPath.get(), lib.resolve(module.jarName()));
+                    } else {
+                        Files.copy(EXTRA_INSTALL_FOLDER.resolve(module.jarName()), lib.resolve(module.jarName()));
+                    }
                 }
             }
 

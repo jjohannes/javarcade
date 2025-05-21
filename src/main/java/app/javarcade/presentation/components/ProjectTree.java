@@ -89,7 +89,7 @@ public record ProjectTree(TreeView<String> tree,
     }
 
     private static ImageView logoButton(String iconName) {
-        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION, iconName));
+        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION.resolve("main"), iconName));
         ImageView iconView = new ImageView(icon);
         iconView.setPreserveRatio(true);
         iconView.setFitHeight(60);
