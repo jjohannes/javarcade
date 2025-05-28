@@ -52,7 +52,7 @@ public record Editors(Text top, Path projectContainer) {
         if (!modules && myName.equals("modules")) {
             parentName = parent.getValue() + "-no-modules";
         } else {
-            parentName = parent.getValue();
+            parentName = parent.getValue().replace("https://", "");
         }
 
         return parentPath(parent, Path.of(parentName).resolve(path), modules);

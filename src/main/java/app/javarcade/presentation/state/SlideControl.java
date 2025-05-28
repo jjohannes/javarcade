@@ -61,8 +61,12 @@ public class SlideControl {
             projectTree.update(gradleNotMaven, moduleSystem, renovate);
             editors.open(selectedItem, moduleSystem);
         });
-        projectTree.tree().setOnMouseClicked(event -> {
-            selectedItem = projectTree.tree().getSelectionModel().getSelectedItem();
+        projectTree.jarTree().setOnMouseClicked(event -> {
+            selectedItem = projectTree.jarTree().getSelectionModel().getSelectedItem();
+            editors.open(selectedItem, moduleSystem);
+        });
+        projectTree.projectTree().setOnMouseClicked(event -> {
+            selectedItem = projectTree.projectTree().getSelectionModel().getSelectedItem();
             editors.open(selectedItem, moduleSystem);
         });
         terminal.reset();

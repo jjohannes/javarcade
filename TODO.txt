@@ -3,15 +3,13 @@ Mechanics:
 
 Content:
 - Icons on Files
-- Renovate Screenshot
+- Renovate Screenshot - one more Slide!
 - Slides
-- Highlighting?
+- Highlighting in Editor (?)
 
 - Dependency analysis
 
 - tiles-maven-plugin ?
-
-- Anatomy of a Jar
 
 - Retrieving and Building JARs:
   - Show simplified output of build tools (?)

@@ -19,16 +19,76 @@ import java.util.Set;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 import static app.javarcade.presentation.ui.UI.SPACE;
 
-public record ProjectTree(TreeView<String> tree,
+public record ProjectTree(TreeView<String> projectTree,
+                          TreeView<String> jarTree,
                           Set<TreeItem<String>> items,
+                          ImageView jarButton,
                           ImageView jpmsButton,
                           ImageView gradleButton,
                           ImageView mavenButton,
                           ImageView renovateButton) {
     
     public ProjectTree(StackPane box, Path projectLocation) {
-        this(new TreeView<>(), new HashSet<>(), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
+        this(new TreeView<>(), new TreeView<>(), new HashSet<>(), logoButton("commons"), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
 
+        projectTree().setRoot(buildProjectTree(projectLocation));
+        projectTree().setShowRoot(true);
+        projectTree().setStyle("-fx-font-size: 24px;");
+        projectTree().setVisible(false);
+
+        jarTree().setRoot(buildJarTree());
+        jarTree().setShowRoot(true);
+        jarTree().setStyle("-fx-font-size: 24px;");
+
+        updateButtonVisibility();
+        jarButton().setOnMouseClicked(event -> {
+            jarTree().setVisible(!jarTree().isVisible());
+            projectTree().setVisible(!projectTree().isVisible());
+            updateButtonVisibility();
+        });
+
+        HBox menuBar = new HBox(jarButton(), jpmsButton(), gradleButton(), mavenButton(), renovateButton());
+        menuBar.setSpacing(SPACE * 3);
+        menuBar.setPadding(new Insets(SPACE));
+        VBox.setVgrow(projectTree(), Priority.ALWAYS);
+        VBox container = new VBox(menuBar, new StackPane(jarTree(), projectTree()));
+
+        box.getChildren().add(container);
+    }
+
+    private void updateButtonVisibility() {
+        jarButton().setOpacity(jarTree().isVisible() ? 1 : 0.3);
+
+        jpmsButton().setVisible(projectTree().isVisible());
+        gradleButton().setVisible(projectTree().isVisible());
+        mavenButton().setVisible(projectTree().isVisible());
+        renovateButton().setVisible(projectTree().isVisible());
+    }
+
+    private TreeItem<String> buildJarTree() {
+        TreeItem<String> repository = newItem("https://repo1.maven.org/maven2");
+        repository.setExpanded(true);
+        TreeItem<String> folder = newItem("org/apache/commons/commons-csv/1.14.0");
+        folder.setExpanded(true);
+        repository.getChildren().add(folder);
+
+        TreeItem<String> pom = newItem("commons-csv-1.14.0.pom");
+        TreeItem<String> jar = newItem("commons-csv-1.14.0.jar");
+        TreeItem<String> javaPackage = newItem("org/apache/commons/csv/*.class");
+        TreeItem<String> manifest = newItem("META-INF/MANIFEST.MF");
+        TreeItem<String> moduleInfo = newItem("module-info.class");
+
+        jar.getChildren().add(javaPackage);
+        jar.getChildren().add(manifest);
+        jar.getChildren().add(moduleInfo);
+
+        folder.getChildren().add(jar);
+        folder.getChildren().add(pom);
+
+        return repository;
+    }
+
+    private TreeItem<String> buildProjectTree(Path projectLocation) {
         TreeItem<String> rootItem = newItem(projectLocation.getFileName().toString());
         rootItem.setExpanded(true);
 
@@ -74,18 +134,7 @@ public record ProjectTree(TreeView<String> tree,
         buildToolConfig.getChildren().add(repositories);
         buildToolConfig.getChildren().add(dependencyRules);
         buildToolConfig.getChildren().add(javaModule);
-
-        tree().setRoot(rootItem);
-        tree().setShowRoot(true);
-        tree().setStyle("-fx-font-size: 24px;");
-
-        HBox menuBar = new HBox(jpmsButton(), gradleButton(), mavenButton(), renovateButton());
-        menuBar.setSpacing(SPACE * 3);
-        menuBar.setPadding(new Insets(SPACE));
-        VBox.setVgrow(tree(), Priority.ALWAYS);
-        VBox container = new VBox(menuBar, tree());
-
-        box.getChildren().add(container);
+        return rootItem;
     }
 
     private static ImageView logoButton(String iconName) {
