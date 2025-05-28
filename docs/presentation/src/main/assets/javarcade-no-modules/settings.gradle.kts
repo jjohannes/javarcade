@@ -1,4 +1,4 @@
-pluginManagement { includeBuild("../javarcade/gradle/plugins") }
+pluginManagement { includeBuild("../../../../../../gradle/plugins") }
 
 plugins {
     id("com.autonomousapps.build-health") version "2.15.0"
@@ -12,7 +12,7 @@ File("modules").listFiles().forEach {
 }
 
 include(":versions")
-project(":versions").projectDir = file("../javarcade/gradle/versions")
+project(":versions").projectDir = file("../../../../../../gradle/versions")
 
 // Ignore module-info.java files
 gradle.lifecycle.beforeProject {
@@ -21,7 +21,7 @@ gradle.lifecycle.beforeProject {
         the<SourceSetContainer>().named("main") {
             java {
                 setSrcDirs(java.sourceDirectories.map {
-                    it.absolutePath.replace("/javarcade-no-modules/", "/javarcade/")
+                    it.absolutePath.replace("/docs/presentation/src/main/assets/javarcade-no-modules/", "/")
                 })
                 exclude("module-info.java")
             }

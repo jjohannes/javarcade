@@ -1,5 +1,5 @@
 module app.javarcade.base.engine {
-  requires transitive app.javarcade.base.model;
+  requires app.javarcade.base.model;
   requires org.slf4j;
 
   exports app.javarcade.base.engine;

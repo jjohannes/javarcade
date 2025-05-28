@@ -1,0 +1,26 @@
+name: Build Project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Gradle
+        run: ./gradlew checkAllModuleInfo build
+      - name: Gradle (without Java Modules)
+        run: ./gradlew projectHealth build -p docs/presentation/src/main/assets/javarcade-no-modules
+      - name: Maven
+        run: ./mvnw -B -U -ntp clean verify
+      - name: Maven (without Java Modules)
+        run: ./mvnw -B -U -ntp clean verify -f docs/presentation/src/main/assets/javarcade-no-modules/pom.xml

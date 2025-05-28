@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <relativePath>../javarcade/.mvn/identity</relativePath>
+        <relativePath>../../../../../../.mvn/identity</relativePath>
         <groupId>app.javarcade</groupId>
         <artifactId>mavenbuild-identity</artifactId>
         <version>${revision}</version>
