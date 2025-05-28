@@ -24,3 +24,5 @@ jobs:
         run: ./mvnw -B -U -ntp clean verify
       - name: Maven (without Java Modules)
         run: ./mvnw -B -U -ntp clean verify -f docs/presentation/src/main/assets/javarcade-no-modules/pom.xml
+      - name: Presentation App
+        run: ./gradlew build -p docs/presentation
