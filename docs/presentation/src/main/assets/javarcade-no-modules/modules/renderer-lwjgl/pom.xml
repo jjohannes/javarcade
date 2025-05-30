@@ -34,6 +34,27 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-glfw</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-opengl</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-stb</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
   </dependencies>
-  <build><sourceDirectory>../../../javarcade/modules/renderer-lwjgl/src/main/java</sourceDirectory></build>
+  <build><sourceDirectory>../../../../../../../../modules/renderer-lwjgl/src/main/java</sourceDirectory></build>
 </project>
