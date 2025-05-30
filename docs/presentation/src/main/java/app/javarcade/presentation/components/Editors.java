@@ -37,11 +37,10 @@ public record Editors(Text top, Path projectContainer, Path projectWithoutModule
         }
 
         Path pathInProject = parentPath(item, Path.of(item.getValue()), modules);
-        Path location = pathInProject.getFileName().toString().endsWith(NO_MODULE_PROJECT_SUFFIX)
+        Path location = pathInProject.getName(0).toString().endsWith(NO_MODULE_PROJECT_SUFFIX)
                 ? projectWithoutModulesContainer.resolve(pathInProject)
                 : projectContainer.resolve(pathInProject);
 
-        System.out.println(location);
         if (Files.isDirectory(location) || !Files.exists(location)) {
             reset();
             return;
@@ -75,6 +74,7 @@ public record Editors(Text top, Path projectContainer, Path projectWithoutModule
             return Files.readAllLines(location).stream()
                     .dropWhile(l -> l.startsWith("import ") || l.isBlank())
                     .filter(l -> !l.contains("<build><sourceDirectory>../../../"))
+                    .map(l -> l.replace("../../../../../../", ""))
                     .collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new RuntimeException(e);
