@@ -14,6 +14,8 @@ File("modules").listFiles().forEach {
 include(":versions")
 project(":versions").projectDir = file("../../../../../../gradle/versions")
 
+dependencyAnalysis { issues { all { onAny { severity("fail") } } } }
+
 // Ignore module-info.java files
 gradle.lifecycle.beforeProject {
     plugins.withId("java") {

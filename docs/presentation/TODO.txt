@@ -16,6 +16,6 @@ Content:
   - Allow running different types of builds
 - Analysis
   - `mvn dependency:analyze`
-  - `gradle projectHealth` / `checkAllModuleInfo`
+  - `gradle projectHealth --continue` / `checkAllModuleInfo --continue`
 
 
