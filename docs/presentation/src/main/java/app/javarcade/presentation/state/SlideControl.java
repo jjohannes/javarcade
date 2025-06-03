@@ -4,7 +4,6 @@ import app.javarcade.presentation.components.ApplicationScreen;
 import app.javarcade.presentation.components.Editors;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
-import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.ToolsGrid;
 import app.javarcade.presentation.components.TopicList;
@@ -30,7 +29,7 @@ public class SlideControl {
     private boolean moduleSystem = false;
     private TreeItem<String> selectedItem = null;
 
-    public SlideControl(SlideBar slideBar, ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, ToolsGrid tools, TopicList topics) {
+    public SlideControl(ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, ToolsGrid tools, TopicList topics) {
         activeModules.addAll(initialState(moduleGraph));
 
         moduleGraph.modules().forEach(module ->

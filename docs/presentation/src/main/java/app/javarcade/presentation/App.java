@@ -4,7 +4,6 @@ import app.javarcade.presentation.components.ApplicationScreen;
 import app.javarcade.presentation.components.Editors;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
-import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.ToolsGrid;
 import app.javarcade.presentation.components.TopicList;
@@ -59,7 +58,6 @@ public class App extends Application {
         bottomBox.setPadding(new Insets(0, SPACE, SPACE, SPACE));
 
         // Boxes in the top row (scrollable)
-        StackPane slideBarBox = createBox(topBox, 100, SCREEN_DIM);
         StackPane applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
         StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
         StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM);
@@ -69,19 +67,16 @@ public class App extends Application {
         StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
         StackPane terminalBox = createBox(bottomBox, WIDTH - TOOLS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
-        // Box in the topic row
-
         ImageView slideView = new ImageView();
 
         new SlideControl(
-                new SlideBar(slideBarBox, slideView),
                 new ApplicationScreen(applicationBox),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
                 new ProjectTree(projectStructureBox, APP_ROOT_FOLDER),
                 new Editors(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
                 new Terminal(terminalBox),
                 new ToolsGrid(toolsBox),
-                new TopicList(topicsBox, JavarcadeProject.topics())
+                new TopicList(topicsBox, JavarcadeProject.topics(), slideView)
         );
 
         Scene scene = scalableScene(root, slideView);

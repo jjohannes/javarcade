@@ -13,3 +13,8 @@ Broken scenarios:
 
 Long click Maven:
 - "Rogue Maven" -> run without clean
+
+Layouting/Assets
+- General Layout for App
+- Title and End Slide
+- Cheat Sheet Slide
