@@ -62,14 +62,14 @@ public interface JavarcadeProject {
         );
     }
 
-    static Set<Topic> topics() {
-        return Set.of(
-                new Topic("Dependency Definition", 0, 0),
-                new Topic("Module Version Management", 1, 0),
-                // new Topic("Retrieving and Building JARs", 2, 0),
-                new Topic("Version Conflict Management", 0, 1),
-                new Topic("Variant Conflict Management", 1, 1)
-                // new Topic("Version Update Management", 2, 1)
+    static List<Topic> topics() {
+        return List.of(
+                new Topic("Dependency Definition"),
+                new Topic("Module Version Management"),
+                new Topic("Retrieving and Building JARs"),
+                new Topic("Version and Variant Conflict Management"),
+                new Topic("Dependency Consistency Checks"),
+                new Topic("Version Update Management")
         );
     }
 

@@ -37,7 +37,7 @@ public record Editors(Text top, Path projectContainer, Path projectWithoutModule
         }
 
         Path pathInProject = parentPath(item, Path.of(item.getValue()), modules);
-        Path location = pathInProject.getName(0).toString().endsWith(NO_MODULE_PROJECT_SUFFIX)
+        Path location = projectWithoutModulesContainer.resolve(pathInProject).toFile().exists()
                 ? projectWithoutModulesContainer.resolve(pathInProject)
                 : projectContainer.resolve(pathInProject);
 

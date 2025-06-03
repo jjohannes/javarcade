@@ -7,11 +7,12 @@ import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.ToolsGrid;
-import app.javarcade.presentation.components.TopicGrid;
+import app.javarcade.presentation.components.TopicList;
 import app.javarcade.presentation.data.JavarcadeProject;
 import app.javarcade.presentation.state.SlideControl;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -48,8 +49,12 @@ public class App extends Application {
         topScrollPane.setFitToHeight(true);
         topScrollPane.setFitToWidth(false);
 
+        HBox topicsBox = new HBox(SPACE);
+        topicsBox.setPadding(new Insets(SPACE, 0, 0, 0));
+        topicsBox.setAlignment(Pos.CENTER);
+
         HBox bottomBox = new HBox(SPACE);
-        VBox root = new VBox(topScrollPane, bottomBox);
+        VBox root = new VBox(topicsBox, topScrollPane, bottomBox);
         topBox.setPadding(new Insets(SPACE));
         bottomBox.setPadding(new Insets(0, SPACE, SPACE, SPACE));
 
@@ -61,8 +66,10 @@ public class App extends Application {
         StackPane editorsBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
 
         // Boxes in the bottom row
-        StackPane topicBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
         StackPane terminalBox = createBox(bottomBox, WIDTH - TOOLS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+
+        // Box in the topic row
 
         ImageView slideView = new ImageView();
 
@@ -73,8 +80,8 @@ public class App extends Application {
                 new ProjectTree(projectStructureBox, APP_ROOT_FOLDER),
                 new Editors(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
                 new Terminal(terminalBox),
-                new ToolsGrid(topicBox),
-                new TopicGrid(new StackPane(), JavarcadeProject.topics())
+                new ToolsGrid(toolsBox),
+                new TopicList(topicsBox, JavarcadeProject.topics())
         );
 
         Scene scene = scalableScene(root, slideView);

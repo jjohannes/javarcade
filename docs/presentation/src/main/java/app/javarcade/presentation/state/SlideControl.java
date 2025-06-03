@@ -7,12 +7,13 @@ import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.ToolsGrid;
-import app.javarcade.presentation.components.TopicGrid;
+import app.javarcade.presentation.components.TopicList;
 import app.javarcade.presentation.components.model.Module;
 import app.javarcade.presentation.components.model.ShellCommand;
 import javafx.scene.control.TreeItem;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
@@ -26,10 +27,10 @@ public class SlideControl {
     private final Set<Module> activeModules = new HashSet<>();
     private boolean graph = false;
     private ShellCommand.Tool focusedTool = JAVA;
-    private boolean moduleSystem = true;
+    private boolean moduleSystem = false;
     private TreeItem<String> selectedItem = null;
 
-    public SlideControl(SlideBar slideBar, ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, ToolsGrid tools, TopicGrid topics) {
+    public SlideControl(SlideBar slideBar, ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, ToolsGrid tools, TopicList topics) {
         activeModules.addAll(initialState(moduleGraph));
 
         moduleGraph.modules().forEach(module ->
@@ -40,8 +41,10 @@ public class SlideControl {
             moduleGraph.update(activeModules, graph);
         });
 
-        terminal.theTerminal().setOnMouseClicked(event ->
-                terminal.execute(moduleSystem, focusedTool, activeModules, applicationScreen));
+        terminal.theTerminal().setOnMouseClicked(event -> {
+            selectTopic(topics, focusedTool);
+            terminal.execute(moduleSystem, focusedTool, activeModules, applicationScreen);
+        });
 
         tools.jpmsButton().setOnMouseClicked(event -> {
             moduleSystem = !moduleSystem;
@@ -51,21 +54,21 @@ public class SlideControl {
             terminal.reset(moduleSystem, focusedTool);
         });
         tools.gradleButton().setOnMouseClicked(event -> {
-            focusedTool = focusedTool == GRADLE ? JAVA : GRADLE;
+            focusedTool = refocus(GRADLE);
             projectTree.update(focusedTool, moduleSystem);
             tools.update(focusedTool, moduleSystem);
             editors.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         tools.mavenButton().setOnMouseClicked(event -> {
-            focusedTool = focusedTool == MAVEN ? JAVA : MAVEN;
+            focusedTool = refocus(MAVEN);
             projectTree.update(focusedTool, moduleSystem);
             tools.update(focusedTool, moduleSystem);
             editors.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         tools.renovateButton().setOnMouseClicked(event -> {
-            focusedTool = focusedTool == RENOVATE ? JAVA : RENOVATE;
+            focusedTool = refocus(RENOVATE);
             projectTree.update(focusedTool, moduleSystem);
             tools.update(focusedTool, moduleSystem);
             editors.open(selectedItem, moduleSystem);
@@ -73,11 +76,13 @@ public class SlideControl {
         });
         projectTree.jarTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.jarTree().getSelectionModel().getSelectedItem();
+            selectTopic(topics, null);
             editors.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.projectTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.projectTree().getSelectionModel().getSelectedItem();
+            selectTopic(topics, null);
             editors.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
@@ -86,6 +91,43 @@ public class SlideControl {
         projectTree.update(focusedTool, moduleSystem);
         tools.update(focusedTool, moduleSystem);
         terminal.reset(moduleSystem, focusedTool);
+    }
+
+    private void selectTopic(TopicList topics, ShellCommand.Tool toolInTerminal) {
+        if (toolInTerminal == GRADLE || toolInTerminal == MAVEN) {
+            topics.focus(topics.topics().get(2));
+            return;
+        }
+        if (selectedItem == null) {
+            return;
+        }
+        if (selectedItem.getParent().getValue().endsWith("versions")) {
+            topics.focus(topics.topics().get(1));
+            return;
+        }
+        if (selectedItem.getValue().startsWith("dependency-rules")) {
+            topics.focus(topics.topics().get(3));
+            return;
+        }
+        if (selectedItem.getValue().startsWith("quality-checks")) {
+            topics.focus(topics.topics().get(4));
+            return;
+        }
+        if (selectedItem.getValue().equals("renovate.json")) {
+            topics.focus(topics.topics().get(5));
+            return;
+        }
+        if (List.of("module-info.class", "commons-csv-1.14.0.pom", "module-info.java", "build.gradle.kts", "pom.xml").contains(selectedItem.getValue())) {
+            topics.focus(topics.topics().getFirst());
+        }
+    }
+
+    private ShellCommand.Tool refocus(ShellCommand.Tool requested) {
+        if (focusedTool == requested) {
+            selectedItem = null;
+            return JAVA;
+        }
+        return requested;
     }
 
     private void active(Module jar, ModuleGraph moduleGraph, ApplicationScreen applicationScreen, Terminal terminal) {

@@ -44,7 +44,7 @@ public record ProjectTree(TreeView<String> projectTree,
 
         TreeItem<String> pom = newItem("commons-csv-1.14.0.pom");
         TreeItem<String> jar = newItem("commons-csv-1.14.0.jar");
-        TreeItem<String> javaPackage = newItem("org/apache/commons/csv/*.class");
+        TreeItem<String> javaPackage = newItem("org/apache/commons/csv/**/*.class");
         TreeItem<String> manifest = newItem("META-INF/MANIFEST.MF");
         TreeItem<String> moduleInfo = newItem("module-info.class");
 
@@ -151,7 +151,7 @@ public record ProjectTree(TreeView<String> projectTree,
         }
 
         if (value.startsWith("src/main/java")) {
-            return moduleSystem ? "src/main/java/module-info.java" : "src/main/java/...";
+            return moduleSystem ? "src/main/java/module-info.java" : "src/main/java/**/*.java";
         }
 
         if (value.equals("renovate.json") || value.isEmpty()) {

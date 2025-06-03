@@ -1,22 +1,15 @@
-Mechanics:
-- Topic Keys
-
 Content:
 - Icons on Files
-- Renovate Screenshot - one more Slide!
 - Slides
 - Highlighting in Editor (?)
 
-- Dependency analysis
+- Click R&B JARs to reset caches
+  --> part of this story is to auto select Jars based on build result
 
-- Retrieving and Building JARs:
-  - Show simplified output of build tools (?)
-  - Allow running different types of builds
-- Analysis
-  - `mvn dependency:analyze`
-  - `gradle projectHealth --continue` / `checkAllModuleInfo --continue`
+Broken scenarios:
+- java-module: change Java version
+- dep-rules: have wrong variant selected
+- one module-info / build files: quality check error
 
-
-Long click:
-- Maven "Rogue Maven" -> run without clean
-- Renovate "Cool Renovate" -> run on GitHub
+Long click Maven:
+- "Rogue Maven" -> run without clean
