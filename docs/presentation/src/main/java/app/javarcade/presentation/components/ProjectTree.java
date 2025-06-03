@@ -1,15 +1,9 @@
 package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.ShellCommand;
-import javafx.geometry.Insets;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,36 +15,24 @@ import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRAD
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.RENOVATE;
-import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
-import static app.javarcade.presentation.ui.UI.SPACE;
 
 public record ProjectTree(TreeView<String> projectTree,
                           TreeView<String> jarTree,
                           Set<TreeItem<String>> items,
-                          ImageView jpmsButton,
-                          ImageView gradleButton,
-                          ImageView mavenButton,
-                          ImageView renovateButton) {
+                          StackPane container) {
     
     public ProjectTree(StackPane box, Path projectLocation) {
-        this(new TreeView<>(), new TreeView<>(), new HashSet<>(), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
+        this(new TreeView<>(), new TreeView<>(), new HashSet<>(), box);
 
         projectTree().setRoot(buildProjectTree(projectLocation));
         projectTree().setShowRoot(true);
         projectTree().setStyle("-fx-font-size: 24px;");
-        projectTree().setVisible(false);
 
         jarTree().setRoot(buildJarTree());
         jarTree().setShowRoot(true);
         jarTree().setStyle("-fx-font-size: 24px;");
 
-        HBox menuBar = new HBox(jpmsButton(), gradleButton(), mavenButton(), renovateButton());
-        menuBar.setSpacing(SPACE * 3);
-        menuBar.setPadding(new Insets(SPACE));
-        VBox.setVgrow(projectTree(), Priority.ALWAYS);
-        VBox container = new VBox(menuBar, new StackPane(jarTree(), projectTree()));
-
-        box.getChildren().add(container);
+        box.getChildren().add(jarTree());
     }
 
     private TreeItem<String> buildJarTree() {
@@ -125,15 +107,6 @@ public record ProjectTree(TreeView<String> projectTree,
         return rootItem;
     }
 
-    private static ImageView logoButton(String iconName) {
-        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION.resolve("icons"), iconName));
-        ImageView iconView = new ImageView(icon);
-        iconView.setPreserveRatio(true);
-        iconView.setFitHeight(60);
-        iconView.setPickOnBounds(true); // Enable clicks on transparent areas
-        return iconView;
-    }
-
     private TreeItem<String> newItem(String name) {
         TreeItem<String> item = new TreeItem<>(name);
         items().add(item);
@@ -141,14 +114,8 @@ public record ProjectTree(TreeView<String> projectTree,
     }
 
     public void update(ShellCommand.Tool focusedTool, boolean moduleSystem) {
-        jarTree().setVisible(focusedTool == JAVA);
-        projectTree().setVisible(focusedTool != JAVA);
-
-        jpmsButton().setOpacity(moduleSystem ? 1 : 0.3);
-
-        gradleButton().setOpacity(focusedTool == GRADLE ? 1 : 0.3);
-        mavenButton().setOpacity(focusedTool == MAVEN ? 1 : 0.3);
-        renovateButton().setOpacity(focusedTool == RENOVATE ? 1 : 0.3);
+        container.getChildren().clear();
+        container.getChildren().add(focusedTool == JAVA ? jarTree() : projectTree());
 
         items().forEach(item -> item.setValue(updateTreeItemValue(item.getValue(), focusedTool, moduleSystem)));
     }

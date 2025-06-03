@@ -6,6 +6,7 @@ import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
+import app.javarcade.presentation.components.ToolsGrid;
 import app.javarcade.presentation.components.TopicGrid;
 import app.javarcade.presentation.data.JavarcadeProject;
 import app.javarcade.presentation.state.SlideControl;
@@ -30,7 +31,7 @@ import static app.javarcade.presentation.ui.UI.GRAPH_WIDTH;
 import static app.javarcade.presentation.ui.UI.HEIGHT;
 import static app.javarcade.presentation.ui.UI.SCREEN_DIM;
 import static app.javarcade.presentation.ui.UI.SPACE;
-import static app.javarcade.presentation.ui.UI.TOPICS_WIDTH;
+import static app.javarcade.presentation.ui.UI.TOOLS_WIDTH;
 import static app.javarcade.presentation.ui.UI.TREE_WIDTH;
 import static app.javarcade.presentation.ui.UI.WIDTH;
 
@@ -60,8 +61,8 @@ public class App extends Application {
         StackPane editorsBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
 
         // Boxes in the bottom row
-        StackPane topicBox = createBox(bottomBox, TOPICS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
-        StackPane terminalBox = createBox(bottomBox, WIDTH - TOPICS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane topicBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane terminalBox = createBox(bottomBox, WIDTH - TOOLS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
         ImageView slideView = new ImageView();
 
@@ -72,7 +73,8 @@ public class App extends Application {
                 new ProjectTree(projectStructureBox, APP_ROOT_FOLDER),
                 new Editors(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
                 new Terminal(terminalBox),
-                new TopicGrid(topicBox, JavarcadeProject.topics())
+                new ToolsGrid(topicBox),
+                new TopicGrid(new StackPane(), JavarcadeProject.topics())
         );
 
         Scene scene = scalableScene(root, slideView);

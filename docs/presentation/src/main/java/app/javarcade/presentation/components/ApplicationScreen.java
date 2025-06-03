@@ -1,23 +1,15 @@
 package app.javarcade.presentation.components;
 
-import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import static app.javarcade.presentation.data.JavarcadeProject.WORK_FOLDER;
 
-public record ApplicationScreen(ImageView screenshot, Text error) {
+public record ApplicationScreen(ImageView screenshot) {
 
     public ApplicationScreen(StackPane box) {
-        this(screenshotView(box), errorTextView(box));
+        this(screenshotView(box));
     }
 
     private static ImageView screenshotView(StackPane box) {
@@ -29,27 +21,8 @@ public record ApplicationScreen(ImageView screenshot, Text error) {
         return imageView;
     }
 
-    private static Text errorTextView(StackPane box) {
-        Text text = new Text();
-        text.setFont(Font.font("Monospaced", FontWeight.BOLD, 32));
-        text.setFill(Color.WHITE);
-        TextFlow textFlow = new TextFlow(text);
-
-        Rectangle background = new Rectangle();
-        background.setFill(Color.web("#FF7F7FBB"));
-        background.widthProperty().bind(text.layoutBoundsProperty().map(Bounds::getWidth));
-        background.heightProperty().bind(text.layoutBoundsProperty().map(Bounds::getHeight));
-
-        box.setAlignment(Pos.TOP_LEFT);
-        box.getChildren().add(background);
-        box.getChildren().add(textFlow);
-
-        return text;
-    }
-
     public void reset() {
         screenshot.setVisible(false);
-        error.setText("");
     }
 
     public void reloadScreenshot() {
