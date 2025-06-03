@@ -14,7 +14,7 @@ application {
     mainClass = "app.javarcade.presentation.App"
 }
 
-val javaFX = "21.0.7"
+val javaFX = "21.0.8-ea+1"
 
 dependencies.constraints {
     implementation("org.openjfx:javafx-graphics:$javaFX")
