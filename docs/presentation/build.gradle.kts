@@ -15,7 +15,7 @@ application {
 }
 
 dependencies.constraints {
-    implementation("org.openjfx:javafx-graphics:21.0.7")
+    implementation("org.openjfx:javafx-graphics:21.0.8-ea+1")
     implementation("org.openjfx:javafx-controls:21.0.7")
     testImplementation("org.assertj:assertj-core:3.22.0")
 }
