@@ -1,7 +1,7 @@
 pluginManagement { includeBuild("../../../../../../gradle/plugins") }
 
 plugins {
-    id("com.autonomousapps.build-health") version "2.15.0"
+    id("com.autonomousapps.build-health") version "2.18.0"
 }
 
 File("modules").listFiles().forEach {
