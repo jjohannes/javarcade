@@ -14,10 +14,11 @@ application {
     mainClass = "app.javarcade.presentation.App"
 }
 
+val javaFX = "21.0.7"
+
 dependencies.constraints {
-    implementation("org.openjfx:javafx-graphics:21.0.7")
-    implementation("org.openjfx:javafx-controls:21.0.7")
-    testImplementation("org.assertj:assertj-core:3.22.0")
+    implementation("org.openjfx:javafx-graphics:$javaFX")
+    implementation("org.openjfx:javafx-controls:$javaFX")
 }
 
 JavaFXModule.values().forEach { javaFXModule ->
