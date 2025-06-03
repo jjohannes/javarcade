@@ -1,12 +1,12 @@
 Content:
+- Separate config for quality-check
 - Icons on Files
-- Slides
 - Highlighting in Editor (?)
 
-- Click R&B JARs to reset caches
   --> part of this story is to auto select Jars based on build result
 
-Broken scenarios:
+Broken scenarios / switch button upper right corner editor or terminal
+- Reset Gradle / Maven caches (to see downloads)
 - java-module: change Java version
 - dep-rules: have wrong variant selected
 - one module-info / build files: quality check error

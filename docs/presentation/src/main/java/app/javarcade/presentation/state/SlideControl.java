@@ -97,6 +97,10 @@ public class SlideControl {
             topics.focus(topics.topics().get(2));
             return;
         }
+        if (toolInTerminal == RENOVATE) {
+            topics.focus(topics.topics().get(5));
+            return;
+        }
         if (selectedItem == null) {
             return;
         }

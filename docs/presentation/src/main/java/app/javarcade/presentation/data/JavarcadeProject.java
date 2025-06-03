@@ -12,6 +12,7 @@ import java.util.Set;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.RENOVATE;
 
 public interface JavarcadeProject {
     Path APP_ROOT_FOLDER = Path.of("/Users/jendrik/projects/gradle/howto/javarcade");
@@ -73,14 +74,16 @@ public interface JavarcadeProject {
         );
     }
 
-    static List<ShellCommand> shellCommands() {
-        return List.of(
+    static Set<ShellCommand> shellCommands() {
+        return Set.of(
                 new ShellCommand("java --module-path lib --module app.javarcade.base.engine", true, JAVA, WORK_FOLDER),
                 new ShellCommand("java --class-path  lib/* app.javarcade.base.engine.Engine", false, JAVA, WORK_FOLDER),
                 new ShellCommand("./gradlew build", true, GRADLE, APP_ROOT_FOLDER),
                 new ShellCommand("./gradlew build", false, GRADLE, APP_NO_MODULES_FOLDER),
                 new ShellCommand("./mvnw clean verify", true, MAVEN, APP_ROOT_FOLDER),
-                new ShellCommand("./mvnw clean verify", false, MAVEN, APP_NO_MODULES_FOLDER)
+                new ShellCommand("./mvnw clean verify", false, MAVEN, APP_NO_MODULES_FOLDER),
+                new ShellCommand("renovate jjohannes/javarcade", true, RENOVATE, null),
+                new ShellCommand("renovate jjohannes/javarcade", false, RENOVATE, null)
         );
     }
 }

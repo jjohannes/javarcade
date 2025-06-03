@@ -51,14 +51,10 @@ public record Terminal(Text theTerminal, ImageView renovatePR, ScrollPane contai
     }
 
     public void reset(boolean moduleSystem, ShellCommand.Tool focusedTool) {
-        if (focusedTool == RENOVATE) {
-            container.setContent(renovatePR);
-        } else  {
-            Optional<ShellCommand> command = findCommand(moduleSystem, focusedTool);
-            theTerminal.setText(command.orElseThrow().cmd());
-            theTerminal.setOpacity(0.3);
-            container.setContent(theTerminal);
-        }
+        Optional<ShellCommand> command = findCommand(moduleSystem, focusedTool);
+        theTerminal.setText(command.orElseThrow().cmd());
+        theTerminal.setOpacity(0.3);
+        container.setContent(theTerminal);
     }
 
     public void resetCurrent() {
@@ -67,6 +63,11 @@ public record Terminal(Text theTerminal, ImageView renovatePR, ScrollPane contai
     }
 
     public void execute(boolean moduleSystem, ShellCommand.Tool focusedTool, Set<Module> activeModules, ApplicationScreen applicationScreen) {
+        if (focusedTool == RENOVATE) {
+            container.setContent(renovatePR);
+            return;
+        }
+
         if (theTerminal.getOpacity() == 1.0) {
             return; // already executed
         }
@@ -104,7 +105,7 @@ public record Terminal(Text theTerminal, ImageView renovatePR, ScrollPane contai
         theTerminal().setOpacity(1.0);
 
         new Thread(() -> {
-            String consoleOut = runExternalCommand(cmd.get(), applicationScreen);
+            String consoleOut = runExternalCommand(cmd.get());
             Platform.runLater(() -> {
                 theTerminal.setText(theTerminal.getText() + "\n" + consoleOut);
                 applicationScreen.reloadScreenshot();
@@ -112,7 +113,7 @@ public record Terminal(Text theTerminal, ImageView renovatePR, ScrollPane contai
         }).start();
     }
 
-    private String runExternalCommand(ShellCommand cmd, ApplicationScreen applicationScreen) {
+    private String runExternalCommand(ShellCommand cmd) {
         try {
             Process p = Runtime.getRuntime().exec(
                     cmd.cmd().split("\\s+"),
