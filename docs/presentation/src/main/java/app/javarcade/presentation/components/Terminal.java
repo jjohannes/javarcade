@@ -46,6 +46,7 @@ public record Terminal(List<Text> commands) {
     public void execute(Text cmd, Set<Module> activeModules, ApplicationScreen applicationScreen) {
         try {
             Path lib = WORK_FOLDER.resolve("lib");
+            Files.createDirectories(lib);
             //noinspection resource
             for (Path file : Files.list(lib).toList()) {
                 Files.deleteIfExists(file);
