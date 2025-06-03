@@ -28,5 +28,8 @@ gradle.lifecycle.beforeProject {
                 exclude("module-info.java")
             }
         }
+        tasks.named("check") {
+            dependsOn("projectHealth")
+        }
     }
 }

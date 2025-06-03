@@ -19,10 +19,12 @@ jobs:
       - name: Gradle
         run: ./gradlew checkAllModuleInfo build
       - name: Gradle (without Java Modules)
-        run: ./gradlew projectHealth build -p docs/presentation/src/main/assets/javarcade-no-modules
+        working-directory: docs/presentation/src/main/assets/javarcade-no-modules
+        run: ./gradlew projectHealth build
       - name: Maven
         run: ./mvnw -B -U -ntp clean verify
       - name: Maven (without Java Modules)
-        run: ./mvnw -B -U -ntp clean verify -f docs/presentation/src/main/assets/javarcade-no-modules/pom.xml
+        working-directory: docs/presentation/src/main/assets/javarcade-no-modules
+        run: ./mvnw -B -U -ntp clean verify
       - name: Presentation App
         run: ./gradlew build -p docs/presentation

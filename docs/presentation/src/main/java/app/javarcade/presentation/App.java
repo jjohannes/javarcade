@@ -60,8 +60,8 @@ public class App extends Application {
         StackPane editorsBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
 
         // Boxes in the bottom row
-        StackPane terminalBox = createBox(bottomBox, WIDTH - TOPICS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
         StackPane topicBox = createBox(bottomBox, TOPICS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane terminalBox = createBox(bottomBox, WIDTH - TOPICS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
         ImageView slideView = new ImageView();
 

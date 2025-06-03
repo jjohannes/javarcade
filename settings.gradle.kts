@@ -11,3 +11,11 @@ javaModules {
     directory("modules") { group = "app.javarcade" }
     versions("gradle/versions")
 }
+
+gradle.lifecycle.beforeProject {
+    plugins.withId("java") {
+        tasks.named("check") {
+            dependsOn("checkAllModuleInfo")
+        }
+    }
+}

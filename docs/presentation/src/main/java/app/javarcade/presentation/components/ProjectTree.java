@@ -1,5 +1,6 @@
 package app.javarcade.presentation.components;
 
+import app.javarcade.presentation.components.model.ShellCommand;
 import javafx.geometry.Insets;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -16,20 +17,23 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.RENOVATE;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 import static app.javarcade.presentation.ui.UI.SPACE;
 
 public record ProjectTree(TreeView<String> projectTree,
                           TreeView<String> jarTree,
                           Set<TreeItem<String>> items,
-                          ImageView jarButton,
                           ImageView jpmsButton,
                           ImageView gradleButton,
                           ImageView mavenButton,
                           ImageView renovateButton) {
     
     public ProjectTree(StackPane box, Path projectLocation) {
-        this(new TreeView<>(), new TreeView<>(), new HashSet<>(), logoButton("commons"), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
+        this(new TreeView<>(), new TreeView<>(), new HashSet<>(), logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
 
         projectTree().setRoot(buildProjectTree(projectLocation));
         projectTree().setShowRoot(true);
@@ -40,29 +44,13 @@ public record ProjectTree(TreeView<String> projectTree,
         jarTree().setShowRoot(true);
         jarTree().setStyle("-fx-font-size: 24px;");
 
-        updateButtonVisibility();
-        jarButton().setOnMouseClicked(event -> {
-            jarTree().setVisible(!jarTree().isVisible());
-            projectTree().setVisible(!projectTree().isVisible());
-            updateButtonVisibility();
-        });
-
-        HBox menuBar = new HBox(jarButton(), jpmsButton(), gradleButton(), mavenButton(), renovateButton());
+        HBox menuBar = new HBox(jpmsButton(), gradleButton(), mavenButton(), renovateButton());
         menuBar.setSpacing(SPACE * 3);
         menuBar.setPadding(new Insets(SPACE));
         VBox.setVgrow(projectTree(), Priority.ALWAYS);
         VBox container = new VBox(menuBar, new StackPane(jarTree(), projectTree()));
 
         box.getChildren().add(container);
-    }
-
-    private void updateButtonVisibility() {
-        jarButton().setOpacity(jarTree().isVisible() ? 1 : 0.3);
-
-        jpmsButton().setVisible(projectTree().isVisible());
-        gradleButton().setVisible(projectTree().isVisible());
-        mavenButton().setVisible(projectTree().isVisible());
-        renovateButton().setVisible(projectTree().isVisible());
     }
 
     private TreeItem<String> buildJarTree() {
@@ -152,21 +140,21 @@ public record ProjectTree(TreeView<String> projectTree,
         return item;
     }
 
-    public void update(boolean gradleNotMaven, boolean moduleSystem, boolean renovate) {
-        if (gradleNotMaven) {
-            gradleButton().setOpacity(1);
-            mavenButton().setOpacity(0.3);
-        } else {
-            gradleButton().setOpacity(0.3);
-            mavenButton().setOpacity(1);
-        }
+    public void update(ShellCommand.Tool focusedTool, boolean moduleSystem) {
+        jarTree().setVisible(focusedTool == JAVA);
+        projectTree().setVisible(focusedTool != JAVA);
+
         jpmsButton().setOpacity(moduleSystem ? 1 : 0.3);
-        renovateButton().setOpacity(renovate ? 1 : 0.3);
-        items().forEach(item -> item.setValue(updateTreeItemValue(item.getValue(), gradleNotMaven, moduleSystem, renovate)));
+
+        gradleButton().setOpacity(focusedTool == GRADLE ? 1 : 0.3);
+        mavenButton().setOpacity(focusedTool == MAVEN ? 1 : 0.3);
+        renovateButton().setOpacity(focusedTool == RENOVATE ? 1 : 0.3);
+
+        items().forEach(item -> item.setValue(updateTreeItemValue(item.getValue(), focusedTool, moduleSystem)));
     }
 
-    private String updateTreeItemValue(String value, boolean gradleNotMaven, boolean moduleSystem, boolean renovate) {
-        if (gradleNotMaven) {
+    private String updateTreeItemValue(String value, ShellCommand.Tool focusedTool, boolean moduleSystem) {
+        if (focusedTool == GRADLE) {
             if (value.equals("pom.xml")) {
                 return "build.gradle.kts";
             }
@@ -179,7 +167,8 @@ public record ProjectTree(TreeView<String> projectTree,
             if (value.equals(".mvn/versions")) {
                 return "gradle/versions";
             }
-        } else {
+        }
+        if (focusedTool == MAVEN) {
             if (value.equals("build.gradle.kts")) {
                 return "pom.xml";
             }
@@ -199,7 +188,7 @@ public record ProjectTree(TreeView<String> projectTree,
         }
 
         if (value.equals("renovate.json") || value.isEmpty()) {
-            return renovate ? "renovate.json" : "";
+            return focusedTool == RENOVATE ? "renovate.json" : "";
         }
 
         return value;

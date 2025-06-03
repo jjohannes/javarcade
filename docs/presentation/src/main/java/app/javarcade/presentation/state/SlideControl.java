@@ -8,27 +8,27 @@ import app.javarcade.presentation.components.SlideBar;
 import app.javarcade.presentation.components.Terminal;
 import app.javarcade.presentation.components.TopicGrid;
 import app.javarcade.presentation.components.model.Module;
+import app.javarcade.presentation.components.model.ShellCommand;
 import javafx.scene.control.TreeItem;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static app.javarcade.presentation.data.JavarcadeProject.RUN_CLASS_PATH_CMD;
-import static app.javarcade.presentation.data.JavarcadeProject.RUN_MODULE_PATH_CMD;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.RENOVATE;
 import static app.javarcade.presentation.data.JavarcadeProject.initialState;
 
 public class SlideControl {
 
     private final Set<Module> activeModules = new HashSet<>();
     private boolean graph = false;
-    private boolean gradleNotMaven = true;
+    private ShellCommand.Tool focusedTool = JAVA;
     private boolean moduleSystem = true;
-    private boolean renovate = false;
     private TreeItem<String> selectedItem = null;
 
     public SlideControl(SlideBar slideBar, ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, TopicGrid topicGrid) {
-        terminal.commands().get(0).setText(RUN_MODULE_PATH_CMD);
-        terminal.commands().get(1).setText(RUN_CLASS_PATH_CMD);
         activeModules.addAll(initialState(moduleGraph));
 
         moduleGraph.modules().forEach(module ->
@@ -38,40 +38,48 @@ public class SlideControl {
             graph = !graph;
             moduleGraph.update(activeModules, graph);
         });
-        terminal.commands().forEach(cmd ->
-                cmd.setOnMouseClicked(event -> terminal.execute(cmd, activeModules, applicationScreen))
-        );
+
+        terminal.theTerminal().setOnMouseClicked(event ->
+                terminal.execute(moduleSystem, focusedTool, activeModules, applicationScreen));
+
         projectTree.jpmsButton().setOnMouseClicked(event -> {
             moduleSystem = !moduleSystem;
-            projectTree.update(gradleNotMaven, moduleSystem, renovate);
+            projectTree.update(focusedTool, moduleSystem);
             editors.open(selectedItem, moduleSystem);
+            terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.gradleButton().setOnMouseClicked(event -> {
-            gradleNotMaven = true;
-            projectTree.update(true, moduleSystem, renovate);
+            focusedTool = focusedTool == GRADLE ? JAVA : GRADLE;
+            projectTree.update(focusedTool, moduleSystem);
             editors.open(selectedItem, moduleSystem);
+            terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.mavenButton().setOnMouseClicked(event -> {
-            gradleNotMaven = false;
-            projectTree.update(false, moduleSystem, renovate);
+            focusedTool = focusedTool == MAVEN ? JAVA : MAVEN;
+            projectTree.update(focusedTool, moduleSystem);
             editors.open(selectedItem, moduleSystem);
+            terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.renovateButton().setOnMouseClicked(event -> {
-            renovate = !renovate;
-            projectTree.update(gradleNotMaven, moduleSystem, renovate);
+            focusedTool = focusedTool == RENOVATE ? JAVA : RENOVATE;
+            projectTree.update(focusedTool, moduleSystem);
             editors.open(selectedItem, moduleSystem);
+            terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.jarTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.jarTree().getSelectionModel().getSelectedItem();
             editors.open(selectedItem, moduleSystem);
+            terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.projectTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.projectTree().getSelectionModel().getSelectedItem();
             editors.open(selectedItem, moduleSystem);
+            terminal.reset(moduleSystem, focusedTool);
         });
-        terminal.reset();
+        terminal.resetCurrent();
         moduleGraph.update(activeModules, graph);
-        projectTree.update(gradleNotMaven, moduleSystem, renovate);
+        projectTree.update(focusedTool, moduleSystem);
+        terminal.reset(moduleSystem, focusedTool);
     }
 
     private void active(Module jar, ModuleGraph moduleGraph, ApplicationScreen applicationScreen, Terminal terminal) {
@@ -82,6 +90,6 @@ public class SlideControl {
         }
         moduleGraph.update(activeModules, graph);
         applicationScreen.reset();
-        terminal.reset();
+        terminal.resetCurrent();
     }
 }

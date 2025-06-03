@@ -2,10 +2,16 @@ package app.javarcade.presentation.data;
 
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.model.Module;
+import app.javarcade.presentation.components.model.ShellCommand;
 import app.javarcade.presentation.components.model.Topic;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
+
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
+import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
 
 public interface JavarcadeProject {
     Path APP_ROOT_FOLDER = Path.of("/Users/jendrik/projects/gradle/howto/javarcade");
@@ -13,11 +19,9 @@ public interface JavarcadeProject {
     Path ASSET_LOCATION = APP_ROOT_FOLDER.resolve("docs/presentation/src/main/assets");
     Path EXTRA_INSTALL_FOLDER = ASSET_LOCATION.resolve("jars");
     Path WORK_FOLDER = ASSET_LOCATION.resolve("work");
+    Path APP_NO_MODULES_FOLDER = ASSET_LOCATION.resolve("javarcade-no-modules");
 
     String NO_MODULE_PROJECT_SUFFIX = "-no-modules";
-
-    String RUN_MODULE_PATH_CMD = "java --module-path lib --module app.javarcade.base.engine";
-    String RUN_CLASS_PATH_CMD  = "java --class-path  lib/* app.javarcade.base.engine.Engine";
 
     static Set<Module> modules() {
         return Set.of(
@@ -62,10 +66,21 @@ public interface JavarcadeProject {
         return Set.of(
                 new Topic("Dependency Definition", 0, 0),
                 new Topic("Module Version Management", 1, 0),
-                new Topic("Retrieving and Building JARs", 2, 0),
+                // new Topic("Retrieving and Building JARs", 2, 0),
                 new Topic("Version Conflict Management", 0, 1),
-                new Topic("Variant Conflict Management", 1, 1),
-                new Topic("Version Update Management", 2, 1)
+                new Topic("Variant Conflict Management", 1, 1)
+                // new Topic("Version Update Management", 2, 1)
+        );
+    }
+
+    static List<ShellCommand> shellCommands() {
+        return List.of(
+                new ShellCommand("java --module-path lib --module app.javarcade.base.engine", true, JAVA, WORK_FOLDER),
+                new ShellCommand("java --class-path  lib/* app.javarcade.base.engine.Engine", false, JAVA, WORK_FOLDER),
+                new ShellCommand("./gradlew build", true, GRADLE, APP_ROOT_FOLDER),
+                new ShellCommand("./gradlew build", false, GRADLE, APP_NO_MODULES_FOLDER),
+                new ShellCommand("./mvnw clean verify", true, MAVEN, APP_ROOT_FOLDER),
+                new ShellCommand("./mvnw clean verify", false, MAVEN, APP_NO_MODULES_FOLDER)
         );
     }
 }

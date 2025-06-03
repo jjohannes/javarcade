@@ -9,8 +9,6 @@ Content:
 
 - Dependency analysis
 
-- tiles-maven-plugin ?
-
 - Retrieving and Building JARs:
   - Show simplified output of build tools (?)
   - Allow running different types of builds
@@ -19,3 +17,6 @@ Content:
   - `gradle projectHealth --continue` / `checkAllModuleInfo --continue`
 
 
+Long click:
+- Maven "Rogue Maven" -> run without clean
+- Renovate "Cool Renovate" -> run on GitHub
