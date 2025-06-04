@@ -31,11 +31,13 @@ jvmDependencyConflicts {
 plugins.withId("java") {
   sourceSets.configureEach {
     configurations[runtimeClasspathConfigurationName].attributes {
-      attribute(OPERATING_SYSTEM_ATTRIBUTE, objects.named<OperatingSystemFamily>(MACOS))
-      attribute(ARCHITECTURE_ATTRIBUTE, objects.named<MachineArchitecture>(ARM64))
+      attribute(OPERATING_SYSTEM_ATTRIBUTE, objects.named(MACOS))
+      attribute(ARCHITECTURE_ATTRIBUTE, objects.named(ARM64))
     }
     dependencies {
-      configurations[implementationConfigurationName](platform(project(":versions")))
+      configurations[implementationConfigurationName](
+        platform(project(":versions"))
+      )
     }
   }
 }
