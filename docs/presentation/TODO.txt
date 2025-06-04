@@ -2,8 +2,7 @@ Content:
 - Separate config for quality-check
 - Icons on Files
 - Highlighting in Editor (?)
-
-  --> part of this story is to auto select Jars based on build result
+  --> part of this story is to auto select Jars based on build result and the run the APP afterwards!
 
 Broken scenarios / switch button upper right corner editor or terminal
 - Reset Gradle / Maven caches (to see downloads)

@@ -62,7 +62,7 @@ public class App extends Application {
         StackPane applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
         StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
         StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM);
-        StackPane editorsBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
+        StackPane editorsBox = createBox(topBox, GRAPH_WIDTH + 200, SCREEN_DIM);
 
         // Boxes in the bottom row
         StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
