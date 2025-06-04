@@ -10,10 +10,14 @@ rootProject.name = "javarcade"
 javaModules {
     directory("modules") { group = "app.javarcade" }
     versions("gradle/versions")
+    directory("apps") {
+        module("desktop")
+        group = "app.javarcade"
+    }
 }
 
 gradle.lifecycle.beforeProject {
-    plugins.withId("java") {
+    plugins.withId("java-library") {
         tasks.named("check") {
             dependsOn("checkAllModuleInfo")
         }
