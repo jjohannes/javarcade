@@ -1,17 +1,8 @@
 Content:
-- Separate config for quality-check
 - Icons on Files
-- Highlighting in Editor (?)
-  --> part of this story is to auto select Jars based on build result and the run the APP afterwards!
-
-Broken scenarios / switch button upper right corner editor or terminal
-- Reset Gradle / Maven caches (to see downloads)
-- java-module: change Java version
-- dep-rules: have wrong variant selected
-- one module-info / build files: quality check error
-
-Long click Maven:
-- "Rogue Maven" -> run without clean
+- Highlighting in Editor and Console (?)
+- (!) part of this story is to auto select Jars based on build result and the run the APP afterwards!
+      -> Once done, do a test: wrong logging variant selected
 
 Layouting/Assets
 - General Layout for App

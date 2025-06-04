@@ -75,15 +75,17 @@ public interface JavarcadeProject {
     }
 
     static Set<ShellCommand> shellCommands() {
+        var javaMP = new ShellCommand("java --module-path lib --module app.javarcade.base.engine", "", true, JAVA, WORK_FOLDER, null);
+        var javaCP = new ShellCommand("java --class-path  lib/* app.javarcade.base.engine.Engine", "", false, JAVA, WORK_FOLDER, null);
         return Set.of(
-                new ShellCommand("java --module-path lib --module app.javarcade.base.engine", "", true, JAVA, WORK_FOLDER),
-                new ShellCommand("java --class-path  lib/* app.javarcade.base.engine.Engine", "", false, JAVA, WORK_FOLDER),
-                new ShellCommand("./gradlew build", "", true, GRADLE, APP_ROOT_FOLDER),
-                new ShellCommand("./gradlew build", "", false, GRADLE, APP_NO_MODULES_FOLDER),
-                new ShellCommand("./mvnw clean verify", " --batch-mode -Dmaven.repo.local=" + WORK_FOLDER.resolve("home/.m2/repo"), true, MAVEN, APP_ROOT_FOLDER),
-                new ShellCommand("./mvnw clean verify", " --batch-mode -Dmaven.repo.local=" + WORK_FOLDER.resolve("home/.m2/repo"), false, MAVEN, APP_NO_MODULES_FOLDER),
-                new ShellCommand("renovate jjohannes/javarcade", "", true, RENOVATE, null),
-                new ShellCommand("renovate jjohannes/javarcade", "", false, RENOVATE, null)
+                javaMP,
+                javaCP,
+                new ShellCommand("./gradlew build", "", true, GRADLE, APP_ROOT_FOLDER, javaMP),
+                new ShellCommand("./gradlew build", "", false, GRADLE, APP_NO_MODULES_FOLDER, javaCP),
+                new ShellCommand("./mvnw clean verify", " --batch-mode -Dmaven.repo.local=" + WORK_FOLDER.resolve("home/.m2/repo"), true, MAVEN, APP_ROOT_FOLDER, javaMP),
+                new ShellCommand("./mvnw clean verify", " --batch-mode -Dmaven.repo.local=" + WORK_FOLDER.resolve("home/.m2/repo"), false, MAVEN, APP_NO_MODULES_FOLDER, javaCP),
+                new ShellCommand("renovate jjohannes/javarcade", "", true, RENOVATE, null, null),
+                new ShellCommand("renovate jjohannes/javarcade", "", false, RENOVATE, null, null)
         );
     }
 }

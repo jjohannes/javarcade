@@ -11,6 +11,9 @@ import app.javarcade.presentation.components.model.Module;
 import app.javarcade.presentation.components.model.ShellCommand;
 import javafx.scene.control.TreeItem;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +23,7 @@ import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.RENOVATE;
 import static app.javarcade.presentation.data.JavarcadeProject.initialState;
+import static java.util.Objects.requireNonNull;
 
 public class SlideControl {
 
@@ -43,7 +47,16 @@ public class SlideControl {
 
         terminal.theTerminal().setOnMouseClicked(event -> {
             selectTopic(topics, focusedTool);
-            terminal.execute(moduleSystem, focusedTool, activeModules, applicationScreen);
+            if (focusedTool == GRADLE || focusedTool == MAVEN) {
+                activeModules.clear();
+                moduleGraph.update(activeModules, graph);
+                terminal.execute(moduleSystem, focusedTool, activeModules, applicationScreen, workDir -> {
+                    updateActiveModulesFromInstallDir(moduleGraph, workDir);
+                    moduleGraph.update(activeModules, graph);
+                });
+            } else {
+                terminal.execute(moduleSystem, focusedTool, activeModules, applicationScreen, workDir -> {});
+            }
         });
 
         tools.jpmsButton().setOnMouseClicked(event -> {
@@ -99,6 +112,24 @@ public class SlideControl {
         projectTree.update(focusedTool, moduleSystem);
         tools.update(focusedTool, moduleSystem, rogue);
         terminal.reset(moduleSystem, focusedTool, rogue);
+    }
+
+    private void updateActiveModulesFromInstallDir(ModuleGraph moduleGraph, Object workDir) {
+
+    }
+
+    private void updateActiveModulesFromInstallDir(ModuleGraph moduleGraph, Path workDir) {
+        if (workDir == null) {
+            return;
+        }
+        var installDir = workDir.resolve(focusedTool.getInstallDir());
+        if (!installDir.toFile().isDirectory()) {
+            return;
+        }
+        Arrays.stream(requireNonNull(installDir.toFile().listFiles())).map(File::getName).forEach(jar -> {
+            activeModules.add(moduleGraph.modules().stream().filter(m -> m.jarName().equals(jar))
+                    .findFirst().orElse(new Module(jar)));
+        });
     }
 
     public void toggleRogueMode(ToolsGrid tools, Terminal terminal) {

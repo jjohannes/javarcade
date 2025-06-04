@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
@@ -56,7 +57,7 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
         box.setAlignment(Pos.TOP_RIGHT);
         box.getChildren().addAll(container, nuke);
 
-        cleanCaches();
+        // TODO cleanCaches();
     }
 
     private static ImageView nukeButton() {
@@ -87,7 +88,8 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
         theTerminal.setOpacity(0.7);
     }
 
-    public void execute(boolean moduleSystem, ShellCommand.Tool focusedTool, Set<Module> activeModules, ApplicationScreen applicationScreen) {
+    public void execute(boolean moduleSystem, ShellCommand.Tool focusedTool, Set<Module> activeModules,
+                        ApplicationScreen applicationScreen, Consumer<Path> updateCommand) {
         if (focusedTool == RENOVATE) {
             container.setContent(renovatePR);
             return;
@@ -103,14 +105,39 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
         }
 
         try {
-            if (focusedTool == JAVA) {
+            Files.deleteIfExists(WORK_FOLDER.resolve("out").resolve("screen.png"));
+            applicationScreen.reloadScreenshot();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        theTerminal().setOpacity(1.0);
+
+        new Thread(() -> {
+            var succeeded = runExternalCommand(cmd.get(), activeModules, theTerminal.getText());
+            if (succeeded) {
+                Platform.runLater(() -> {
+                    updateCommand.accept(cmd.get().workDir());
+                    runExternalCommand(cmd.get().followUp(), activeModules, null);
+                    applicationScreen.reloadScreenshot();
+                });
+            }
+        }).start();
+    }
+
+    private boolean runExternalCommand(ShellCommand cmd, Set<Module> activeModules, String override) {
+        if (cmd == null) {
+            return false;
+        }
+
+        try {
+            if (cmd.tool() == JAVA) {
                 Path lib = WORK_FOLDER.resolve("lib");
                 Files.createDirectories(lib);
                 //noinspection resource
                 for (Path file : Files.list(lib).toList()) {
                     Files.deleteIfExists(file);
                 }
-                Files.deleteIfExists(WORK_FOLDER.resolve("out").resolve("screen.png"));
                 Files.createDirectories(lib);
                 for (Module module : activeModules) {
                     try (Stream<Path> result = Files.find(APP_MODULES_FOLDER, 4, (p, a) -> module.jarName().equals(p.getFileName().toString()))) {
@@ -123,21 +150,8 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
                     }
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-        theTerminal().setOpacity(1.0);
-
-        new Thread(() -> {
-            runExternalCommand(cmd.get());
-            Platform.runLater(applicationScreen::reloadScreenshot);
-        }).start();
-    }
-
-    private void runExternalCommand(ShellCommand cmd) {
-        try {
-            Process p = run(theTerminal.getText() + cmd.cmdHidden(), cmd.workDir());
+            Process p = run((override == null ? cmd.cmd() : override) + cmd.cmdHidden(), cmd.workDir());
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -151,13 +165,21 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
 
             p.waitFor();
 
-            if (cmd.tool() == GRADLE || cmd.tool() == MAVEN) {
-                nuke.setVisible(true);
-            }
-
             String error = new String(p.getErrorStream().readAllBytes());
             System.out.println(error);
+
             updateTerminal(trimError(error));
+
+            if (cmd.tool() == GRADLE || cmd.tool() == MAVEN) {
+                nuke.setVisible(true);
+                if (error.isEmpty() && !cmd.tool().getInstallCommand().isEmpty()) {
+                    var install = run(cmd.tool().getInstallCommand(), cmd.workDir());
+                    install.waitFor();
+                    System.out.println(new String(install.getInputStream().readAllBytes()));
+                    System.out.println(new String(install.getErrorStream().readAllBytes()));
+                }
+            }
+            return error.isEmpty();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
