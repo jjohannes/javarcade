@@ -150,7 +150,7 @@ public class SlideControl {
         if (selectedItem == null) {
             return;
         }
-        if (selectedItem.getParent().getValue().endsWith("versions")) {
+        if (selectedItem.getParent() != null && selectedItem.getParent().getValue().endsWith("versions")) {
             topics.focus(topics.topics().get(1));
             return;
         }

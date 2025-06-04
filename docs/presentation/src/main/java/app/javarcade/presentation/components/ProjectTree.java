@@ -2,6 +2,7 @@ package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.ShellCommand;
 import javafx.scene.Node;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
+import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyle;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
@@ -26,30 +28,28 @@ public record ProjectTree(TreeView<String> projectTree,
                           StackPane container) {
     
     public ProjectTree(StackPane box, Path projectLocation) {
-        this(new TreeView<>(), new TreeView<>(), new HashSet<>(), box);
+        this(applyScrollPaneStyle(new TreeView<>()), applyScrollPaneStyle(new TreeView<>()), new HashSet<>(), box);
 
         projectTree().setRoot(buildProjectTree(projectLocation));
         projectTree().setShowRoot(true);
-        projectTree().setStyle("-fx-font-size: 24px;");
 
         jarTree().setRoot(buildJarTree());
         jarTree().setShowRoot(true);
-        jarTree().setStyle("-fx-font-size: 24px;");
 
         box.getChildren().add(jarTree());
     }
 
     private TreeItem<String> buildJarTree() {
-        TreeItem<String> repository = newItem("https://repo1.maven.org/maven2");
+        TreeItem<String> repository = newItem("https://repo1.maven.org/maven2", "folder");
         repository.setExpanded(true);
-        TreeItem<String> folder = newItem("org/apache/commons/commons-csv/1.14.0");
+        TreeItem<String> folder = newItem("org/apache/commons/commons-csv/1.14.0", "folder");
         repository.getChildren().add(folder);
 
-        TreeItem<String> pom = newItem("commons-csv-1.14.0.pom");
-        TreeItem<String> jar = newItem("commons-csv-1.14.0.jar");
-        TreeItem<String> javaPackage = newItem("org/apache/commons/csv/**/*.class");
-        TreeItem<String> manifest = newItem("META-INF/MANIFEST.MF");
-        TreeItem<String> moduleInfo = newItem("module-info.class");
+        TreeItem<String> pom = newItem("commons-csv-1.14.0.pom", "text");
+        TreeItem<String> jar = newItem("commons-csv-1.14.0.jar", "jar");
+        TreeItem<String> javaPackage = newItem("org/apache/commons/csv/**/*.class", "binary");
+        TreeItem<String> manifest = newItem("META-INF/MANIFEST.MF", "text");
+        TreeItem<String> moduleInfo = newItem("module-info.class", "binary");
 
         jar.getChildren().add(javaPackage);
         jar.getChildren().add(manifest);

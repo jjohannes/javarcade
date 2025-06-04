@@ -16,7 +16,14 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -26,8 +33,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
-import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
+import java.util.Random;
+
+import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyle;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_ROOT_FOLDER;
+import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 import static app.javarcade.presentation.ui.UI.GRAPH_WIDTH;
 import static app.javarcade.presentation.ui.UI.HEIGHT;
 import static app.javarcade.presentation.ui.UI.SCREEN_DIM;
@@ -42,8 +52,7 @@ public class App extends Application {
     public void start(Stage stage) {
         HBox topBox = new HBox(SPACE);
         topBox.setPrefWidth(WIDTH);
-        ScrollPane topScrollPane = new ScrollPane(topBox);
-        topScrollPane.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-insets: 0;");
+        ScrollPane topScrollPane = applyScrollPaneStyle(new ScrollPane(topBox));
         topScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         topScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         topScrollPane.setFitToHeight(true);
@@ -92,6 +101,8 @@ public class App extends Application {
             }
         });
 
+        root.setBackground(new Background(noisyBackground()));
+
         stage.setTitle("Java Modularity");
         stage.setScene(scene);
         stage.show();
@@ -135,5 +146,26 @@ public class App extends Application {
         parent.getChildren().add(stackPane);
 
         return inner;
+    }
+
+    private BackgroundImage noisyBackground() {
+        WritableImage noiseImage = new WritableImage(WIDTH, HEIGHT);
+        PixelWriter pw = noiseImage.getPixelWriter();
+        Random rand = new Random();
+        Color base = Color.ALICEBLUE;
+
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
+                double noise = 0.92 + 0.08 * rand.nextDouble(); // subtle noise
+                Color c = base.interpolate(Color.WHITE, 1 - noise);
+                pw.setColor(x, y, c);
+            }
+        }
+        return new BackgroundImage(
+                noiseImage,
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT
+        );
     }
 }

@@ -1,6 +1,3 @@
-Content:
-- Highlighting in Editor and Console (?)
-
 Layouting/Assets
 - General layout and style
 - Slides

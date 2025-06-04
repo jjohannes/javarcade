@@ -6,13 +6,12 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyleMono;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_MODULES_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_NO_MODULES_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_ROOT_FOLDER;
@@ -22,10 +21,7 @@ import static app.javarcade.presentation.data.JavarcadeProject.NO_MODULE_PROJECT
 public record Editor(TextArea content, Path projectContainer, Path projectWithoutModulesContainer, ImageView nuke) {
 
     public Editor(StackPane box, Path projectContainer, Path projectWithoutModulesContainer) {
-        this(new TextArea(), projectContainer, projectWithoutModulesContainer, nukeButton());
-
-        content.setFont(Font.font("Monospaced", FontWeight.BOLD, 24));
-        content.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-insets: 0;");
+        this(applyScrollPaneStyleMono(new TextArea()), projectContainer, projectWithoutModulesContainer, nukeButton());
 
         nuke.setOnMouseClicked(event -> resetAll());
 

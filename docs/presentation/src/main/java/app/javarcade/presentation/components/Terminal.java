@@ -9,9 +9,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyleMono;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
@@ -35,18 +36,14 @@ import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 import static app.javarcade.presentation.data.JavarcadeProject.EXTRA_INSTALL_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.WORK_FOLDER;
 
-public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, ScrollPane container) {
+public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovatePR, ScrollPane container) {
 
     public Terminal(StackPane box) {
-        this(new Text(), nukeButton(), browserView(), new ScrollPane());
-
-        theTerminal.setFont(Font.font("Monospaced", FontWeight.BOLD, 24));
+        this(new TextFlow(), nukeButton(), browserView(), applyScrollPaneStyleMono(new ScrollPane()));
 
         container.setContent(theTerminal);
-
-        container.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-insets: 0;");
         container.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        container.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        container.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         nuke.setOnMouseClicked(event -> {
             nuke.setVisible(false);
@@ -78,13 +75,20 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
 
     public void reset(boolean moduleSystem, ShellCommand.Tool focusedTool, boolean rogue) {
         Optional<ShellCommand> command = findCommand(moduleSystem, focusedTool);
-        theTerminal.setText(rogue ? command.orElseThrow().cmd().replace(" clean", "") : command.orElseThrow().cmd());
+        theTerminal.getChildren().clear();
+        theTerminal.getChildren().add(new Text(rogue ? command.orElseThrow().cmd().replace(" clean", "") : command.orElseThrow().cmd()));
         theTerminal.setOpacity(0.7);
         container.setContent(theTerminal);
     }
 
     public void resetCurrent() {
-        theTerminal.setText(theTerminal.getText().split("\n")[0]);
+        if (!theTerminal.getChildren().isEmpty()) {
+            String old = ((Text) theTerminal.getChildren().getFirst()).getText();
+            theTerminal.getChildren().clear();
+            Text text = new Text(old.split("\n")[0]);
+            text.setFill(Color.BLACK);
+            theTerminal.getChildren().add(text);
+        }
         theTerminal.setOpacity(0.7);
     }
 
@@ -112,9 +116,11 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
         }
 
         theTerminal().setOpacity(1.0);
+        Text commandText = (Text) theTerminal.getChildren().getFirst();
+        commandText.setFill(Color.DARKGREEN);
 
         new Thread(() -> {
-            var succeeded = runExternalCommand(cmd.get(), activeModules, theTerminal.getText());
+            var succeeded = runExternalCommand(cmd.get(), activeModules, commandText.getText());
             if (succeeded) {
                 Platform.runLater(() -> {
                     updateCommand.accept(cmd.get().workDir());
@@ -156,7 +162,7 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
                 String line;
                 while ((line = reader.readLine()) != null) {
                     System.out.println(line);
-                    updateTerminal(line);
+                    updateTerminal(line, Color.BLACK);
                     if (line.equals("Calculating task graph as no cached configuration is available for tasks: build")) {
                         printGradleDownloadLog();
                     }
@@ -168,7 +174,7 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
             String error = new String(p.getErrorStream().readAllBytes());
             System.out.println(error);
 
-            updateTerminal(trimError(error));
+            updateTerminal(trimError(error), Color.INDIANRED);
 
             if (cmd.tool() == GRADLE || cmd.tool() == MAVEN) {
                 nuke.setVisible(true);
@@ -182,7 +188,7 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
         try {
             Thread.sleep(1000);
             for (String line : Files.readAllLines(ASSET_LOCATION.resolve("gradle-download.log"))) {
-                updateTerminal(line);
+                updateTerminal(line, Color.BLACK);
                 Thread.sleep(5);
             }
         } catch (IOException | InterruptedException e) {
@@ -190,9 +196,20 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
         }
     }
 
-    private void updateTerminal(String nextLine) {
+    private void updateTerminal(String nextLine, Color color) {
         Platform.runLater(() -> {
-            theTerminal.setText(theTerminal.getText() + "\n" + nextLine);
+            Text text = new Text("\n" + nextLine);
+            text.setFill(color);
+            if (text.getText().contains("Download")) {
+                text.setFill(Color.DARKSLATEGRAY);
+            }
+            if (text.getText().contains("SUCCESS")) {
+                text.setFill(Color.DARKGREEN);
+            }
+            if (text.getText().contains("FAIL")) {
+                text.setFill(Color.INDIANRED);
+            }
+            theTerminal.getChildren().add(text);
             container.setVvalue(1.0);
         });
     }
