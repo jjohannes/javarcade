@@ -19,5 +19,4 @@
       <artifactId>commons-io</artifactId>
     </dependency>
   </dependencies>
-  <build><sourceDirectory>../../../../../../../../modules/classic-assets/src/main/java</sourceDirectory></build>
-</project>
+<build><sourceDirectory>../../../../../../../../modules/classic-assets/src/main/java</sourceDirectory></build></project>

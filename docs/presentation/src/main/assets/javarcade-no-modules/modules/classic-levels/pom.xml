@@ -19,5 +19,4 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
-  <build><sourceDirectory>../../../../../../../../modules/classic-levels/src/main/java</sourceDirectory></build>
-</project>
+<build><sourceDirectory>../../../../../../../../modules/classic-levels/src/main/java</sourceDirectory></build></project>

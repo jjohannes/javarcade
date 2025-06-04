@@ -56,5 +56,4 @@
       <classifier>${lwjgl.natives}</classifier>
     </dependency>
   </dependencies>
-  <build><sourceDirectory>../../../../../../../../modules/renderer-lwjgl/src/main/java</sourceDirectory></build>
-</project>
+<build><sourceDirectory>../../../../../../../../modules/renderer-lwjgl/src/main/java</sourceDirectory></build></project>

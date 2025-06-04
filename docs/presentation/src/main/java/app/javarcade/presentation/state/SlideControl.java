@@ -1,7 +1,7 @@
 package app.javarcade.presentation.state;
 
 import app.javarcade.presentation.components.ApplicationScreen;
-import app.javarcade.presentation.components.Editors;
+import app.javarcade.presentation.components.Editor;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.Terminal;
@@ -29,7 +29,7 @@ public class SlideControl {
     private boolean moduleSystem = false;
     private TreeItem<String> selectedItem = null;
 
-    public SlideControl(ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editors editors, Terminal terminal, ToolsGrid tools, TopicList topics) {
+    public SlideControl(ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editor editor, Terminal terminal, ToolsGrid tools, TopicList topics) {
         activeModules.addAll(initialState(moduleGraph));
 
         moduleGraph.modules().forEach(module ->
@@ -49,42 +49,50 @@ public class SlideControl {
             moduleSystem = !moduleSystem;
             projectTree.update(focusedTool, moduleSystem);
             tools.update(focusedTool, moduleSystem);
-            editors.open(selectedItem, moduleSystem);
+            editor.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         tools.gradleButton().setOnMouseClicked(event -> {
             focusedTool = refocus(GRADLE);
             projectTree.update(focusedTool, moduleSystem);
             tools.update(focusedTool, moduleSystem);
-            editors.open(selectedItem, moduleSystem);
+            editor.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         tools.mavenButton().setOnMouseClicked(event -> {
             focusedTool = refocus(MAVEN);
             projectTree.update(focusedTool, moduleSystem);
             tools.update(focusedTool, moduleSystem);
-            editors.open(selectedItem, moduleSystem);
+            editor.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         tools.renovateButton().setOnMouseClicked(event -> {
             focusedTool = refocus(RENOVATE);
             projectTree.update(focusedTool, moduleSystem);
             tools.update(focusedTool, moduleSystem);
-            editors.open(selectedItem, moduleSystem);
+            editor.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.jarTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.jarTree().getSelectionModel().getSelectedItem();
             selectTopic(topics, null);
-            editors.open(selectedItem, moduleSystem);
+            editor.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
         projectTree.projectTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.projectTree().getSelectionModel().getSelectedItem();
             selectTopic(topics, null);
-            editors.open(selectedItem, moduleSystem);
+            editor.open(selectedItem, moduleSystem);
             terminal.reset(moduleSystem, focusedTool);
         });
+        editor.content().focusedProperty().addListener((observable, old, focus) -> {
+            if (focus) {
+                terminal.reset(moduleSystem, focusedTool);
+            } else {
+                editor.save(selectedItem, moduleSystem);
+            }
+        });
+
         terminal.resetCurrent();
         moduleGraph.update(activeModules, graph);
         projectTree.update(focusedTool, moduleSystem);

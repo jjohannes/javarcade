@@ -1,7 +1,7 @@
 package app.javarcade.presentation;
 
 import app.javarcade.presentation.components.ApplicationScreen;
-import app.javarcade.presentation.components.Editors;
+import app.javarcade.presentation.components.Editor;
 import app.javarcade.presentation.components.ModuleGraph;
 import app.javarcade.presentation.components.ProjectTree;
 import app.javarcade.presentation.components.Terminal;
@@ -74,7 +74,7 @@ public class App extends Application {
                 new ApplicationScreen(applicationBox),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
                 new ProjectTree(projectStructureBox, APP_ROOT_FOLDER),
-                new Editors(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
+                new Editor(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
                 new Terminal(terminalBox),
                 new ToolsGrid(toolsBox),
                 new TopicList(topicsBox, JavarcadeProject.topics(), slideView)
