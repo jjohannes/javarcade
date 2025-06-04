@@ -10,6 +10,12 @@ File("modules").listFiles().forEach {
     project(":${it.name}").projectDir = file(it)
   }
 }
+File("apps").listFiles().forEach {
+  if (File(it, "build.gradle.kts").exists()) {
+    include(":${it.name}")
+    project(":${it.name}").projectDir = file(it)
+  }
+}
 
 include(":versions")
 project(":versions").projectDir = file("../../../../../../gradle/versions")
@@ -29,7 +35,7 @@ gradle.lifecycle.beforeProject {
       }
     }
     tasks.named("check") {
-      dependsOn("projectHealth")
+      dependsOn(tasks.named { it == "projectHealth" })
     }
   }
 }
