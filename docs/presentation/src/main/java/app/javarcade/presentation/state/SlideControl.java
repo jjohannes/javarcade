@@ -123,12 +123,24 @@ public class SlideControl {
             topics.focus(topics.topics().get(1));
             return;
         }
+        if (selectedItem.getValue().startsWith("repositories")) {
+            topics.focus(topics.topics().get(2));
+            return;
+        }
         if (selectedItem.getValue().startsWith("dependency-rules")) {
             topics.focus(topics.topics().get(3));
             return;
         }
-        if (selectedItem.getValue().startsWith("quality-checks")) {
+        if (selectedItem.getValue().startsWith("quality-check")) {
             topics.focus(topics.topics().get(4));
+            return;
+        }
+        if (selectedItem.getValue().startsWith("java-module")) {
+            topics.markDone(topics.topics().get(4));
+            return;
+        }
+        if (selectedItem.getValue().startsWith("compile") || selectedItem.getValue().startsWith("test")) {
+            topics.reset();
             return;
         }
         if (selectedItem.getValue().equals("renovate.json")) {

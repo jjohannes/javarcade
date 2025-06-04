@@ -24,11 +24,11 @@ public record TopicList(List<Topic> topics) {
             loadOrUnloadSlide(slideView, "slide-title");
         });
         cheatSheet.setOnMouseClicked(mouseEvent -> {
-            markAllDone();
+            markDone(topics.getLast());
             loadOrUnloadSlide(slideView, "slide-sheet");
         });
         end.setOnMouseClicked(mouseEvent -> {
-            markAllDone();
+            markDone(topics.getLast());
             loadOrUnloadSlide(slideView, "slide-end");
         });
 
@@ -55,14 +55,20 @@ public record TopicList(List<Topic> topics) {
         return iconView;
     }
 
+    public void reset() {
+        topics.forEach(this::futureTopicStyle);
+    }
+
     public void focus(Topic topic) {
         topics.stream().dropWhile(t -> t != topic).forEach(this::futureTopicStyle);
         topics.stream().takeWhile(t -> t != topic).forEach(this::doneStyle);
         focusStyle(topic);
     }
 
-    public void markAllDone() {
-        topics.forEach(this::doneStyle);
+    public void markDone(Topic topic) {
+        topics.stream().dropWhile(t -> t != topic).forEach(this::futureTopicStyle);
+        topics.stream().takeWhile(t -> t != topic).forEach(this::doneStyle);
+        if (topic != null) doneStyle(topic);
     }
 
     private void doneStyle(Topic topic) {

@@ -66,6 +66,9 @@ public record ProjectTree(TreeView<String> projectTree,
 
         TreeItem<String> repositories = newItem("repositories.gradle.kts"); // /pom.xml
         TreeItem<String> dependencyRules = newItem("dependency-rules.gradle.kts"); // /pom.xml
+        TreeItem<String> compile = newItem("compile.gradle.kts"); // /pom.xml
+        TreeItem<String> test = newItem("test.gradle.kts"); // /pom.xml
+        TreeItem<String> qCheck = newItem("quality-check.gradle.kts"); // /pom.xml
         TreeItem<String> javaModule = newItem("java-module.gradle.kts"); // /pom.xml
         TreeItem<String> bom = newItem("build.gradle.kts");
         TreeItem<String> renovateJson = newItem("renovate.json");
@@ -102,6 +105,9 @@ public record ProjectTree(TreeView<String> projectTree,
 
         buildToolConfig.getChildren().add(repositories);
         buildToolConfig.getChildren().add(dependencyRules);
+        buildToolConfig.getChildren().add(qCheck);
+        buildToolConfig.getChildren().add(compile);
+        buildToolConfig.getChildren().add(test);
         buildToolConfig.getChildren().add(javaModule);
         return rootItem;
     }

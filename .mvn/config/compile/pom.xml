@@ -17,10 +17,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.1</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.14.0</version>
           <configuration>
@@ -28,6 +24,22 @@
               <arg>-Xlint:all</arg>
               <arg>-Werror</arg>
             </compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.4.2</version>
+          <configuration>
+            <archive>
+              <addMavenDescriptor>false</addMavenDescriptor>
+              <manifest>
+                <addDefaultEntries>false</addDefaultEntries>
+              </manifest>
+            </archive>
           </configuration>
         </plugin>
       </plugins>
