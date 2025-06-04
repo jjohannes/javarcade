@@ -11,7 +11,7 @@ javaModules {
     directory("modules") { group = "app.javarcade" }
     versions("gradle/versions")
     directory("apps") {
-        module("desktop")
+        module("app-desktop")
         group = "app.javarcade"
     }
 }
