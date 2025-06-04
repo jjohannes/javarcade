@@ -54,7 +54,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
         box.setAlignment(Pos.TOP_RIGHT);
         box.getChildren().addAll(container, nuke);
 
-        // TODO cleanCaches();
+        cleanCaches();
     }
 
     private static ImageView nukeButton() {
