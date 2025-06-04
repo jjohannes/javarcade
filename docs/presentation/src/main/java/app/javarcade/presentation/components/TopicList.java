@@ -41,10 +41,8 @@ public record TopicList(List<Topic> topics) {
         var url = "file:%s/%s.jpg".formatted(ASSET_LOCATION.resolve("slides"), slide);
         if (slideView.getImage() == null || !url.equals(slideView.getImage().getUrl())) {
             slideView.setImage(new Image(url));
-            slideView.setVisible(true);
         } else {
             slideView.setImage(null);
-            slideView.setVisible(false);
         }
     }
 

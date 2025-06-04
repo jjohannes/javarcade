@@ -16,6 +16,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -80,11 +81,17 @@ public class App extends Application {
         );
 
         Scene scene = scalableScene(root, slideView);
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                slideView.setImage(null);
+            }
+        });
 
-        // scene.setOnKeyPressed(e -> { });
         stage.setTitle("Java Modularity");
         stage.setScene(scene);
         stage.show();
+
+        applicationBox.requestFocus(); // start on left
     }
 
     private Scene scalableScene(VBox root, ImageView slideView) {

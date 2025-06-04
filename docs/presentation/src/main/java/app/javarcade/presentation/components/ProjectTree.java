@@ -39,7 +39,6 @@ public record ProjectTree(TreeView<String> projectTree,
         TreeItem<String> repository = newItem("https://repo1.maven.org/maven2");
         repository.setExpanded(true);
         TreeItem<String> folder = newItem("org/apache/commons/commons-csv/1.14.0");
-        folder.setExpanded(true);
         repository.getChildren().add(folder);
 
         TreeItem<String> pom = newItem("commons-csv-1.14.0.pom");
