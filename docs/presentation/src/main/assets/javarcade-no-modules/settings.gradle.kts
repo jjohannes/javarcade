@@ -1,14 +1,14 @@
 pluginManagement { includeBuild("../../../../../../gradle/plugins") }
 
 plugins {
-    id("com.autonomousapps.build-health") version "2.18.0"
+  id("com.autonomousapps.build-health") version "2.18.0"
 }
 
 File("modules").listFiles().forEach {
-    if (File(it, "build.gradle.kts").exists()) {
-        include(":${it.name}")
-        project(":${it.name}").projectDir = file(it)
-    }
+  if (File(it, "build.gradle.kts").exists()) {
+    include(":${it.name}")
+    project(":${it.name}").projectDir = file(it)
+  }
 }
 
 include(":versions")
@@ -18,18 +18,18 @@ dependencyAnalysis { issues { all { onAny { severity("fail") } } } }
 
 // Ignore module-info.java files
 gradle.lifecycle.beforeProject {
-    plugins.withId("java") {
-        the<JavaPluginExtension>().modularity.inferModulePath = false
-        the<SourceSetContainer>().named("main") {
-            java {
-                setSrcDirs(java.sourceDirectories.map {
-                    it.absolutePath.replace("/docs/presentation/src/main/assets/javarcade-no-modules/", "/")
-                })
-                exclude("module-info.java")
-            }
-        }
-        tasks.named("check") {
-            dependsOn("projectHealth")
-        }
+  plugins.withId("java") {
+    the<JavaPluginExtension>().modularity.inferModulePath = false
+    the<SourceSetContainer>().named("main") {
+      java {
+        setSrcDirs(java.sourceDirectories.map {
+          it.absolutePath.replace("/docs/presentation/src/main/assets/javarcade-no-modules/", "/")
+        })
+        exclude("module-info.java")
+      }
     }
+    tasks.named("check") {
+      dependsOn("projectHealth")
+    }
+  }
 }
