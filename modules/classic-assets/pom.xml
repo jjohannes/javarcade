@@ -8,5 +8,5 @@
   </parent>
   <artifactId>classic-assets</artifactId>
 
-  <!-- org.gradlex:java-module-dependencies-maven-extension activated -->
+  <!-- org.gradlex:java-module-dependencies-maven-extension active -->
 </project>

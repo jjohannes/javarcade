@@ -1,3 +1,3 @@
 plugins { id("java-module") }
 
-// org.gradlex.java-module-dependencies activated
+// org.gradlex.java-module-dependencies active

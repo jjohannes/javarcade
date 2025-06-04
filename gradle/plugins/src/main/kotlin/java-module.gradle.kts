@@ -4,15 +4,9 @@ import org.gradle.nativeplatform.OperatingSystemFamily.*
 plugins {
   id("dependency-rules")
   id("repositories")
+  id("compile")
+  id("test")
   id("java-library")
-}
-
-java {
-  toolchain.languageVersion = JavaLanguageVersion.of(21)
-}
-
-tasks.test {
-  useJUnitPlatform()
 }
 
 sourceSets.configureEach {

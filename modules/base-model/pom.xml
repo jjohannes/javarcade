@@ -8,5 +8,5 @@
   </parent>
   <artifactId>base-model</artifactId>
 
-  <!-- org.gradlex:java-module-dependencies-maven-extension activated -->
+  <!-- org.gradlex:java-module-dependencies-maven-extension active -->
 </project>
