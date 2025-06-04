@@ -1,8 +1,11 @@
 package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.ShellCommand;
+import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
@@ -15,6 +18,7 @@ import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRAD
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.RENOVATE;
+import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 
 public record ProjectTree(TreeView<String> projectTree,
                           TreeView<String> jarTree,
@@ -58,11 +62,11 @@ public record ProjectTree(TreeView<String> projectTree,
     }
 
     private TreeItem<String> buildProjectTree(Path projectLocation) {
-        TreeItem<String> rootItem = newItem(projectLocation.getFileName().toString());
+        TreeItem<String> rootItem = newItem(projectLocation.getFileName().toString(), "folder");
         rootItem.setExpanded(true);
 
-        TreeItem<String> buildToolConfig = newItem("gradle/plugins/src/main/kotlin"); // .mvn/config
-        TreeItem<String> versions = newItem("gradle/versions"); // .mvn/versions
+        TreeItem<String> buildToolConfig = newItem("gradle/plugins/src/main/kotlin", "folder"); // .mvn/config
+        TreeItem<String> versions = newItem("gradle/versions", "folder"); // .mvn/versions
 
         TreeItem<String> repositories = newItem("repositories.gradle.kts"); // /pom.xml
         TreeItem<String> dependencyRules = newItem("dependency-rules.gradle.kts"); // /pom.xml
@@ -73,14 +77,14 @@ public record ProjectTree(TreeView<String> projectTree,
         TreeItem<String> bom = newItem("build.gradle.kts");
         TreeItem<String> renovateJson = newItem("renovate.json");
 
-        TreeItem<String> modules = newItem("modules");
+        TreeItem<String> modules = newItem("modules", "folder");
 
         Path modulesFolder = projectLocation.resolve("modules");
         try(var l = Files.list(modulesFolder)) {
             l.filter(f -> !f.getFileName().toString().startsWith(".")).sorted().forEach(moduleFolder -> {
-                TreeItem<String> module = newItem(moduleFolder.getFileName().toString());
+                TreeItem<String> module = newItem(moduleFolder.getFileName().toString(), "folder");
 
-                TreeItem<String> moduleInfo = newItem("src/main/java/module-info.java");
+                TreeItem<String> moduleInfo = newItem("src/main/java/module-info.java", "java");
                 TreeItem<String> buildFile = newItem("build.gradle.kts"); // pom.xml
                 module.getChildren().add(moduleInfo);
                 module.getChildren().add(buildFile);
@@ -91,10 +95,6 @@ public record ProjectTree(TreeView<String> projectTree,
             throw new RuntimeException(e);
         }
 
-        // Image icon = new Image("file:/Users/jendrik/projects/gradle/howto/javarcade-presentation/assets/main/base-model.png");
-        // ImageView iconView = new ImageView(icon);
-        // iconView.setFitHeight(16);
-        // iconView.setFitWidth(16);
 
         rootItem.getChildren().add(buildToolConfig);
         rootItem.getChildren().add(versions);
@@ -112,6 +112,13 @@ public record ProjectTree(TreeView<String> projectTree,
         return rootItem;
     }
 
+    private TreeItem<String> newItem(String name, String icon) {
+        TreeItem<String> item = new TreeItem<>(name);
+        item.setGraphic(icon(icon));
+        items().add(item);
+        return item;
+    }
+
     private TreeItem<String> newItem(String name) {
         TreeItem<String> item = new TreeItem<>(name);
         items().add(item);
@@ -123,6 +130,23 @@ public record ProjectTree(TreeView<String> projectTree,
         container.getChildren().add(focusedTool == JAVA ? jarTree() : projectTree());
 
         items().forEach(item -> item.setValue(updateTreeItemValue(item.getValue(), focusedTool, moduleSystem)));
+        items().forEach(item -> item.setGraphic(updateTreeItemIcon(item.getGraphic(), item.getValue())));
+    }
+
+    private Node updateTreeItemIcon(Node graphic, String updatedValue) {
+        if (updatedValue.endsWith(".gradle.kts")) {
+            return icon("gradle");
+        }
+        if (updatedValue.endsWith("pom.xml")) {
+            return icon("maven");
+        }
+        if (updatedValue.equals("renovate.json")) {
+            return icon("renovate");
+        }
+        if (updatedValue.isEmpty()) {
+            return null;
+        }
+        return graphic;
     }
 
     private String updateTreeItemValue(String value, ShellCommand.Tool focusedTool, boolean moduleSystem) {
@@ -164,5 +188,13 @@ public record ProjectTree(TreeView<String> projectTree,
         }
 
         return value;
+    }
+
+    private ImageView icon(String iconName) {
+        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION.resolve("treeicons"), iconName));
+        ImageView iconView = new ImageView(icon);
+        iconView.setPreserveRatio(true);
+        iconView.setFitHeight(24);
+        return iconView;
     }
 }

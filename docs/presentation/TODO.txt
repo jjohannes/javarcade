@@ -1,10 +1,9 @@
 Content:
-- Icons on Files
 - Highlighting in Editor and Console (?)
-- (!) part of this story is to auto select Jars based on build result and the run the APP afterwards!
-      -> Once done, do a test: wrong logging variant selected
 
 Layouting/Assets
-- General Layout for App
-- Title and End Slide
-- Cheat Sheet Slide
+- General layout and style
+- Slides
+  - Cheat Sheet
+  - Title
+  - End
