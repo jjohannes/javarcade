@@ -41,11 +41,14 @@ public record ToolsGrid(ImageView jpmsButton,
         return iconView;
     }
 
-    public void update(ShellCommand.Tool focusedTool, boolean moduleSystem) {
+    public void update(ShellCommand.Tool focusedTool, boolean moduleSystem, boolean rogue) {
         jpmsButton().setOpacity(moduleSystem ? 1 : 0.3);
 
         gradleButton().setOpacity(focusedTool == GRADLE ? 1 : 0.3);
         mavenButton().setOpacity(focusedTool == MAVEN ? 1 : 0.3);
         renovateButton().setOpacity(focusedTool == RENOVATE ? 1 : 0.3);
+
+        mavenButton().setImage(new Image(("file:%s/%s.png").formatted(ASSET_LOCATION.resolve("icons"),
+                rogue ? "maven-rogue" : "maven")));
     }
 }

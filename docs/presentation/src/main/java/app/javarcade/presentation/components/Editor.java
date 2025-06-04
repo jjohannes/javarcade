@@ -3,6 +3,7 @@ package app.javarcade.presentation.components;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -18,15 +19,9 @@ public record Editor(TextArea content, Path projectContainer, Path projectWithou
     public Editor(StackPane box, Path projectContainer, Path projectWithoutModulesContainer) {
         this(new TextArea(), projectContainer, projectWithoutModulesContainer);
 
-        content().setFont(Font.font("Monospaced", FontWeight.BOLD, 24));
-        ScrollPane scrollPane = new ScrollPane(content());
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-insets: 0;");
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-        box.getChildren().add(scrollPane);
+        content.setFont(Font.font("Monospaced", FontWeight.BOLD, 24));
+        content.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-insets: 0;");
+        box.getChildren().add(content());
     }
 
     public void open(TreeItem<String> item, boolean modules) {

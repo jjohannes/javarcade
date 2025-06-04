@@ -69,14 +69,16 @@ public class App extends Application {
         StackPane terminalBox = createBox(bottomBox, WIDTH - TOOLS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
 
         ImageView slideView = new ImageView();
+        ToolsGrid toolsGrid = new ToolsGrid(toolsBox);
+        Terminal terminal = new Terminal(terminalBox);
 
-        new SlideControl(
+        SlideControl slideControl = new SlideControl(
                 new ApplicationScreen(applicationBox),
                 new ModuleGraph(moduleGraphBox, JavarcadeProject.modules()),
                 new ProjectTree(projectStructureBox, APP_ROOT_FOLDER),
                 new Editor(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
-                new Terminal(terminalBox),
-                new ToolsGrid(toolsBox),
+                terminal,
+                toolsGrid,
                 new TopicList(topicsBox, JavarcadeProject.topics(), slideView)
         );
 
@@ -84,6 +86,9 @@ public class App extends Application {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
                 slideView.setImage(null);
+            }
+            if (e.getCode() == KeyCode.X) {
+                slideControl.toggleRogueMode(toolsGrid, terminal);
             }
         });
 

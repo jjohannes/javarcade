@@ -28,6 +28,7 @@ public class SlideControl {
     private ShellCommand.Tool focusedTool = JAVA;
     private boolean moduleSystem = false;
     private TreeItem<String> selectedItem = null;
+    private boolean rogue = false;
 
     public SlideControl(ApplicationScreen applicationScreen, ModuleGraph moduleGraph, ProjectTree projectTree, Editor editor, Terminal terminal, ToolsGrid tools, TopicList topics) {
         activeModules.addAll(initialState(moduleGraph));
@@ -48,46 +49,46 @@ public class SlideControl {
         tools.jpmsButton().setOnMouseClicked(event -> {
             moduleSystem = !moduleSystem;
             projectTree.update(focusedTool, moduleSystem);
-            tools.update(focusedTool, moduleSystem);
+            tools.update(focusedTool, moduleSystem, rogue);
             editor.open(selectedItem, moduleSystem);
-            terminal.reset(moduleSystem, focusedTool);
+            terminal.reset(moduleSystem, focusedTool, rogue);
         });
         tools.gradleButton().setOnMouseClicked(event -> {
             focusedTool = refocus(GRADLE);
             projectTree.update(focusedTool, moduleSystem);
-            tools.update(focusedTool, moduleSystem);
+            tools.update(focusedTool, moduleSystem, rogue);
             editor.open(selectedItem, moduleSystem);
-            terminal.reset(moduleSystem, focusedTool);
+            terminal.reset(moduleSystem, focusedTool, rogue);
         });
         tools.mavenButton().setOnMouseClicked(event -> {
             focusedTool = refocus(MAVEN);
             projectTree.update(focusedTool, moduleSystem);
-            tools.update(focusedTool, moduleSystem);
+            tools.update(focusedTool, moduleSystem, rogue);
             editor.open(selectedItem, moduleSystem);
-            terminal.reset(moduleSystem, focusedTool);
+            terminal.reset(moduleSystem, focusedTool, rogue);
         });
         tools.renovateButton().setOnMouseClicked(event -> {
             focusedTool = refocus(RENOVATE);
             projectTree.update(focusedTool, moduleSystem);
-            tools.update(focusedTool, moduleSystem);
+            tools.update(focusedTool, moduleSystem, rogue);
             editor.open(selectedItem, moduleSystem);
-            terminal.reset(moduleSystem, focusedTool);
+            terminal.reset(moduleSystem, focusedTool, rogue);
         });
         projectTree.jarTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.jarTree().getSelectionModel().getSelectedItem();
             selectTopic(topics, null);
             editor.open(selectedItem, moduleSystem);
-            terminal.reset(moduleSystem, focusedTool);
+            terminal.reset(moduleSystem, focusedTool, rogue);
         });
         projectTree.projectTree().setOnMouseClicked(event -> {
             selectedItem = projectTree.projectTree().getSelectionModel().getSelectedItem();
             selectTopic(topics, null);
             editor.open(selectedItem, moduleSystem);
-            terminal.reset(moduleSystem, focusedTool);
+            terminal.reset(moduleSystem, focusedTool, rogue);
         });
         editor.content().focusedProperty().addListener((observable, old, focus) -> {
             if (focus) {
-                terminal.reset(moduleSystem, focusedTool);
+                terminal.reset(moduleSystem, focusedTool, rogue);
             } else {
                 editor.save(selectedItem, moduleSystem);
             }
@@ -96,8 +97,14 @@ public class SlideControl {
         terminal.resetCurrent();
         moduleGraph.update(activeModules, graph);
         projectTree.update(focusedTool, moduleSystem);
-        tools.update(focusedTool, moduleSystem);
-        terminal.reset(moduleSystem, focusedTool);
+        tools.update(focusedTool, moduleSystem, rogue);
+        terminal.reset(moduleSystem, focusedTool, rogue);
+    }
+
+    public void toggleRogueMode(ToolsGrid tools, Terminal terminal) {
+        rogue = !rogue;
+        tools.update(focusedTool, moduleSystem, rogue);
+        terminal.reset(moduleSystem, focusedTool, rogue);
     }
 
     private void selectTopic(TopicList topics, ShellCommand.Tool toolInTerminal) {

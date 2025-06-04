@@ -75,16 +75,16 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
         return iconView;
     }
 
-    public void reset(boolean moduleSystem, ShellCommand.Tool focusedTool) {
+    public void reset(boolean moduleSystem, ShellCommand.Tool focusedTool, boolean rogue) {
         Optional<ShellCommand> command = findCommand(moduleSystem, focusedTool);
-        theTerminal.setText(command.orElseThrow().cmd());
-        theTerminal.setOpacity(0.3);
+        theTerminal.setText(rogue ? command.orElseThrow().cmd().replace(" clean", "") : command.orElseThrow().cmd());
+        theTerminal.setOpacity(0.7);
         container.setContent(theTerminal);
     }
 
     public void resetCurrent() {
         theTerminal.setText(theTerminal.getText().split("\n")[0]);
-        theTerminal.setOpacity(0.3);
+        theTerminal.setOpacity(0.7);
     }
 
     public void execute(boolean moduleSystem, ShellCommand.Tool focusedTool, Set<Module> activeModules, ApplicationScreen applicationScreen) {
@@ -137,13 +137,13 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
 
     private void runExternalCommand(ShellCommand cmd) {
         try {
-            Process p = run(cmd.cmd() + cmd.cmdHidden(), cmd.workDir());
+            Process p = run(theTerminal.getText() + cmd.cmdHidden(), cmd.workDir());
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     System.out.println(line);
                     updateTerminal(line);
-                    if (line.equals("> Task :plugins:jar")) {
+                    if (line.equals("Calculating task graph as no cached configuration is available for tasks: build")) {
                         printGradleDownloadLog();
                     }
                 }
@@ -164,9 +164,10 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
     }
     private void printGradleDownloadLog() {
         try {
+            Thread.sleep(1000);
             for (String line : Files.readAllLines(ASSET_LOCATION.resolve("gradle-download.log"))) {
                 updateTerminal(line);
-                Thread.sleep(3);
+                Thread.sleep(5);
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
