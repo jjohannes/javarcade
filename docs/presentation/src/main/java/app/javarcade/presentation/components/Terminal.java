@@ -172,12 +172,6 @@ public record Terminal(Text theTerminal, ImageView nuke, ImageView renovatePR, S
 
             if (cmd.tool() == GRADLE || cmd.tool() == MAVEN) {
                 nuke.setVisible(true);
-                if (error.isEmpty() && !cmd.tool().getInstallCommand().isEmpty()) {
-                    var install = run(cmd.tool().getInstallCommand(), cmd.workDir());
-                    install.waitFor();
-                    System.out.println(new String(install.getInputStream().readAllBytes()));
-                    System.out.println(new String(install.getErrorStream().readAllBytes()));
-                }
             }
             return error.isEmpty();
         } catch (IOException | InterruptedException e) {

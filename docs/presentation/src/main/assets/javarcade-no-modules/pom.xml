@@ -22,5 +22,6 @@
         <module>modules/classic-assets</module>
         <module>modules/classic-items</module>
         <module>modules/classic-levels</module>
+        <module>apps/app-desktop</module>
     </modules>
 </project>

@@ -6,7 +6,7 @@
     <groupId>app.javarcade</groupId>
     <version>${revision}</version>
   </parent>
-  <artifactId>engine-lwjgl</artifactId>
+  <artifactId>renderer-lwjgl</artifactId>
 
   <!-- org.gradlex:java-module-dependencies-maven-extension active -->
 </project>
