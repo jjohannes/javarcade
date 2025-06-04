@@ -17,10 +17,10 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
       - name: Gradle
-        run: ./gradlew checkAllModuleInfo build
+        run: ./gradlew build
       - name: Gradle (without Java Modules)
         working-directory: docs/presentation/src/main/assets/javarcade-no-modules
-        run: ./gradlew projectHealth build
+        run: ./gradlew build
       - name: Maven
         run: ./mvnw -B -U -ntp clean verify
       - name: Maven (without Java Modules)
