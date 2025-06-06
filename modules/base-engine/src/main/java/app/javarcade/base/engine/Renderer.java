@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 
 public interface Renderer {
     static void launch() {
+        Logger logger = LoggerFactory.getLogger(Renderer.class);
+        logger.info("Welcome to Javarcade!");
+
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             throwable.printStackTrace();
             System.exit(1);
@@ -14,7 +17,7 @@ public interface Renderer {
 
         var impl = ServiceLoader.load(Renderer.class).findFirst();
         impl.ifPresentOrElse(Renderer::run, () -> {
-            LoggerFactory.getLogger(Renderer.class).warn("No renderer implementation available");
+            logger.warn("No renderer implementation available");
         });
     }
 
