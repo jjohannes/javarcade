@@ -21,8 +21,8 @@ public record ToolsGrid(ImageView jpmsButton,
 
         GridPane grid = new GridPane();
         grid.setHgap(40);
-        grid.setVgap(40);
-        grid.setPadding(new Insets(25));
+        grid.setVgap(20);
+        grid.setPadding(new Insets(10));
 
         grid.add(new StackPane(logoButton("java"), jpmsButton), 0, 0);
         grid.add(renovateButton, 1, 0);

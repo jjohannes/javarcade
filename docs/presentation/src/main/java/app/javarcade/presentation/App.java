@@ -9,6 +9,7 @@ import app.javarcade.presentation.components.ToolsGrid;
 import app.javarcade.presentation.components.TopicList;
 import app.javarcade.presentation.data.JavarcadeProject;
 import app.javarcade.presentation.state.SlideControl;
+import app.javarcade.presentation.ui.UI;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,28 +17,22 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
-import java.util.Random;
-
-import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyle;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_ROOT_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
+import static app.javarcade.presentation.ui.UI.EDITOR_WIDTH;
 import static app.javarcade.presentation.ui.UI.GRAPH_WIDTH;
 import static app.javarcade.presentation.ui.UI.HEIGHT;
 import static app.javarcade.presentation.ui.UI.SCREEN_DIM;
@@ -45,12 +40,15 @@ import static app.javarcade.presentation.ui.UI.SPACE;
 import static app.javarcade.presentation.ui.UI.TOOLS_WIDTH;
 import static app.javarcade.presentation.ui.UI.TREE_WIDTH;
 import static app.javarcade.presentation.ui.UI.WIDTH;
+import static app.javarcade.presentation.ui.UI.applyScrollPaneStyle;
 
 public class App extends Application {
 
+    private StackPane applicationBox = null;
+
     @Override
     public void start(Stage stage) {
-        HBox topBox = new HBox(SPACE);
+        HBox topBox = new HBox(SPACE * 2);
         topBox.setPrefWidth(WIDTH);
         ScrollPane topScrollPane = applyScrollPaneStyle(new ScrollPane(topBox));
         topScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -58,26 +56,30 @@ public class App extends Application {
         topScrollPane.setFitToHeight(true);
         topScrollPane.setFitToWidth(false);
 
-        HBox topicsBox = new HBox(SPACE);
+        HBox topicsBox = new HBox(10);
         topicsBox.setPadding(new Insets(SPACE, 0, 0, 0));
         topicsBox.setAlignment(Pos.CENTER);
+        topicsBox.setPrefHeight(140);
 
-        HBox bottomBox = new HBox(SPACE);
+        HBox bottomBox = new HBox(SPACE * 4);
         VBox root = new VBox(topicsBox, topScrollPane, bottomBox);
-        topBox.setPadding(new Insets(SPACE));
-        bottomBox.setPadding(new Insets(0, SPACE, SPACE, SPACE));
+        topBox.setPadding(new Insets(10, SPACE * 3.5, SPACE * 0.5, SPACE * 3.5));
+        bottomBox.setPadding(new Insets(SPACE * 0.5, SPACE * 10, SPACE, SPACE * 10));
 
         // Boxes in the top row (scrollable)
-        StackPane applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM);
-        StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM);
-        StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM);
-        StackPane editorsBox = createBox(topBox, GRAPH_WIDTH + 200, SCREEN_DIM);
+        applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM, "PREVIEW");
+        StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM, "LIB");
+        StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM, "REPOSITORY");
+        StackPane editorsBox = createBox(topBox, EDITOR_WIDTH, SCREEN_DIM, "EDITOR");
 
         // Boxes in the bottom row
-        StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, HEIGHT - SCREEN_DIM - SPACE * 4.0);
-        StackPane terminalBox = createBox(bottomBox, WIDTH - TOOLS_WIDTH, HEIGHT - SCREEN_DIM - SPACE * 4.0);
+        StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, 20, null);
+        StackPane terminalBox = createBox(bottomBox, 1000, 20, null);
 
         ImageView slideView = new ImageView();
+        slideView.setFitWidth(1800);
+        slideView.setPreserveRatio(true);
+
         ToolsGrid toolsGrid = new ToolsGrid(toolsBox);
         Terminal terminal = new Terminal(terminalBox);
 
@@ -93,79 +95,81 @@ public class App extends Application {
 
         Scene scene = scalableScene(root, slideView);
         scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ESCAPE) {
-                slideView.setImage(null);
-            }
             if (e.getCode() == KeyCode.X) {
-                slideControl.toggleRogueMode(toolsGrid, terminal);
+                if (slideView.getImage() != null) {
+                    slideView.setImage(null);
+                } else {
+                    slideControl.toggleRogueMode(toolsGrid, terminal);
+                }
             }
         });
 
-        root.setBackground(new Background(noisyBackground()));
+        root.setPrefHeight(HEIGHT);
+
+        UI.mainBG(root);
+        UI.topicsBG(topicsBox);
+        UI.windowsBG(topBox);
+        UI.terminalBG(bottomBox);
 
         stage.setTitle("Java Modularity");
         stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
-
-        applicationBox.requestFocus(); // start on left
     }
 
     private Scene scalableScene(VBox root, ImageView slideView) {
         StackPane pane = new StackPane(root, slideView);
         Group scalableGroup = new Group(pane);
-        Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT);
+        Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT, Color.BLACK);
         Scale scale = new Scale(1, 1, 0, 0);
         scalableGroup.getTransforms().add(scale);
-        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double scaleX = newVal.doubleValue() / WIDTH;
-            double scaleY = scene.getHeight() / HEIGHT;
-            double scaleFactor = Math.min(scaleX, scaleY);
-            scale.setX(scaleFactor);
-            scale.setY(scaleFactor);
-        });
-        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
-            double scaleX = scene.getWidth() / WIDTH;
-            double scaleY = newVal.doubleValue() / HEIGHT;
-            double scaleFactor = Math.min(scaleX, scaleY);
-            scale.setX(scaleFactor);
-            scale.setY(scaleFactor);
-        });
+
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> updateScaleAndPosition(scene, scale, scalableGroup));
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> updateScaleAndPosition(scene, scale, scalableGroup));
+
         return scene;
     }
 
-    private StackPane createBox(Pane parent, double width, double height) {
+    private void updateScaleAndPosition(Scene scene, Scale scale, Group scalableGroup) {
+        double scaleX = scene.getWidth() / WIDTH;
+        double scaleY = scene.getHeight() / HEIGHT;
+        double scaleFactor = Math.min(scaleX, scaleY);
+
+        scale.setX(scaleFactor);
+        scale.setY(scaleFactor);
+
+        // Center the content
+        double offsetX = (scene.getWidth() - WIDTH * scaleFactor) / 2;
+        double offsetY = (scene.getHeight() - HEIGHT * scaleFactor) / 2;
+        scalableGroup.setTranslateX(offsetX);
+        scalableGroup.setTranslateY(offsetY);
+
+        if (applicationBox != null) {
+            applicationBox.requestFocus(); // start on left
+            applicationBox = null;
+        }
+    }
+
+    private StackPane createBox(Pane parent, double width, double height, String label) {
         StackPane inner = new StackPane();
-        inner.setPadding(new Insets(SPACE * 0.5));
-        inner.setPrefWidth(width - SPACE);
-        inner.setPrefHeight(height - SPACE);
+        inner.setPrefWidth(width);
+        inner.setPrefHeight(height);
 
         Rectangle rectangle = new Rectangle(width, height, Color.TRANSPARENT);
         StackPane stackPane = new StackPane(rectangle, inner);
-        stackPane.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+        // stackPane.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
 
-        parent.getChildren().add(stackPane);
+        if (label == null) {
+            parent.getChildren().add(stackPane);
+        } else {
+            Text labelText = new Text(label);
+            labelText.setFont(Font.font("Monospaced", FontWeight.BOLD, 24));
+            labelText.setFill(Color.DARKKHAKI);
+            VBox boxWithLabel = new VBox(SPACE * 1.5, labelText, stackPane);
+            boxWithLabel.setAlignment(Pos.CENTER);
+            parent.getChildren().add(boxWithLabel);
+        }
 
         return inner;
-    }
-
-    private BackgroundImage noisyBackground() {
-        WritableImage noiseImage = new WritableImage(WIDTH, HEIGHT);
-        PixelWriter pw = noiseImage.getPixelWriter();
-        Random rand = new Random();
-        Color base = Color.ALICEBLUE;
-
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                double noise = 0.92 + 0.08 * rand.nextDouble(); // subtle noise
-                Color c = base.interpolate(Color.WHITE, 1 - noise);
-                pw.setColor(x, y, c);
-            }
-        }
-        return new BackgroundImage(
-                noiseImage,
-                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT
-        );
     }
 }

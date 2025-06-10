@@ -5,7 +5,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.util.List;
 
@@ -17,9 +18,9 @@ public record TopicList(List<Topic> topics) {
         this(topics);
         topics.forEach(this::futureTopicStyle);
 
-        var title = slideButton("slide");
-        var cheatSheet = slideButton("slide");
-        var end = slideButton("slide");
+        var title = slideButton(140);
+        var cheatSheet = slideButton(140);
+        var end = slideButton(140);
         title.setOnMouseClicked(mouseEvent -> {
             loadOrUnloadSlide(slideView, "slide-title");
         });
@@ -34,7 +35,8 @@ public record TopicList(List<Topic> topics) {
 
         box.getChildren().addAll(title);
         box.getChildren().addAll(topics.stream().map(Topic::text).toList());
-        box.getChildren().addAll(cheatSheet, end);
+        box.getChildren().addAll(cheatSheet);
+        box.getChildren().addAll(end);
     }
 
     private void loadOrUnloadSlide(ImageView slideView, String slide) {
@@ -46,13 +48,11 @@ public record TopicList(List<Topic> topics) {
         }
     }
 
-    private static ImageView slideButton(String iconName) {
-        Image icon = new Image(("file:%s/%s.png").formatted(ASSET_LOCATION.resolve("icons"), iconName));
-        ImageView iconView = new ImageView(icon);
-        iconView.setPreserveRatio(true);
-        iconView.setFitWidth(60);
-        iconView.setPickOnBounds(true); // Enable clicks on transparent areas
-        return iconView;
+    private static Rectangle slideButton(int width) {
+        Rectangle icon = new Rectangle(width, 80);
+        icon.setFill(Color.TRANSPARENT);
+        icon.setPickOnBounds(true); // Enable clicks on transparent areas
+        return icon;
     }
 
     public void reset() {
@@ -73,19 +73,19 @@ public record TopicList(List<Topic> topics) {
 
     private void doneStyle(Topic topic) {
         topic.text().setOpacity(1);
-        Polygon arrow = (Polygon) topic.text().getChildren().getFirst();
+        Shape arrow = (Shape) topic.text().getChildren().getFirst();
         arrow.setFill(Color.LIGHTGREEN);
     }
 
     private void focusStyle(Topic topic) {
         topic.text().setOpacity(1);
-        Polygon arrow = (Polygon) topic.text().getChildren().getFirst();
+        Shape arrow = (Shape) topic.text().getChildren().getFirst();
         arrow.setFill(Color.LIGHTBLUE);
     }
 
     private void futureTopicStyle(Topic topic) {
         topic.text().setOpacity(0.3);
-        Polygon arrow = (Polygon) topic.text().getChildren().getFirst();
+        Shape arrow = (Shape) topic.text().getChildren().getFirst();
         arrow.setFill(Color.LIGHTGRAY);
     }
 }

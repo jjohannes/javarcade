@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyleMono;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_MODULES_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_NO_MODULES_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.APP_ROOT_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 import static app.javarcade.presentation.data.JavarcadeProject.NO_MODULE_PROJECT_SUFFIX;
+import static app.javarcade.presentation.ui.UI.applyScrollPaneStyleMono;
 
 public record Editor(TextArea content, Path projectContainer, Path projectWithoutModulesContainer, ImageView nuke) {
 
@@ -27,6 +27,10 @@ public record Editor(TextArea content, Path projectContainer, Path projectWithou
 
         box.setAlignment(Pos.TOP_RIGHT);
         box.getChildren().addAll(content, nuke);
+        content.heightProperty().addListener((observable, oldValue, newValue) -> {
+            content.lookupAll(".scroll-bar").forEach(bar -> bar.setOpacity(0));
+        });
+
         resetAll();
     }
 

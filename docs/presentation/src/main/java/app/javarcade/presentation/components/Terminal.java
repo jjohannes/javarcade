@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyleMono;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
@@ -35,6 +34,7 @@ import static app.javarcade.presentation.data.JavarcadeProject.APP_ROOT_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
 import static app.javarcade.presentation.data.JavarcadeProject.EXTRA_INSTALL_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.WORK_FOLDER;
+import static app.javarcade.presentation.ui.UI.applyScrollPaneStyleMono;
 
 public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovatePR, ScrollPane container) {
 
@@ -76,7 +76,9 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
     public void reset(boolean moduleSystem, ShellCommand.Tool focusedTool, boolean rogue) {
         Optional<ShellCommand> command = findCommand(moduleSystem, focusedTool);
         theTerminal.getChildren().clear();
-        theTerminal.getChildren().add(new Text(rogue ? command.orElseThrow().cmd().replace(" clean", "") : command.orElseThrow().cmd()));
+        Text text = new Text(rogue ? command.orElseThrow().cmd().replace(" clean", "") : command.orElseThrow().cmd());
+        text.setFill(Color.WHITE);
+        theTerminal.getChildren().add(text);
         theTerminal.setOpacity(0.7);
         container.setContent(theTerminal);
     }
@@ -86,7 +88,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
             String old = ((Text) theTerminal.getChildren().getFirst()).getText();
             theTerminal.getChildren().clear();
             Text text = new Text(old.split("\n")[0]);
-            text.setFill(Color.BLACK);
+            text.setFill(Color.WHITE);
             theTerminal.getChildren().add(text);
         }
         theTerminal.setOpacity(0.7);
@@ -117,7 +119,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
 
         theTerminal().setOpacity(1.0);
         Text commandText = (Text) theTerminal.getChildren().getFirst();
-        commandText.setFill(Color.DARKGREEN);
+        commandText.setFill(Color.GREEN);
 
         new Thread(() -> {
             var succeeded = runExternalCommand(cmd.get(), activeModules, commandText.getText());
@@ -125,9 +127,9 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
                 Platform.runLater(() -> {
                     updateCommand.accept(cmd.get().workDir());
                     runExternalCommand(cmd.get().followUp(), activeModules, null);
-                    applicationScreen.reloadScreenshot();
                 });
             }
+            Platform.runLater(applicationScreen::reloadScreenshot);
         }).start();
     }
 
@@ -162,7 +164,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
                 String line;
                 while ((line = reader.readLine()) != null) {
                     System.out.println(line);
-                    updateTerminal(line, Color.BLACK);
+                    updateTerminal(line, Color.WHITE);
                     if (line.equals("Calculating task graph as no cached configuration is available for tasks: build")) {
                         printGradleDownloadLog();
                     }
@@ -188,7 +190,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
         try {
             Thread.sleep(1000);
             for (String line : Files.readAllLines(ASSET_LOCATION.resolve("gradle-download.log"))) {
-                updateTerminal(line, Color.BLACK);
+                updateTerminal(line, Color.WHITE);
                 Thread.sleep(5);
             }
         } catch (IOException | InterruptedException e) {
@@ -208,6 +210,9 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
             }
             if (text.getText().contains("FAIL")) {
                 text.setFill(Color.INDIANRED);
+            }
+            if (text.getText().contains("INFO")) {
+                text.setFill(Color.WHITE);
             }
             theTerminal.getChildren().add(text);
             container.setVvalue(1.0);

@@ -2,6 +2,7 @@ package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.ShellCommand;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -15,12 +16,12 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-import static app.javarcade.presentation.components.SharedComponents.applyScrollPaneStyle;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.GRADLE;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.JAVA;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.MAVEN;
 import static app.javarcade.presentation.components.model.ShellCommand.Tool.RENOVATE;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
+import static app.javarcade.presentation.ui.UI.applyScrollPaneStyle;
 
 public record ProjectTree(TreeView<String> projectTree,
                           TreeView<String> jarTree,
@@ -32,11 +33,15 @@ public record ProjectTree(TreeView<String> projectTree,
 
         projectTree().setRoot(buildProjectTree(projectLocation));
         projectTree().setShowRoot(true);
+        projectTree().heightProperty().addListener((observable, oldValue, newValue) -> {
+            projectTree().lookupAll(".scroll-bar").forEach(bar -> bar.setOpacity(0));
+        });
 
         jarTree().setRoot(buildJarTree());
         jarTree().setShowRoot(true);
-
-        box.getChildren().add(jarTree());
+        jarTree().heightProperty().addListener((observable, oldValue, newValue) -> {
+            projectTree().lookupAll(".scroll-bar").forEach(bar -> bar.setOpacity(0));
+        });
     }
 
     private TreeItem<String> buildJarTree() {

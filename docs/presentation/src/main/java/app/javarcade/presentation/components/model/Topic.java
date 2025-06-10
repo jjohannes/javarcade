@@ -18,8 +18,8 @@ public record Topic(String title, Pane text) {
     private static Pane topicCell(String title) {
         Text text = new Text(title);
         text.setTextAlignment(TextAlignment.CENTER);
-        text.setWrappingWidth(250);
-        text.setFont(new Font(24));
+        text.setWrappingWidth(160);
+        text.setFont(new Font(22));
 
         Polygon arrow = new Polygon(
                 0.0, 0,
@@ -32,7 +32,7 @@ public record Topic(String title, Pane text) {
         arrow.setStroke(Color.BLACK);
         arrow.setStrokeWidth(2);
 
-        StackPane pane = new StackPane(arrow, text);
+        StackPane pane = new StackPane(text);
         pane.setAlignment(Pos.CENTER_LEFT);
 
         return pane;

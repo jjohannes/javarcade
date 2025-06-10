@@ -1,11 +1,12 @@
 package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.Module;
+import app.javarcade.presentation.ui.UI;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -17,18 +18,20 @@ import javafx.scene.text.Text;
 
 import java.util.Set;
 
+import static app.javarcade.presentation.ui.UI.SPACE;
+
 public record ModuleGraph(Set<Module> modules, Text label) {
 
     public ModuleGraph(StackPane box, Set<Module> modules) {
-        this(modules, new Text("lib"));
+        this(modules, (Text) box.getParent().getParent().getChildrenUnmodifiable().getFirst());
 
         GridPane grid = new GridPane();
-        label().setFont(Font.font("Monospaced", FontWeight.BOLD, 36));
         Pane overlay = new Pane();
+        grid.setPadding(new Insets(SPACE * 0.5, 0, 0, SPACE * 3));
         grid.setHgap(10);
-        grid.setVgap(10);
+        grid.setVgap(25);
         overlay.setPickOnBounds(false); // mouse events pass through
-        StackPane mainPane = new StackPane(grid, label(), overlay);
+        StackPane mainPane = new StackPane(grid, overlay);
         mainPane.setAlignment(Pos.TOP_LEFT);
         box.getChildren().add(mainPane);
         modules().forEach(module -> grid.add(module.icon(), module.columnIndex(), module.rowIndex()));
@@ -43,7 +46,7 @@ public record ModuleGraph(Set<Module> modules, Text label) {
 
         Module anyModule = modules().stream().findFirst().orElseThrow();
         StackPane parent = (StackPane) anyModule.icon().getParent().getParent();
-        Pane graphOverlay = (Pane) parent.getChildren().get(2);
+        Pane graphOverlay = (Pane) parent.getChildren().get(1);
         graphOverlay.getChildren().clear();
 
         if (graph) {
@@ -52,14 +55,12 @@ public record ModuleGraph(Set<Module> modules, Text label) {
     }
 
     private void dependencyGraph(Set<Module> activeModules, Pane overlay) {
-
-
         modules().stream().filter(activeModules::contains).forEach(from -> {
-            HBox source = from.icon();
+            Pane source = from.icon();
             Bounds srcBounds = source.localToScene(source.getBoundsInLocal());
             Point2D srcCenter = new Point2D(srcBounds.getMinX() + srcBounds.getWidth() / 2, srcBounds.getMinY() + srcBounds.getHeight() / 2);
             from.dependencies().stream().map(this::get).filter(activeModules::contains).forEach(to -> {
-                HBox target = to.icon();
+                Pane target = to.icon();
 
                 Bounds tgtBounds = target.localToScene(target.getBoundsInLocal());
                 Point2D tgtCenter = new Point2D(tgtBounds.getMinX() + tgtBounds.getWidth() / 2, tgtBounds.getMinY() + tgtBounds.getHeight() / 2);
