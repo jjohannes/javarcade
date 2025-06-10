@@ -1,7 +1,7 @@
 import org.gradle.nativeplatform.MachineArchitecture.*
 import org.gradle.nativeplatform.OperatingSystemFamily.*
 
-plugins { id("org.gradlex.jvm-dependency-conflict-resolution") }
+plugins {id("org.gradlex.jvm-dependency-conflict-resolution")}
 
 jvmDependencyConflicts {
   logging {
@@ -9,8 +9,8 @@ jvmDependencyConflicts {
   }
 
   patch {
-    listOf("", "-glfw", "-opengl", "-stb").forEach { lwjglModule ->
-      module("org.lwjgl:lwjgl$lwjglModule") {
+    listOf("", "-glfw", "-opengl", "-stb").forEach { module ->
+      module("org.lwjgl:lwjgl$module") {
         addTargetPlatformVariant("natives",
           "natives-linux", LINUX, X86_64)
         addTargetPlatformVariant("natives",
@@ -30,10 +30,13 @@ jvmDependencyConflicts {
 
 plugins.withId("java") {
   sourceSets.configureEach {
-    configurations[runtimeClasspathConfigurationName].attributes {
-      attribute(OPERATING_SYSTEM_ATTRIBUTE, objects.named(MACOS))
-      attribute(ARCHITECTURE_ATTRIBUTE, objects.named(ARM64))
-    }
+    configurations[runtimeClasspathConfigurationName]
+     .attributes {
+       attribute(OPERATING_SYSTEM_ATTRIBUTE,
+         objects.named(MACOS))
+       attribute(ARCHITECTURE_ATTRIBUTE,
+         objects.named(ARM64))
+     }
     dependencies {
       configurations[implementationConfigurationName](
         platform(project(":versions"))

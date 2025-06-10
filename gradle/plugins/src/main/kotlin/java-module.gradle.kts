@@ -1,6 +1,3 @@
-import org.gradle.nativeplatform.MachineArchitecture.*
-import org.gradle.nativeplatform.OperatingSystemFamily.*
-
 plugins {
   id("dependency-rules")
   id("repositories")
