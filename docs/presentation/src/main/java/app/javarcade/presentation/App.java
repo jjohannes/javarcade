@@ -81,7 +81,7 @@ public class App extends Application {
         slideView.setPreserveRatio(true);
 
         ToolsGrid toolsGrid = new ToolsGrid(toolsBox);
-        Terminal terminal = new Terminal(terminalBox);
+        Terminal terminal = new Terminal(terminalBox, slideView);
 
         SlideControl slideControl = new SlideControl(
                 new ApplicationScreen(applicationBox),

@@ -22,15 +22,15 @@ public record TopicList(List<Topic> topics) {
         var cheatSheet = slideButton(140);
         var end = slideButton(140);
         title.setOnMouseClicked(mouseEvent -> {
-            loadOrUnloadSlide(slideView, "slide-title");
+            loadOrUnloadSlide(slideView, "slide-title.jpg");
         });
         cheatSheet.setOnMouseClicked(mouseEvent -> {
             markDone(topics.getLast());
-            loadOrUnloadSlide(slideView, "slide-sheet");
+            loadOrUnloadSlide(slideView, "slide-sheet.jpg");
         });
         end.setOnMouseClicked(mouseEvent -> {
             markDone(topics.getLast());
-            loadOrUnloadSlide(slideView, "slide-end");
+            loadOrUnloadSlide(slideView, "slide-end.jpg");
         });
 
         box.getChildren().addAll(title);
@@ -39,8 +39,8 @@ public record TopicList(List<Topic> topics) {
         box.getChildren().addAll(end);
     }
 
-    private void loadOrUnloadSlide(ImageView slideView, String slide) {
-        var url = "file:%s/%s.jpg".formatted(ASSET_LOCATION.resolve("slides"), slide);
+    public static void loadOrUnloadSlide(ImageView slideView, String slide) {
+        var url = "file:%s/%s".formatted(ASSET_LOCATION.resolve("slides"), slide);
         if (slideView.getImage() == null || !url.equals(slideView.getImage().getUrl())) {
             slideView.setImage(new Image(url));
         } else {

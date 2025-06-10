@@ -36,10 +36,10 @@ import static app.javarcade.presentation.data.JavarcadeProject.EXTRA_INSTALL_FOL
 import static app.javarcade.presentation.data.JavarcadeProject.WORK_FOLDER;
 import static app.javarcade.presentation.ui.UI.applyScrollPaneStyleMono;
 
-public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovatePR, ScrollPane container) {
+public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView slideView, ScrollPane container) {
 
-    public Terminal(StackPane box) {
-        this(new TextFlow(), nukeButton(), browserView(), applyScrollPaneStyleMono(new ScrollPane()));
+    public Terminal(StackPane box, ImageView slideView) {
+        this(new TextFlow(), nukeButton(), slideView, applyScrollPaneStyleMono(new ScrollPane()));
 
         container.setContent(theTerminal);
         container.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -97,7 +97,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
     public void execute(boolean moduleSystem, ShellCommand.Tool focusedTool, Set<Module> activeModules,
                         ApplicationScreen applicationScreen, Consumer<Path> updateCommand) {
         if (focusedTool == RENOVATE) {
-            container.setContent(renovatePR);
+            TopicList.loadOrUnloadSlide(slideView, "renovate.png");
             return;
         }
 
