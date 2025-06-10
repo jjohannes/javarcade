@@ -46,7 +46,6 @@ public record ProjectTree(TreeView<String> projectTree,
 
     private TreeItem<String> buildJarTree() {
         TreeItem<String> repository = newItem("https://repo1.maven.org/maven2", "folder");
-        repository.setExpanded(true);
         TreeItem<String> folder = newItem("org/apache/commons/commons-csv/1.14.0", "folder");
         repository.getChildren().add(folder);
 
@@ -68,7 +67,6 @@ public record ProjectTree(TreeView<String> projectTree,
 
     private TreeItem<String> buildProjectTree(Path projectLocation) {
         TreeItem<String> rootItem = newItem(projectLocation.getFileName().toString(), "folder");
-        rootItem.setExpanded(true);
 
         TreeItem<String> buildToolConfig = newItem("gradle/plugins/src/main/kotlin", "folder"); // .mvn/config
         TreeItem<String> versions = newItem("gradle/versions", "folder"); // .mvn/versions

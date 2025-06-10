@@ -17,14 +17,14 @@ public record ToolsGrid(ImageView jpmsButton,
                         ImageView mavenButton,
                         ImageView renovateButton) {
     public ToolsGrid(StackPane box) {
-        this(logoButton("jpms"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
+        this(logoButton("java"), logoButton("gradle"), logoButton("maven"), logoButton("renovate"));
 
         GridPane grid = new GridPane();
         grid.setHgap(40);
         grid.setVgap(20);
         grid.setPadding(new Insets(10));
 
-        grid.add(new StackPane(logoButton("java"), jpmsButton), 0, 0);
+        grid.add(jpmsButton, 0, 0);
         grid.add(renovateButton, 1, 0);
         grid.add(gradleButton, 0, 1);
         grid.add(mavenButton, 1, 1);

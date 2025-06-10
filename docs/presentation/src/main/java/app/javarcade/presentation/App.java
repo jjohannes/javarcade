@@ -63,11 +63,11 @@ public class App extends Application {
 
         HBox bottomBox = new HBox(SPACE * 4);
         VBox root = new VBox(topicsBox, topScrollPane, bottomBox);
-        topBox.setPadding(new Insets(10, SPACE * 3.5, SPACE * 0.5, SPACE * 3.5));
+        topBox.setPadding(new Insets(10, SPACE * 3.5, SPACE, SPACE * 3.5));
         bottomBox.setPadding(new Insets(SPACE * 0.5, SPACE * 10, SPACE, SPACE * 10));
 
         // Boxes in the top row (scrollable)
-        applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM, "PREVIEW");
+        applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM, "APP SCREEN");
         StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM, "LIB");
         StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM, "REPOSITORY");
         StackPane editorsBox = createBox(topBox, EDITOR_WIDTH, SCREEN_DIM, "EDITOR");
@@ -165,8 +165,8 @@ public class App extends Application {
             Text labelText = new Text(label);
             labelText.setFont(Font.font("Monospaced", FontWeight.BOLD, 24));
             labelText.setFill(Color.DARKKHAKI);
-            VBox boxWithLabel = new VBox(SPACE * 1.5, labelText, stackPane);
-            boxWithLabel.setAlignment(Pos.CENTER);
+            VBox boxWithLabel = new VBox(SPACE * 1.2, labelText, stackPane);
+            boxWithLabel.setAlignment(Pos.TOP_CENTER);
             parent.getChildren().add(boxWithLabel);
         }
 

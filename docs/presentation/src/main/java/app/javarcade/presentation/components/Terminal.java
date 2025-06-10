@@ -203,7 +203,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView renovateP
             Text text = new Text("\n" + nextLine);
             text.setFill(color);
             if (text.getText().contains("Download")) {
-                text.setFill(Color.DARKSLATEGRAY);
+                text.setFill(Color.LIGHTSLATEGREY);
             }
             if (text.getText().contains("SUCCESS")) {
                 text.setFill(Color.DARKGREEN);
