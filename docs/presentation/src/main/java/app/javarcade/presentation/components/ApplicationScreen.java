@@ -1,5 +1,6 @@
 package app.javarcade.presentation.components;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -17,6 +18,7 @@ public record ApplicationScreen(ImageView screenshot) {
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(box.getPrefWidth());
         imageView.setFitHeight(box.getPrefHeight());
+        box.setAlignment(Pos.CENTER);
         box.getChildren().add(imageView);
         return imageView;
     }

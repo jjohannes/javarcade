@@ -32,10 +32,13 @@ import javafx.stage.Stage;
 
 import static app.javarcade.presentation.data.JavarcadeProject.APP_ROOT_FOLDER;
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
+import static app.javarcade.presentation.ui.UI.BOTTOM_START;
 import static app.javarcade.presentation.ui.UI.EDITOR_WIDTH;
 import static app.javarcade.presentation.ui.UI.GRAPH_WIDTH;
 import static app.javarcade.presentation.ui.UI.HEIGHT;
-import static app.javarcade.presentation.ui.UI.SCREEN_DIM;
+import static app.javarcade.presentation.ui.UI.MIDDLE_CONTENT_HEIGHT;
+import static app.javarcade.presentation.ui.UI.MIDDLE_START;
+import static app.javarcade.presentation.ui.UI.APP_SCREEN_WIDTH;
 import static app.javarcade.presentation.ui.UI.SPACE;
 import static app.javarcade.presentation.ui.UI.TOOLS_WIDTH;
 import static app.javarcade.presentation.ui.UI.TREE_WIDTH;
@@ -48,33 +51,28 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        HBox topBox = new HBox(SPACE * 2);
-        topBox.setPrefWidth(WIDTH);
-        ScrollPane topScrollPane = applyScrollPaneStyle(new ScrollPane(topBox));
-        topScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        topScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        topScrollPane.setFitToHeight(true);
-        topScrollPane.setFitToWidth(false);
-
-        HBox topicsBox = new HBox(10);
-        topicsBox.setPadding(new Insets(SPACE, 0, 0, 0));
+        HBox topicsBox = new HBox(SPACE * 0.5);
         topicsBox.setAlignment(Pos.CENTER);
-        topicsBox.setPrefHeight(140);
+
+        HBox middleBox = new HBox(SPACE * 2);
+        middleBox.setPrefWidth(WIDTH);
+        ScrollPane middleScrollPane = applyScrollPaneStyle(new ScrollPane(middleBox));
+        middleScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        middleScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        middleScrollPane.setFitToHeight(true);
+        middleScrollPane.setFitToWidth(false);
 
         HBox bottomBox = new HBox(SPACE * 4);
-        VBox root = new VBox(topicsBox, topScrollPane, bottomBox);
-        topBox.setPadding(new Insets(10, SPACE * 3.5, SPACE, SPACE * 3.5));
-        bottomBox.setPadding(new Insets(SPACE * 0.5, SPACE * 10, SPACE, SPACE * 10));
 
         // Boxes in the top row (scrollable)
-        applicationBox = createBox(topBox, SCREEN_DIM, SCREEN_DIM, "APP SCREEN");
-        StackPane moduleGraphBox = createBox(topBox, GRAPH_WIDTH, SCREEN_DIM, "LIB");
-        StackPane projectStructureBox = createBox(topBox, TREE_WIDTH, SCREEN_DIM, "REPOSITORY");
-        StackPane editorsBox = createBox(topBox, EDITOR_WIDTH, SCREEN_DIM, "EDITOR");
+        applicationBox = createBox(middleBox, APP_SCREEN_WIDTH, MIDDLE_CONTENT_HEIGHT, "APP SCREEN");
+        StackPane moduleGraphBox = createBox(middleBox, GRAPH_WIDTH, MIDDLE_CONTENT_HEIGHT, "LIB");
+        StackPane projectStructureBox = createBox(middleBox, TREE_WIDTH, MIDDLE_CONTENT_HEIGHT, "REPOSITORY");
+        StackPane editorsBox = createBox(middleBox, EDITOR_WIDTH, MIDDLE_CONTENT_HEIGHT, "EDITOR");
 
         // Boxes in the bottom row
-        StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, 20, null);
-        StackPane terminalBox = createBox(bottomBox, 1000, 20, null);
+        StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, 0, null);
+        StackPane terminalBox = createBox(bottomBox, 1120, 0, null);
 
         ImageView slideView = new ImageView();
         slideView.setFitWidth(1800);
@@ -93,6 +91,20 @@ public class App extends Application {
                 new TopicList(topicsBox, JavarcadeProject.topics(), slideView)
         );
 
+        var root = new StackPane(topicsBox, middleScrollPane, bottomBox);
+        root.setPrefHeight(HEIGHT);
+
+        StackPane.setMargin(middleScrollPane, new Insets(MIDDLE_START, 0, 0, 0));
+        StackPane.setMargin(bottomBox, new Insets(BOTTOM_START, 0, 0, 0));
+
+        middleBox.setPadding(new Insets(5, SPACE * 3.5, 0, SPACE * 3.5));
+        bottomBox.setPadding(new Insets(SPACE, SPACE * 10, 2 * SPACE, SPACE * 10));
+
+        UI.mainBG(root);
+        UI.topicsBG(topicsBox);
+        UI.windowsBG(middleBox);
+        UI.terminalBG(bottomBox);
+
         Scene scene = scalableScene(root, slideView);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.X) {
@@ -103,21 +115,13 @@ public class App extends Application {
                 }
             }
         });
-
-        root.setPrefHeight(HEIGHT);
-
-        UI.mainBG(root);
-        UI.topicsBG(topicsBox);
-        UI.windowsBG(topBox);
-        UI.terminalBG(bottomBox);
-
         stage.setTitle("Java Modularity");
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
     }
 
-    private Scene scalableScene(VBox root, ImageView slideView) {
+    private Scene scalableScene(Pane root, ImageView slideView) {
         StackPane pane = new StackPane(root, slideView);
         Group scalableGroup = new Group(pane);
         Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT, Color.BLACK);
@@ -153,7 +157,9 @@ public class App extends Application {
     private StackPane createBox(Pane parent, double width, double height, String label) {
         StackPane inner = new StackPane();
         inner.setPrefWidth(width);
-        inner.setPrefHeight(height);
+        if (height > 0) {
+            inner.setPrefHeight(height);
+        }
 
         Rectangle rectangle = new Rectangle(width, height, Color.TRANSPARENT);
         StackPane stackPane = new StackPane(rectangle, inner);
@@ -165,7 +171,7 @@ public class App extends Application {
             Text labelText = new Text(label);
             labelText.setFont(Font.font("Monospaced", FontWeight.BOLD, 24));
             labelText.setFill(Color.DARKKHAKI);
-            VBox boxWithLabel = new VBox(SPACE * 1.2, labelText, stackPane);
+            VBox boxWithLabel = new VBox(SPACE * 0.5, labelText, stackPane);
             boxWithLabel.setAlignment(Pos.TOP_CENTER);
             parent.getChildren().add(boxWithLabel);
         }

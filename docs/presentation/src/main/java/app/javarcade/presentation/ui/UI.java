@@ -16,11 +16,15 @@ public interface UI {
     int HEIGHT = 1080;
     int SPACE = 20;
 
-    int SCREEN_DIM = 600;
+    int MIDDLE_START = 145;
+    int BOTTOM_START = MIDDLE_START + 680;
+    int MIDDLE_CONTENT_HEIGHT = 625;
+
+    int APP_SCREEN_WIDTH = 600;
     int TOOLS_WIDTH = 300;
     int TREE_WIDTH = 580;
     int GRAPH_WIDTH = 660;
-    int EDITOR_WIDTH = 800;
+    int EDITOR_WIDTH = 880;
 
     static <T extends Node> T applyScrollPaneStyle(T pane) {
         pane.setStyle("-fx-background-color: transparent;" +
@@ -49,7 +53,7 @@ public interface UI {
     }
 
     static void mainBG(Region main) {
-        Image bgImage = layoutImage("bg");
+        Image bgImage = layoutImage("bg.jpg");
         BackgroundImage backgroundImage = new BackgroundImage(
                 bgImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -61,7 +65,7 @@ public interface UI {
     }
 
     static void topicsBG(Region main) {
-        Image bgImage = layoutImage("topics");
+        Image bgImage = layoutImage("topics.png");
         BackgroundImage backgroundImage = new BackgroundImage(
                 bgImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -73,7 +77,7 @@ public interface UI {
     }
 
     static void terminalBG(Region main) {
-        Image bgImage = layoutImage("terminal");
+        Image bgImage = layoutImage("terminal.png");
         BackgroundImage backgroundImage = new BackgroundImage(
                 bgImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -85,7 +89,7 @@ public interface UI {
     }
 
     static void windowsBG(Region main) {
-        Image bgImage = layoutImage("windows");
+        Image bgImage = layoutImage("windows.png");
         BackgroundImage backgroundImage = new BackgroundImage(
                 bgImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -97,6 +101,6 @@ public interface UI {
     }
 
     private static Image layoutImage(String name) {
-        return new Image("file:%s/%s.png".formatted(ASSET_LOCATION.resolve("layout"), name));
+        return new Image("file:%s/%s".formatted(ASSET_LOCATION.resolve("layout"), name));
     }
 }

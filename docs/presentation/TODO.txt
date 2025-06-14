@@ -1,6 +1,38 @@
+Wording/Theme:
+- Title: Javarcade, because "Java + Arcade Game"
+- Example: Bomberman, because "Arcade Game", composable modules with visual counterparts, 4 Players (= 4 Tools)
+- Theme: Marmelade Jars, because a Module in Java is a "Jar", playful/light theme, our version of Bomberman, no Bombs, but Marmelade
+
 Layouting/Assets
-- General layout and style
-- Slides
+- Slide Layout
+- Jars with logo/content for "shelf" (folder):
+  - Own Jars (maybe all same design?): Model, Engine, Assets, Items, Levels, Renderer
+  - Jars with Logo: Apache, LWJGL, SLF"J
+- Tool "buttons" based on 4 characters
+  - Gradle Elephant, Maven Owl, Java Duke (+ Jigsaw), Dependabot Robot
+
+Theme - 4 Characters + (Exploding) Marmelade Jars
+- Slides / Theme based on the 4 Characters / reuse Background pattern
   - Cheat Sheet
   - Title
   - End
+
+Game Assets for Example (after other things are good)
+- 4 Character Sprites - based on character (walk/explode animations maybe later)
+- solid wall
+- destructible wall
+- Marmelade Jar with (explode Animation with flexible length)
+- Items:
+  - Marmelade Jar (pick up)
+  - Increase explosion length
+  - Increase character speed
+
+OPEN:
+- Editor 100px breiter
+
+
+BUGs:
+- Jars are never copied from 'without-modules-version'
+
+FUNC:
+- When selecting Module in tree: select it and its dependencies

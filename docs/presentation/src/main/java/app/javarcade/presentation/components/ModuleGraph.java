@@ -27,7 +27,7 @@ public record ModuleGraph(Set<Module> modules, Text label) {
 
         GridPane grid = new GridPane();
         Pane overlay = new Pane();
-        grid.setPadding(new Insets(SPACE * 0.8, 0, 0, SPACE * 3));
+        grid.setPadding(new Insets(SPACE * 1.7, 0, 0, SPACE * 3));
         grid.setHgap(10);
         grid.setVgap(25);
         overlay.setPickOnBounds(false); // mouse events pass through
