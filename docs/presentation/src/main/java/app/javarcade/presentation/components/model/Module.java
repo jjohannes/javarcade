@@ -46,7 +46,7 @@ public record Module(String jarName, int columnIndex, int rowIndex, Set<String> 
         text.setWrappingWidth(84);
 
         StackPane textWrapper = new StackPane(text);
-        textWrapper.setPadding(new Insets(0, 0 , 22, 60));
+        textWrapper.setPadding(new Insets(0, 0 , 22, 64));
         StackPane box = new StackPane(iconView, textWrapper);
         box.setAlignment(Pos.CENTER_RIGHT);
         return box;

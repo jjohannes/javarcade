@@ -40,6 +40,7 @@ import static app.javarcade.presentation.ui.UI.MIDDLE_CONTENT_HEIGHT;
 import static app.javarcade.presentation.ui.UI.MIDDLE_START;
 import static app.javarcade.presentation.ui.UI.APP_SCREEN_WIDTH;
 import static app.javarcade.presentation.ui.UI.SPACE;
+import static app.javarcade.presentation.ui.UI.TERMINAL_WIDTH;
 import static app.javarcade.presentation.ui.UI.TOOLS_WIDTH;
 import static app.javarcade.presentation.ui.UI.TREE_WIDTH;
 import static app.javarcade.presentation.ui.UI.WIDTH;
@@ -52,7 +53,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         HBox topicsBox = new HBox(SPACE * 0.5);
-        topicsBox.setAlignment(Pos.CENTER);
+        topicsBox.setAlignment(Pos.TOP_CENTER);
 
         HBox middleBox = new HBox(SPACE * 2);
         middleBox.setPrefWidth(WIDTH);
@@ -71,11 +72,11 @@ public class App extends Application {
         StackPane editorsBox = createBox(middleBox, EDITOR_WIDTH, MIDDLE_CONTENT_HEIGHT, "EDITOR");
 
         // Boxes in the bottom row
-        StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH - SPACE * 4, 0, null);
-        StackPane terminalBox = createBox(bottomBox, 1120, 0, null);
+        StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH, 0, null);
+        StackPane terminalBox = createBox(bottomBox, TERMINAL_WIDTH, 0, null);
 
         ImageView slideView = new ImageView();
-        slideView.setFitWidth(1800);
+        slideView.setFitWidth(WIDTH);
         slideView.setPreserveRatio(true);
 
         ToolsGrid toolsGrid = new ToolsGrid(toolsBox);
@@ -97,6 +98,7 @@ public class App extends Application {
         StackPane.setMargin(middleScrollPane, new Insets(MIDDLE_START, 0, 0, 0));
         StackPane.setMargin(bottomBox, new Insets(BOTTOM_START, 0, 0, 0));
 
+        topicsBox.setPadding(new Insets(SPACE * 2.5, 0, 0, 0));
         middleBox.setPadding(new Insets(5, SPACE * 3.5, 0, SPACE * 3.5));
         bottomBox.setPadding(new Insets(SPACE, SPACE * 10, 2 * SPACE, SPACE * 10));
 

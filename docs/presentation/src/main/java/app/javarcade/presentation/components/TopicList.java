@@ -6,7 +6,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 import java.util.List;
 
@@ -73,19 +72,13 @@ public record TopicList(List<Topic> topics) {
 
     private void doneStyle(Topic topic) {
         topic.text().setOpacity(1);
-        Shape arrow = (Shape) topic.text().getChildren().getFirst();
-        arrow.setFill(Color.LIGHTGREEN);
     }
 
     private void focusStyle(Topic topic) {
         topic.text().setOpacity(1);
-        Shape arrow = (Shape) topic.text().getChildren().getFirst();
-        arrow.setFill(Color.LIGHTBLUE);
     }
 
     private void futureTopicStyle(Topic topic) {
         topic.text().setOpacity(0.3);
-        Shape arrow = (Shape) topic.text().getChildren().getFirst();
-        arrow.setFill(Color.LIGHTGRAY);
     }
 }

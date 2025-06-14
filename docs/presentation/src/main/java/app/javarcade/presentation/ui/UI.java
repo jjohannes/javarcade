@@ -21,10 +21,11 @@ public interface UI {
     int MIDDLE_CONTENT_HEIGHT = 625;
 
     int APP_SCREEN_WIDTH = 600;
-    int TOOLS_WIDTH = 300;
     int TREE_WIDTH = 580;
     int GRAPH_WIDTH = 660;
     int EDITOR_WIDTH = 880;
+    int TOOLS_WIDTH = 220;
+    int TERMINAL_WIDTH = 1120;
 
     static <T extends Node> T applyScrollPaneStyle(T pane) {
         pane.setStyle("-fx-background-color: transparent;" +
