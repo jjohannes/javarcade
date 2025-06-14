@@ -167,7 +167,7 @@ public class SlideControl {
             return;
         }
         if (selectedItem.getValue().startsWith("java-module")) {
-            topics.markDone(topics.topics().get(4));
+            topics.focus(topics.topics().get(4));
             return;
         }
         if (selectedItem.getValue().startsWith("compile") || selectedItem.getValue().startsWith("test")) {

@@ -65,10 +65,10 @@ public interface JavarcadeProject {
 
     static List<Topic> topics() {
         return List.of(
-                new Topic("Dependency Definition"),
+                new Topic("Module Dependency Definition"),
                 new Topic("Module\nVersion\nManagement"),
-                new Topic("Retrieving\nand Building\nJARs"),
-                new Topic("Version and Variant Conflict Management"),
+                new Topic("Retrieving\n& Building JARs"),
+                new Topic("Version\n& Variant Conflicts"), // Management
                 new Topic("Dependency Consistency Checks"),
                 new Topic("Version\nUpdate Management")
         );

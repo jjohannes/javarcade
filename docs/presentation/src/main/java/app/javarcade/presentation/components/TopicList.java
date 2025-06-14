@@ -1,20 +1,25 @@
 package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.Topic;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static app.javarcade.presentation.data.JavarcadeProject.ASSET_LOCATION;
+import static app.javarcade.presentation.ui.UI.SPACE;
 
-public record TopicList(List<Topic> topics) {
+public record TopicList(List<Topic> topics, List<ImageView> topicFocusBg) {
 
-    public TopicList(HBox box, List<Topic> topics, ImageView slideView) {
-        this(topics);
+    public TopicList(Pane box, List<Topic> topics, ImageView slideView) {
+        this(topics, new ArrayList<>());
         topics.forEach(this::futureTopicStyle);
 
         var title = slideButton(140);
@@ -24,18 +29,31 @@ public record TopicList(List<Topic> topics) {
             loadOrUnloadSlide(slideView, "slide-title.jpg");
         });
         cheatSheet.setOnMouseClicked(mouseEvent -> {
-            markDone(topics.getLast());
+            focus(topics.getLast());
             loadOrUnloadSlide(slideView, "slide-sheet.jpg");
         });
         end.setOnMouseClicked(mouseEvent -> {
-            markDone(topics.getLast());
+            focus(topics.getLast());
             loadOrUnloadSlide(slideView, "slide-end.jpg");
         });
 
-        box.getChildren().addAll(title);
-        box.getChildren().addAll(topics.stream().map(Topic::text).toList());
-        box.getChildren().addAll(cheatSheet);
-        box.getChildren().addAll(end);
+        HBox bar = new HBox(SPACE * 0.5);
+        bar.setAlignment(Pos.TOP_CENTER);
+        bar.setPadding(new Insets(SPACE * 2.5, 0, 0, 0));
+
+        bar.getChildren().addAll(title);
+        bar.getChildren().addAll(topics.stream().map(Topic::text).toList());
+        bar.getChildren().addAll(cheatSheet);
+        bar.getChildren().addAll(end);
+
+        for (int i = 0; i <= topics.size(); i++) {
+            var image = new ImageView(new Image("file:%s/topics%s.png".formatted(ASSET_LOCATION.resolve("layout"), i)));
+            topicFocusBg.add(image);
+            image.setVisible(false);
+            box.getChildren().add(image);
+        }
+
+        box.getChildren().add(bar);
     }
 
     public static void loadOrUnloadSlide(ImageView slideView, String slide) {
@@ -59,23 +77,15 @@ public record TopicList(List<Topic> topics) {
     }
 
     public void focus(Topic topic) {
-        topics.stream().dropWhile(t -> t != topic).forEach(this::futureTopicStyle);
-        topics.stream().takeWhile(t -> t != topic).forEach(this::doneStyle);
-        focusStyle(topic);
-    }
-
-    public void markDone(Topic topic) {
-        topics.stream().dropWhile(t -> t != topic).forEach(this::futureTopicStyle);
-        topics.stream().takeWhile(t -> t != topic).forEach(this::doneStyle);
-        if (topic != null) doneStyle(topic);
-    }
-
-    private void doneStyle(Topic topic) {
-        topic.text().setOpacity(1);
-    }
-
-    private void focusStyle(Topic topic) {
-        topic.text().setOpacity(1);
+        int topicIndex = topic == null ? 0 : topics.indexOf(topic);
+        for (int i = 0; i <= topicIndex; i++) {
+            topics.get(i).text().setOpacity(1.0);
+            topicFocusBg.get(i).setVisible(true);
+        }
+        for (int i = topicIndex + 1; i < topics.size(); i++) {
+            topics.get(i).text().setOpacity(0.3);
+            topicFocusBg.get(i).setVisible(false);
+        }
     }
 
     private void futureTopicStyle(Topic topic) {

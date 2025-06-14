@@ -52,10 +52,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        HBox topicsBox = new HBox(SPACE * 0.5);
-        topicsBox.setAlignment(Pos.TOP_CENTER);
+        var topicsBox = new StackPane();
+        topicsBox.setAlignment(Pos.TOP_LEFT);
 
-        HBox middleBox = new HBox(SPACE * 2);
+        var middleBox = new HBox(SPACE * 2);
         middleBox.setPrefWidth(WIDTH);
         ScrollPane middleScrollPane = applyScrollPaneStyle(new ScrollPane(middleBox));
         middleScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -63,7 +63,7 @@ public class App extends Application {
         middleScrollPane.setFitToHeight(true);
         middleScrollPane.setFitToWidth(false);
 
-        HBox bottomBox = new HBox(SPACE * 4);
+        var bottomBox = new HBox(SPACE * 4);
 
         // Boxes in the top row (scrollable)
         applicationBox = createBox(middleBox, APP_SCREEN_WIDTH, MIDDLE_CONTENT_HEIGHT, "APP SCREEN");
@@ -98,7 +98,6 @@ public class App extends Application {
         StackPane.setMargin(middleScrollPane, new Insets(MIDDLE_START, 0, 0, 0));
         StackPane.setMargin(bottomBox, new Insets(BOTTOM_START, 0, 0, 0));
 
-        topicsBox.setPadding(new Insets(SPACE * 2.5, 0, 0, 0));
         middleBox.setPadding(new Insets(5, SPACE * 3.5, 0, SPACE * 3.5));
         bottomBox.setPadding(new Insets(SPACE, SPACE * 10, 2 * SPACE, SPACE * 10));
 

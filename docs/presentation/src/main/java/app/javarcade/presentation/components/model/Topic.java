@@ -1,9 +1,8 @@
 package app.javarcade.presentation.components.model;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -18,6 +17,8 @@ public record Topic(String title, Text text) {
         text.setTextAlignment(TextAlignment.CENTER);
         text.setWrappingWidth(160);
         text.setFont(new Font(22));
+        text.setFont(Font.font("Monospaced", FontWeight.BOLD, FontPosture.ITALIC, 21));
+        text.setOpacity(0.3);
         return text;
     }
 }
