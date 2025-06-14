@@ -54,54 +54,34 @@ public interface UI {
     }
 
     static void mainBG(Region main) {
-        Image bgImage = layoutImage("bg.jpg");
-        BackgroundImage backgroundImage = new BackgroundImage(
-                bgImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT
-        );
-        main.setBackground(new Background(backgroundImage));
+        main.setBackground(layoutImage("bg.jpg"));
     }
 
     static void topicsBG(Region main) {
-        Image bgImage = layoutImage("topics.png");
-        BackgroundImage backgroundImage = new BackgroundImage(
-                bgImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT
-        );
-        main.setBackground(new Background(backgroundImage));
+        main.setBackground(layoutImage("topics.png"));
     }
 
     static void terminalBG(Region main) {
-        Image bgImage = layoutImage("terminal.png");
-        BackgroundImage backgroundImage = new BackgroundImage(
-                bgImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT
-        );
-        main.setBackground(new Background(backgroundImage));
+        main.setBackground(layoutImage("terminal.png"));
     }
 
     static void windowsBG(Region main) {
-        Image bgImage = layoutImage("windows.png");
+        main.setBackground(layoutImage("windows.png"));
+    }
+
+    static void slideBG(Region slide) {
+        slide.setBackground(layoutImage("slide.jpg"));
+    }
+
+    private static Background layoutImage(String name) {
+        Image image = new Image("file:%s/%s".formatted(ASSET_LOCATION.resolve("layout"), name));
         BackgroundImage backgroundImage = new BackgroundImage(
-                bgImage,
+                image,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT
         );
-        main.setBackground(new Background(backgroundImage));
-    }
-
-    private static Image layoutImage(String name) {
-        return new Image("file:%s/%s".formatted(ASSET_LOCATION.resolve("layout"), name));
+        return new Background(backgroundImage);
     }
 }

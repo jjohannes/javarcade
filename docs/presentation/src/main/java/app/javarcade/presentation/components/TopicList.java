@@ -58,10 +58,11 @@ public record TopicList(List<Topic> topics, List<ImageView> topicFocusBg) {
 
     public static void loadOrUnloadSlide(ImageView slideView, String slide) {
         var url = "file:%s/%s".formatted(ASSET_LOCATION.resolve("slides"), slide);
-        if (slideView.getImage() == null || !url.equals(slideView.getImage().getUrl())) {
-            slideView.setImage(new Image(url));
+        if (slideView.getParent().isVisible()) {
+            slideView.getParent().setVisible(false);
         } else {
-            slideView.setImage(null);
+            slideView.setImage(new Image(url));
+            slideView.getParent().setVisible(true);
         }
     }
 

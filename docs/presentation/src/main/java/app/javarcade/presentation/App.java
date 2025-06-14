@@ -75,12 +75,15 @@ public class App extends Application {
         StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH, 0, null);
         StackPane terminalBox = createBox(bottomBox, TERMINAL_WIDTH, 0, null);
 
-        ImageView slideView = new ImageView();
-        slideView.setFitWidth(WIDTH);
-        slideView.setPreserveRatio(true);
+        ImageView slideImg = new ImageView();
+        slideImg.setFitWidth(900);
+        slideImg.setPreserveRatio(true);
+        StackPane slideView = new StackPane(slideImg);
+        slideView.setPrefWidth(WIDTH);
+        slideView.setVisible(false);
 
         ToolsGrid toolsGrid = new ToolsGrid(toolsBox);
-        Terminal terminal = new Terminal(terminalBox, slideView);
+        Terminal terminal = new Terminal(terminalBox, slideImg);
 
         SlideControl slideControl = new SlideControl(
                 new ApplicationScreen(applicationBox),
@@ -89,7 +92,7 @@ public class App extends Application {
                 new Editor(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
                 terminal,
                 toolsGrid,
-                new TopicList(topicsBox, JavarcadeProject.topics(), slideView)
+                new TopicList(topicsBox, JavarcadeProject.topics(), slideImg)
         );
 
         var root = new StackPane(topicsBox, middleScrollPane, bottomBox);
@@ -105,12 +108,13 @@ public class App extends Application {
         UI.topicsBG(topicsBox);
         UI.windowsBG(middleBox);
         UI.terminalBG(bottomBox);
+        UI.slideBG(slideView);
 
         Scene scene = scalableScene(root, slideView);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.X) {
-                if (slideView.getImage() != null) {
-                    slideView.setImage(null);
+                if (slideView.isVisible()) {
+                    slideView.setVisible(false);
                 } else {
                     slideControl.toggleRogueMode(toolsGrid, terminal);
                 }
@@ -122,7 +126,7 @@ public class App extends Application {
         stage.show();
     }
 
-    private Scene scalableScene(Pane root, ImageView slideView) {
+    private Scene scalableScene(Pane root, StackPane slideView) {
         StackPane pane = new StackPane(root, slideView);
         Group scalableGroup = new Group(pane);
         Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT, Color.BLACK);

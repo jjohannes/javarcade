@@ -2,7 +2,13 @@ plugins {
   id("dependency-rules")
   id("repositories")
   id("distribution")
+  id("application")
   id("java")
+}
+
+application {
+  mainModule = "app.javarcade.base.engine"
+  mainClass = "app.javarcade.base.engine.Engine"
 }
 
 distributions.main {
