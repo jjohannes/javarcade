@@ -1,12 +1,14 @@
 package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.Topic;
+import app.javarcade.presentation.ui.UI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -18,7 +20,7 @@ import static app.javarcade.presentation.ui.UI.SPACE;
 
 public record TopicList(List<Topic> topics, List<ImageView> topicFocusBg) {
 
-    public TopicList(Pane box, List<Topic> topics, ImageView slideView) {
+    public TopicList(Pane box, List<Topic> topics, StackPane slideView) {
         this(topics, new ArrayList<>());
         topics.forEach(this::futureTopicStyle);
 
@@ -26,15 +28,15 @@ public record TopicList(List<Topic> topics, List<ImageView> topicFocusBg) {
         var cheatSheet = slideButton(140);
         var end = slideButton(140);
         title.setOnMouseClicked(mouseEvent -> {
-            loadOrUnloadSlide(slideView, "slide-title.jpg");
+            UI.slideTitle(slideView);
         });
         cheatSheet.setOnMouseClicked(mouseEvent -> {
             focus(topics.getLast());
-            loadOrUnloadSlide(slideView, "slide-sheet.jpg");
+            UI.slideRecipe(slideView);
         });
         end.setOnMouseClicked(mouseEvent -> {
             focus(topics.getLast());
-            loadOrUnloadSlide(slideView, "slide-end.jpg");
+            UI.slideEnd(slideView);
         });
 
         HBox bar = new HBox(SPACE * 0.5);
@@ -56,20 +58,10 @@ public record TopicList(List<Topic> topics, List<ImageView> topicFocusBg) {
         box.getChildren().add(bar);
     }
 
-    public static void loadOrUnloadSlide(ImageView slideView, String slide) {
-        var url = "file:%s/%s".formatted(ASSET_LOCATION.resolve("slides"), slide);
-        if (slideView.getParent().isVisible()) {
-            slideView.getParent().setVisible(false);
-        } else {
-            slideView.setImage(new Image(url));
-            slideView.getParent().setVisible(true);
-        }
-    }
-
     private static Rectangle slideButton(int width) {
         Rectangle icon = new Rectangle(width, 80);
         icon.setFill(Color.TRANSPARENT);
-        icon.setPickOnBounds(true); // Enable clicks on transparent areas
+        icon.setPickOnBounds(true);
         return icon;
     }
 

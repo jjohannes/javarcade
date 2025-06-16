@@ -40,7 +40,6 @@ public record Module(String jarName, int columnIndex, int rowIndex, Set<String> 
         iconView.setFitHeight(100);
 
         Text text = new Text(jarName.replace("-", "-\n").replace("-\n3.3.6-\n", "-3.3.6\n-").toUpperCase());
-        text.setFont(Font.font("Monospaced", FontWeight.NORMAL, 14));
         text.setTextAlignment(TextAlignment.LEFT);
         text.setFont(new Font(14));
         text.setWrappingWidth(84);

@@ -3,11 +3,13 @@ package app.javarcade.presentation.components;
 import app.javarcade.presentation.components.model.Module;
 import app.javarcade.presentation.components.model.ShellCommand;
 import app.javarcade.presentation.data.JavarcadeProject;
+import app.javarcade.presentation.ui.UI;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -36,9 +38,9 @@ import static app.javarcade.presentation.data.JavarcadeProject.EXTRA_INSTALL_FOL
 import static app.javarcade.presentation.data.JavarcadeProject.WORK_FOLDER;
 import static app.javarcade.presentation.ui.UI.applyScrollPaneStyleMono;
 
-public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView slideView, ScrollPane container) {
+public record Terminal(TextFlow theTerminal, ImageView nuke, StackPane slideView, ScrollPane container) {
 
-    public Terminal(StackPane box, ImageView slideView) {
+    public Terminal(StackPane box, StackPane slideView) {
         this(new TextFlow(), nukeButton(), slideView, applyScrollPaneStyleMono(new ScrollPane()));
 
         container.setContent(theTerminal);
@@ -97,7 +99,7 @@ public record Terminal(TextFlow theTerminal, ImageView nuke, ImageView slideView
     public void execute(boolean moduleSystem, ShellCommand.Tool focusedTool, Set<Module> activeModules,
                         ApplicationScreen applicationScreen, Consumer<Path> updateCommand) {
         if (focusedTool == RENOVATE) {
-            TopicList.loadOrUnloadSlide(slideView, "renovate.png");
+            UI.slideRenovate(slideView);
             return;
         }
 

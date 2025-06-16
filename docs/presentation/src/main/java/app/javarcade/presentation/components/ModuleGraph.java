@@ -1,7 +1,6 @@
 package app.javarcade.presentation.components;
 
 import app.javarcade.presentation.components.model.Module;
-import app.javarcade.presentation.ui.UI;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -12,8 +11,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.Set;

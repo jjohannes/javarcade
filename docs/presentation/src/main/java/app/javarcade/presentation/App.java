@@ -16,8 +16,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -75,15 +79,13 @@ public class App extends Application {
         StackPane toolsBox = createBox(bottomBox, TOOLS_WIDTH, 0, null);
         StackPane terminalBox = createBox(bottomBox, TERMINAL_WIDTH, 0, null);
 
-        ImageView slideImg = new ImageView();
-        slideImg.setFitWidth(900);
-        slideImg.setPreserveRatio(true);
-        StackPane slideView = new StackPane(slideImg);
+        StackPane slideView = new StackPane();
+        slideView.setPadding(new Insets(80));
         slideView.setPrefWidth(WIDTH);
         slideView.setVisible(false);
 
         ToolsGrid toolsGrid = new ToolsGrid(toolsBox);
-        Terminal terminal = new Terminal(terminalBox, slideImg);
+        Terminal terminal = new Terminal(terminalBox, slideView);
 
         SlideControl slideControl = new SlideControl(
                 new ApplicationScreen(applicationBox),
@@ -92,7 +94,7 @@ public class App extends Application {
                 new Editor(editorsBox, APP_ROOT_FOLDER.getParent(), ASSET_LOCATION),
                 terminal,
                 toolsGrid,
-                new TopicList(topicsBox, JavarcadeProject.topics(), slideImg)
+                new TopicList(topicsBox, JavarcadeProject.topics(), slideView)
         );
 
         var root = new StackPane(topicsBox, middleScrollPane, bottomBox);
@@ -120,6 +122,7 @@ public class App extends Application {
                 }
             }
         });
+        slideView.setOnMouseClicked(e -> slideView.setVisible(false));
         stage.setTitle("Java Modularity");
         stage.setScene(scene);
         stage.setFullScreen(true);
@@ -127,6 +130,10 @@ public class App extends Application {
     }
 
     private Scene scalableScene(Pane root, StackPane slideView) {
+        GaussianBlur blur = new GaussianBlur(20);
+        slideView.visibleProperty().addListener((obs, wasVisible, isNowVisible) -> {
+            root.setEffect(isNowVisible ? blur : null);
+        });
         StackPane pane = new StackPane(root, slideView);
         Group scalableGroup = new Group(pane);
         Scene scene = new Scene(scalableGroup, WIDTH, HEIGHT, Color.BLACK);

@@ -16,7 +16,6 @@ public record Topic(String title, Text text) {
         Text text = new Text(title);
         text.setTextAlignment(TextAlignment.CENTER);
         text.setWrappingWidth(160);
-        text.setFont(new Font(22));
         text.setFont(Font.font("Monospaced", FontWeight.BOLD, FontPosture.ITALIC, 21));
         text.setOpacity(0.3);
         return text;
