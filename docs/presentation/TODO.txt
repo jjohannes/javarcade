@@ -1,22 +1,12 @@
-Wording/Theme:
-- Title: Javarcade, because "Java + Arcade Game"
-- Example: Bomberman, because "Arcade Game", composable modules with visual counterparts, 4 Players (= 4 Tools)
-- Theme: Marmelade Jars, because a Module in Java is a "Jar", playful/light theme, our version of Bomberman, no Bombs, but Marmelade
-
-Assets TODO:
+Assets:
 - Jars with different colors and logos
-- Jar open (?)
-- Arrows (?)
-- Owl with sunglases
+- Arrows
 
-Jendrik TODO:
-- Slides schön machne (insb. Sheet inhalt)
-- javarcade.app registrieren
-- Game - space invaders like
-
-BUGs:
-- Jars are never copied from 'without-modules-version'
-
-FUNC:
+Functional:
 - When selecting Module in tree: select it and its dependencies
 - Editor grey out non-important parts in non-edit mode
+- BUG: Jars are never copied from 'without-modules-version'
+
+Minor:
+- Owl with sunglasses
+
