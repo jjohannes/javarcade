@@ -1,7 +1,0 @@
-module org.apache.commons.csv {
-  requires java.sql;
-  requires org.apache.commons.codec;
-  requires org.apache.commons.io;
-
-  exports org.apache.commons.csv;
-}

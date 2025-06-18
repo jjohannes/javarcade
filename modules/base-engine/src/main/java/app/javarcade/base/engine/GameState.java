@@ -1,6 +1,8 @@
 package app.javarcade.base.engine;
 
 import static app.javarcade.base.engine.GameParameters.EMPTY_DEFAULT;
+import static app.javarcade.base.engine.GameParameters.SYMBOL_EMPTY_SPOT;
+import static app.javarcade.base.engine.GameParameters.SYMBOL_PLAYER;
 import static java.util.function.Function.identity;
 
 import app.javarcade.base.model.Asset;
@@ -9,6 +11,8 @@ import app.javarcade.base.model.Item;
 import app.javarcade.base.model.ItemSet;
 import app.javarcade.base.model.Level;
 import app.javarcade.base.model.Player;
+import app.javarcade.base.model.PlayerPropertyModifier;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -18,19 +22,14 @@ import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 public class GameState {
-
     private boolean up;
     private boolean down;
     private boolean left;
     private boolean right;
 
-    private Spot player;
-    private final Map<Character, Player> players = Map.of(
-            '1', new Player('1'),
-            '2', new Player('2'),
-            '3', new Player('3'),
-            '4', new Player('4'));
-    private final Map<Character, Item> items = new LinkedHashMap<>();
+    private final Map<Character, Item> itemInfo = new LinkedHashMap<>();
+
+    private final List<Spot> items = new LinkedList<>();
     private final List<Spot> spots = new LinkedList<>();
     private final Map<Character, byte[]> images = new HashMap<>();
 
@@ -39,26 +38,32 @@ public class GameState {
     }
 
     private void init() {
+        ServiceLoader.load(ItemSet.class).forEach(set -> {
+            itemInfo.putAll(set.items().stream().collect(Collectors.toMap(Item::symbol, identity())));
+        });
         ServiceLoader.load(AssetSet.class)
                 .forEach(set ->
                         images.putAll(set.assets().stream().collect(Collectors.toMap(Asset::symbol, Asset::image))));
         var level = ServiceLoader.load(Level.class).findFirst().orElse(EMPTY_DEFAULT);
         Spot.render(level).forEach(spot -> {
-            if (players.containsKey(spot.getSymbol())) {
-                spots.addFirst(spot.clone('.'));
+            if (itemInfo.containsKey(spot.getSymbol())) {
+                spots.addFirst(spot.clone(SYMBOL_EMPTY_SPOT));
+                var item = itemInfo.get(spot.getSymbol());
+                spot.getModifiers().putAll(item.modifiers().stream().collect(Collectors.toMap(PlayerPropertyModifier::p, PlayerPropertyModifier::value)));
                 spots.add(spot);
-                player = spot; // TODO multi-player
+                items.add(spot);
             } else {
                 spots.addFirst(spot);
             }
-        });
-        ServiceLoader.load(ItemSet.class).forEach(set -> {
-            items.putAll(set.items().stream().collect(Collectors.toMap(Item::symbol, identity())));
         });
     }
 
     public List<Spot> getSpots() {
         return spots;
+    }
+
+    public List<Spot> getItems() {
+        return items;
     }
 
     public Map<Character, byte[]> getImages() {
@@ -95,10 +100,6 @@ public class GameState {
 
     public void setRight(boolean right) {
         this.right = right;
-    }
-
-    public Spot getPlayer() {
-        return player;
     }
 
     public void action() {

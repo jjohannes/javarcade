@@ -1,5 +1,18 @@
 package app.javarcade.renderer.lwjgl;
 
+import app.javarcade.base.engine.GameLoop;
+import app.javarcade.base.engine.GameState;
+import app.javarcade.base.engine.Renderer;
+import app.javarcade.base.engine.Spot;
+import app.javarcade.renderer.lwjgl.textures.TextureManagement;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.system.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static app.javarcade.base.engine.GameParameters.CELL_HEIGHT_IN_PIXEL;
 import static app.javarcade.base.engine.GameParameters.CELL_WIDTH_IN_PIXEL;
 import static app.javarcade.base.engine.GameParameters.HEIGHT_IN_PIXEL;
@@ -23,13 +36,11 @@ import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -53,21 +64,8 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
-
-import app.javarcade.base.engine.GameLoop;
-import app.javarcade.base.engine.GameState;
-import app.javarcade.base.engine.Renderer;
-import app.javarcade.base.engine.Spot;
-import app.javarcade.renderer.lwjgl.textures.TextureManagement;
-import java.util.HashMap;
-import java.util.Map;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.system.Configuration;
-import org.lwjgl.system.MemoryStack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LWJGLRenderer implements Renderer {
     private static final Logger LOG = LoggerFactory.getLogger(LWJGLRenderer.class);
@@ -109,7 +107,7 @@ public class LWJGLRenderer implements Renderer {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // not top bar
-        window = glfwCreateWindow(WIDTH_IN_PIXEL, HEIGHT_IN_PIXEL, "Javarcade", NULL, NULL);
+        window = glfwCreateWindow(WIDTH_IN_PIXEL, HEIGHT_IN_PIXEL, "Javarcade", NULL /* glfwGetPrimaryMonitor() */, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -142,22 +140,14 @@ public class LWJGLRenderer implements Renderer {
             ;
         });
 
-        // Get the thread stack and push a new frame
-        try (MemoryStack stack = stackPush()) {
-            var pWidth = stack.mallocInt(1); // int*
-            var pHeight = stack.mallocInt(1); // int*
-            glfwGetWindowSize(window, pWidth, pHeight); // pass window size to glfwCreateWindow
-            var vidmode = requireNonNull(glfwGetVideoMode(glfwGetPrimaryMonitor())); // resolution of primary monitor
-            var centerX = (vidmode.width() - pWidth.get(0)) / 2;
-            var centerY = (vidmode.height() - pHeight.get(0)) / 2;
-            glfwSetWindowPos(window, centerX, centerY); // center
-        }
         glfwMakeContextCurrent(window); // make OpenGL context current
         glfwSwapInterval(1); // enable v-sync
         if (PRESENTATION_FOLDER == null) {
             glfwShowWindow(window); // Make window visible
         }
         createCapabilities();
+        var vidmode = requireNonNull(glfwGetVideoMode(glfwGetPrimaryMonitor()));
+        // glViewport((vidmode.width() - vidmode.height()) / 2, 0, vidmode.height(), vidmode.height());
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -172,7 +162,7 @@ public class LWJGLRenderer implements Renderer {
     }
 
     private void loop() {
-        glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
+        glClearColor(0f, 0f, 0f, 0.0f);
 
         final int targetFPS = 60;
         final long frameTime = 1_000_000_000 / targetFPS;

@@ -22,8 +22,8 @@ tasks.assemble {
 dependencies {
   runtimeOnly(project(":base-engine"))
   runtimeOnly(project(":renderer-lwjgl"))
-  runtimeOnly(project(":classic-assets"))
-  runtimeOnly(project(":classic-items"))
-  runtimeOnly(project(":classic-levels"))
+  runtimeOnly(project(":jamcatch-assets"))
+  runtimeOnly(project(":jamcatch-items"))
+  runtimeOnly(project(":jamcatch-ui"))
   runtimeOnly("org.slf4j:slf4j-simple")
 }

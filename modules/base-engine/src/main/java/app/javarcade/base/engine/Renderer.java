@@ -11,7 +11,7 @@ public interface Renderer {
         logger.info("Welcome to Javarcade!");
 
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-            throwable.printStackTrace();
+            logger.error("Unexpected crash!", throwable);
             System.exit(1);
         });
 
