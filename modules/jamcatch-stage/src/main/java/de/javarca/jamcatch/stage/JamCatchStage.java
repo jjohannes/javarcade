@@ -13,12 +13,12 @@ public class JamCatchStage implements Stage {
     public String define() {
         LOG.debug("Constructing stage for JamCatch");
         return """
-                x . . . . . . . . . . $ $ $ $ x
-                x . . . . J . . . . . . . . . x
+                x . . J . . . . . . . 0 0 0 0 x
                 x . . . . . . . . . . . . . . x
                 x . . . . . . . . . . . . . . x
                 x . . . . . . . . . . . . . . x
-                x . . J . . . . . . . . . . . x
+                x . . . . . . . . . . . . . . x
+                x . . . . . . . . . . . . . . x
                 x . . . . . . . . . . . . . . x
                 x . . . . . . . . . . . . . . x
                 x . . . . . . . . . . . . . . x

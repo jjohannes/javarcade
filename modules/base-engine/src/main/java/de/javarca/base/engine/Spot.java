@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.javarca.base.engine.GameParameters.MATRIX_SIZE;
+import static de.javarca.base.engine.GameParameters.STAGE_SIZE;
 import static de.javarca.base.model.InhabitantProperty.BLOCKING;
 import static de.javarca.base.model.InhabitantProperty.DESTRUCTIBLE;
 import static java.lang.Math.max;
@@ -37,7 +37,7 @@ public class Spot implements InhabitantState {
                 .flatMap(line -> line.chars().boxed())
                 .toList();
 
-        return IntStream.range(0, MATRIX_SIZE * MATRIX_SIZE).mapToObj(p ->
+        return IntStream.range(0, STAGE_SIZE * STAGE_SIZE).mapToObj(p ->
                 new Spot((char) symbols.get(p).intValue(), p));
     }
 
@@ -52,8 +52,8 @@ public class Spot implements InhabitantState {
     public Spot(char symbol, int posInStream) {
         this(
                 symbol,
-                posInStream - (posInStream / MATRIX_SIZE) * MATRIX_SIZE,
-                posInStream / MATRIX_SIZE);
+                posInStream - (posInStream / STAGE_SIZE) * STAGE_SIZE,
+                posInStream / STAGE_SIZE);
     }
 
     public Spot clone(char newSymbol) {
@@ -144,6 +144,11 @@ public class Spot implements InhabitantState {
     }
 
     @Override
+    public boolean isAlive() {
+        return alive;
+    }
+
+    @Override
     public void destroy() {
         alive = false;
     }
@@ -174,8 +179,8 @@ public class Spot implements InhabitantState {
             return;
         }
 
-        int newX = min(max(0, x + deltaX), (MATRIX_SIZE - 1) * PRECISION);
-        int newY = min(max(0, y + deltaY), (MATRIX_SIZE - 1) * PRECISION);
+        int newX = min(max(0, x + deltaX), (STAGE_SIZE - 1) * PRECISION);
+        int newY = min(max(0, y + deltaY), (STAGE_SIZE - 1) * PRECISION);
 
         List<Spot> collisions = allSpots.stream().filter(s -> s.alive && s.blocks() && s != this && doesCollide(deltaX, deltaY, s)).toList();
         if (!collisions.isEmpty()) {
@@ -217,6 +222,9 @@ public class Spot implements InhabitantState {
     private void collides(Spot other, InhabitantStates all) {
         if (collisionFunctions.containsKey(other.symbol)) {
             collisionFunctions.get(other.symbol).collide(this, other, all);
+            if (symbol == other.symbol) {
+                return; // do not compute same collision logic twice
+            }
         }
         if (other.collisionFunctions.containsKey(symbol)) {
             other.collisionFunctions.get(symbol).collide(other, this, all);

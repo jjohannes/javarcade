@@ -39,7 +39,7 @@ public class GameLoop {
     private void update() {
         for (Spot spot : gameState.getSpots()) {
             // translate keypress into speed
-            if (spot.getValue(PLAYER) == TRUE) {
+            if (spot.isAlive() && spot.getValue(PLAYER) == TRUE) {
                 if (gameState.isUp()) {
                     spot.resetValue(SPEEDY);
                     spot.multiplyValue(SPEEDY, -1);
@@ -58,7 +58,9 @@ public class GameLoop {
                     spot.setValue(SPEEDX, 0);
                 }
             }
-            spot.move(spot.getValue(SPEEDX), spot.getValue(SPEEDY), gameState.getSpots(), gameState.getAll());
+            if (spot.isAlive()) {
+                spot.move(spot.getValue(SPEEDX), spot.getValue(SPEEDY), gameState.getSpots(), gameState.getAll());
+            }
         }
     }
 

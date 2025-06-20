@@ -1,11 +1,14 @@
 package de.javarca.base.engine.impl;
 
 import de.javarca.base.engine.Spot;
+import de.javarca.base.model.InhabitantProperty;
 import de.javarca.base.model.InhabitantStates;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static de.javarca.base.engine.GameParameters.STAGE_SIZE;
 
 public class InhabitantStatesImpl implements InhabitantStates {
 
@@ -21,7 +24,12 @@ public class InhabitantStatesImpl implements InhabitantStates {
 
     @Override
     public InhabitantStates filter(char symbol) {
-        return new InhabitantStatesImpl(spots.stream().filter(s -> s.getSymbol() == symbol).collect(Collectors.toList()), root, prototypes);
+        return new InhabitantStatesImpl(spots.stream().filter(s -> s.isAlive() && s.getSymbol() == symbol).collect(Collectors.toList()), root, prototypes);
+    }
+
+    @Override
+    public InhabitantStates filter(InhabitantProperty p, int value) {
+        return new InhabitantStatesImpl(spots.stream().filter(s -> s.isAlive() && s.getValue(p) == value).collect(Collectors.toList()), root, prototypes);
     }
 
     @Override
@@ -49,6 +57,16 @@ public class InhabitantStatesImpl implements InhabitantStates {
     public int setY(int y) {
         spots.forEach(s -> s.setY(y));
         return y;
+    }
+
+    @Override
+    public int getMinY() {
+        return spots.stream().map(Spot::getY).min(Integer::compareTo).orElse(0);
+    }
+
+    @Override
+    public int getMaxY() {
+        return spots.stream().map(Spot::getY).max(Integer::compareTo).orElse(STAGE_SIZE);
     }
 
     @Override

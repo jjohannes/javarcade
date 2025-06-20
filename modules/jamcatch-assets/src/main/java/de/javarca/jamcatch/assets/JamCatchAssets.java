@@ -16,11 +16,11 @@ public class JamCatchAssets implements AssetSet {
 
     public JamCatchAssets() {
         assets = Set.of(
-                new Asset('.', readImage("floor")),
+                new Asset('.', readImage("bg")),
                 new Asset('x', readImage("wall")),
-                new Asset('J', readImage("solid")),
+                new Asset('J', readImage("jar")),
                 new Asset('~', readImage("solid")),
-                new Asset('p', readImage("g")));
+                new Asset('p', readImage("catcher")));
     }
 
     private byte[] readImage(String name) {

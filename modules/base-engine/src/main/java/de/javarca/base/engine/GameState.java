@@ -62,7 +62,7 @@ public class GameState {
                 spots.addFirst(spot);
             }
         });
-        all = new InhabitantStatesImpl(renderedStage, spots, prototypes);
+        all = new InhabitantStatesImpl(spots, spots, prototypes);
     }
 
     public List<Spot> getSpots() {

@@ -1,9 +1,7 @@
 plugins {
-  id("dependency-rules")
-  id("repositories")
-  id("distribution")
+  id("de.javarca.build.dependency-rules")
+  id("de.javarca.build.repositories")
   id("application")
-  id("java")
 }
 
 application {

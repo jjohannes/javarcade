@@ -2,6 +2,8 @@ package de.javarca.base.model;
 
 public interface InhabitantState {
 
+    boolean isAlive();
+
     void destroy();
 
     int getX();

@@ -8,11 +8,11 @@ public interface GameParameters {
     int TRUE = 1;
 
     int CELL_SIZE = 16;
-    int MATRIX_SIZE = 16;
-    int GAME_WIDTH = MATRIX_SIZE * CELL_SIZE;
-    int GAME_HEIGHT = MATRIX_SIZE * CELL_SIZE;
+    int STAGE_SIZE = 16;
+    int GAME_WIDTH = STAGE_SIZE * CELL_SIZE;
+    int GAME_HEIGHT = STAGE_SIZE * CELL_SIZE;
 
-    Stage EMPTY_DEFAULT = () -> ("1" + ".".repeat(MATRIX_SIZE) + "3")
-            + (".".repeat(MATRIX_SIZE) + "\n").repeat(MATRIX_SIZE)
-            + ("4" + ".".repeat(MATRIX_SIZE) + "2");
+    Stage EMPTY_DEFAULT = () -> ("1" + ".".repeat(STAGE_SIZE) + "3")
+            + (".".repeat(STAGE_SIZE) + "\n").repeat(STAGE_SIZE)
+            + ("4" + ".".repeat(STAGE_SIZE) + "2");
 }

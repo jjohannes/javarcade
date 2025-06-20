@@ -14,20 +14,20 @@ public interface Collisions {
             'J', (myState, otherState, allStates) -> {
                 otherState.destroy();
                 myState.addToValue(POINTS, otherState.getValue(POINTS));
-                allStates.filter('$').print(myState.getValue(POINTS));
+                allStates.filter('0').print(myState.getValue(POINTS));
                 allStates.spawn('J', new Random().nextInt(14) + 1, 0);
             }
     );
     Map<Character, InhabitantCollision> j = Map.of(
             'J', (myState, otherState, allStates) -> {
                 myState.setValue(SPEEDY, 0);
-                allStates.spawn('J', new Random().nextInt(14) + 1, 0);;
-                allStates.filter('p').setY(myState.getY() - 1);
+                allStates.spawn('J', new Random().nextInt(14) + 1, 0);
+                allStates.filter('p').setY(allStates.filter('J').filter(SPEEDY, 0).getMinY() - 1);
             },
             '~', (myState, otherState, allStates) -> {
                 myState.setValue(SPEEDY, 0);
                 allStates.spawn('J', new Random().nextInt(14) + 1, 0);
-                allStates.filter('p').setY(myState.getY() - 1);
+                allStates.filter('p').setY(allStates.filter('J').filter(SPEEDY, 0).getMinY() - 1);
             }
 
     );
