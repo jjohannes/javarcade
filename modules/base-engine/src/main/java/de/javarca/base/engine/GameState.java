@@ -22,9 +22,9 @@ import static de.javarca.base.model.GameParameters.SYMBOL_EMPTY_SPOT;
 import static java.util.function.Function.identity;
 
 public class GameState {
-    Stage EMPTY_DEFAULT = () -> ("1" + ".".repeat(STAGE_SIZE) + "3")
-            + (".".repeat(STAGE_SIZE) + "\n").repeat(STAGE_SIZE)
-            + ("4" + ".".repeat(STAGE_SIZE) + "2");
+    Stage EMPTY_DEFAULT = () -> ("?".repeat(STAGE_SIZE))
+            + ("?" + ".".repeat(STAGE_SIZE-2) + "?\n").repeat(STAGE_SIZE-2)
+            + ("?".repeat(STAGE_SIZE));
 
     private boolean up;
     private boolean down;

@@ -153,6 +153,6 @@ public class TextureManagement {
         folder.mkdirs();
         STBImageWrite.stbi_write_png(
                 new File(folder, "screen.png").getAbsolutePath(), width, height, 4, flippedBuffer, width * 4);
-        System.out.println(); // newline to trigger listening process
+        System.out.println(":screen-update:"); // newline to trigger listening process
     }
 }
