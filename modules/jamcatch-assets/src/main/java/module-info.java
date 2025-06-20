@@ -1,9 +1,9 @@
-module app.javarcade.classic.assets {
-  requires transitive app.javarcade.base.model;
+module de.javarca.classic.assets {
+  requires transitive de.javarca.base.model;
   requires org.apache.commons.io;
 
-  exports app.javarcade.classic.assets;
+  exports de.javarca.jamcatch.assets;
 
-  provides app.javarcade.base.model.AssetSet with
-      app.javarcade.classic.assets.ClassicAssets;
+  provides de.javarca.base.model.AssetSet with
+          de.javarca.jamcatch.assets.JamCatchAssets;
 }

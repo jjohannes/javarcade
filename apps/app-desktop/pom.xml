@@ -3,38 +3,38 @@
   <parent>
     <relativePath>../../.mvn/config/java-module</relativePath>
     <artifactId>mavenbuild-java-module</artifactId>
-    <groupId>app.javarcade</groupId>
+    <groupId>de.javarca</groupId>
     <version>${revision}</version>
   </parent>
   <artifactId>app-desktop</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>app.javarcade</groupId>
+      <groupId>de.javarca</groupId>
       <artifactId>base-engine</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>app.javarcade</groupId>
+      <groupId>de.javarca</groupId>
       <artifactId>renderer-lwjgl</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>app.javarcade</groupId>
+      <groupId>de.javarca</groupId>
       <artifactId>classic-assets</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>app.javarcade</groupId>
+      <groupId>de.javarca</groupId>
       <artifactId>classic-items</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>app.javarcade</groupId>
+      <groupId>de.javarca</groupId>
       <artifactId>classic-levels</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>

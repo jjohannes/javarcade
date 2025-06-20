@@ -1,11 +1,13 @@
-module app.javarcade.base.engine {
-  requires transitive app.javarcade.base.model;
+import de.javarca.base.model.Stage;
+
+module de.javarca.base.engine {
+  requires transitive de.javarca.base.model;
   requires org.slf4j;
 
-  exports app.javarcade.base.engine;
+  exports de.javarca.base.engine;
 
-  uses app.javarcade.base.model.AssetSet;
-  uses app.javarcade.base.model.Level;
-  uses app.javarcade.base.model.ItemSet;
-  uses app.javarcade.base.engine.Renderer;
+  uses de.javarca.base.model.AssetSet;
+  uses Stage;
+  uses de.javarca.base.model.InhabitantSet;
+  uses de.javarca.base.engine.Renderer;
 }

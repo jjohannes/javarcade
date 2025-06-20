@@ -3,7 +3,7 @@
   <packaging>pom</packaging>
   <parent>
     <relativePath>../test</relativePath>
-    <groupId>app.javarcade</groupId>
+    <groupId>de.javarca</groupId>
     <artifactId>mavenbuild-test</artifactId>
     <version>${revision}</version>
   </parent>

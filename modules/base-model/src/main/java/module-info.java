@@ -1,3 +1,4 @@
-module app.javarcade.base.model {
-  exports app.javarcade.base.model;
+module de.javarca.base.model {
+  requires java.desktop;
+  exports de.javarca.base.model;
 }

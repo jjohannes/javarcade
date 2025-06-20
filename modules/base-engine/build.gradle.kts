@@ -5,5 +5,5 @@ plugins { id("java-module") }
 mainModuleInfo { runtimeOnly("org.slf4j.jul") }
 
 tasks.compileJava {
-  options.javaModuleMainClass = "app.javarcade.base.engine.Engine"
+  options.javaModuleMainClass = "de.javarca.base.engine.Engine"
 }

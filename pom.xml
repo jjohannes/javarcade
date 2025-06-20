@@ -7,7 +7,7 @@
 
     <parent>
         <relativePath>.mvn/identity</relativePath>
-        <groupId>app.javarcade</groupId>
+        <groupId>de.javarca</groupId>
         <artifactId>mavenbuild-identity</artifactId>
         <version>${revision}</version>
     </parent>

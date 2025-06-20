@@ -8,11 +8,11 @@ plugins {
 rootProject.name = "javarcade"
 
 javaModules {
-    directory("modules") { group = "app.javarcade" }
+    directory("modules") { group = "de.javarca" }
     versions("gradle/versions")
     directory("apps") {
         module("app-desktop")
-        group = "app.javarcade"
+        group = "de.javarca"
     }
 }
 

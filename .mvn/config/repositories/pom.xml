@@ -3,7 +3,7 @@
   <packaging>pom</packaging>
   <parent>
     <relativePath>../dependency-rules</relativePath>
-    <groupId>app.javarcade</groupId>
+    <groupId>de.javarca</groupId>
     <artifactId>mavenbuild-dependency-rules</artifactId>
     <version>${revision}</version>
   </parent>

@@ -1,5 +1,8 @@
-module app.javarcade.renderer.lwjgl {
-  requires transitive app.javarcade.base.engine;
+import de.javarca.base.engine.Renderer;
+import de.javarca.renderer.lwjgl.LWJGLRenderer;
+
+module de.javarca.renderer.lwjgl {
+  requires transitive de.javarca.base.engine;
   requires org.lwjgl.glfw;
   requires org.lwjgl.opengl;
   requires org.lwjgl.stb;
@@ -10,8 +13,8 @@ module app.javarcade.renderer.lwjgl {
   requires /*runtime*/ org.lwjgl.opengl.natives;
   requires /*runtime*/ org.lwjgl.stb.natives;
 
-  exports app.javarcade.renderer.lwjgl;
+  exports de.javarca.renderer.lwjgl;
 
-  provides app.javarcade.base.engine.Renderer with
-      app.javarcade.renderer.lwjgl.LWJGLRenderer;
+  provides Renderer with
+          LWJGLRenderer;
 }
