@@ -1,0 +1,92 @@
+package de.javarca.presentation.data;
+
+import de.javarca.presentation.components.ModuleGraph;
+import de.javarca.presentation.components.model.Module;
+import de.javarca.presentation.components.model.ShellCommand;
+import de.javarca.presentation.components.model.Topic;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
+
+import static de.javarca.presentation.components.model.ShellCommand.Tool.GRADLE;
+import static de.javarca.presentation.components.model.ShellCommand.Tool.JAVA;
+import static de.javarca.presentation.components.model.ShellCommand.Tool.MAVEN;
+import static de.javarca.presentation.components.model.ShellCommand.Tool.RENOVATE;
+
+public interface JavarcadeProject {
+    Path LOCAL_REPO_PARENT = Path.of("/Users/jendrik/projects/gradle/howto");
+    Path APP_ROOT_FOLDER = LOCAL_REPO_PARENT.resolve("javarcade");
+    Path APP_MODULES_FOLDER = APP_ROOT_FOLDER.resolve("modules");
+    Path ASSET_LOCATION = LOCAL_REPO_PARENT.resolve("javarcade-presentation/src/main/assets");
+    Path EXTRA_INSTALL_FOLDER = ASSET_LOCATION.resolve("jars");
+    Path WORK_FOLDER = ASSET_LOCATION.resolve("work");
+    Path APP_NO_MODULES_FOLDER = ASSET_LOCATION.resolve("javarcade-no-modules");
+
+    String NO_MODULE_PROJECT_SUFFIX = "-no-modules";
+
+    static Set<Module> modules() {
+        return Set.of(
+                new Module("base-model.jar", 1, 0),
+                new Module("base-engine.jar", 3, 0, Set.of("base-model.jar", "slf4j-api-2.0.17.jar", "slf4j-simple-2.0.17.jar")),
+                new Module("jamcatch-assets.jar", 0, 1, Set.of("base-model.jar", "commons-io-2.16.1.jar")),
+                new Module("jamcatch-stage.jar", 1, 1, Set.of("base-model.jar")),
+                new Module("jamcatch-inhabitants.jar", 2, 1, Set.of("base-model.jar", "commons-csv-1.14.0.jar")),
+                new Module("renderer-lwjgl.jar", 3, 1, Set.of("base-engine.jar", "slf4j-api-2.0.17.jar", "slf4j-jdk14-2.0.17.jar", "lwjgl-3.3.6.jar")),
+                new Module("slf4j-api-2.0.17.jar", 1, 2),
+                new Module("slf4j-simple-2.0.17.jar", 0, 2, Set.of("slf4j-api-2.0.17.jar")),
+                new Module("slf4j-jdk14-2.0.17.jar", 2, 2, Set.of("slf4j-api-2.0.17.jar")),
+                new Module("commons-io-2.16.1.jar", 0, 3),
+                new Module("commons-codec-1.18.0.jar", 1, 3),
+                new Module("commons-csv-1.14.0.jar", 2, 3, Set.of("commons-io-2.18.0.jar", "commons-codec-1.18.0.jar")),
+                new Module("commons-io-2.18.0.jar", 3, 3),
+                new Module("lwjgl-3.3.6.jar", 3, 4, Set.of("lwjgl-3.3.6-natives-macos-arm64.jar", "lwjgl-3.3.6-natives-windows-x86.jar")),
+                new Module("lwjgl-3.3.6-natives-macos-arm64.jar", 2, 4),
+                new Module("lwjgl-3.3.6-natives-windows-x86.jar", 1, 4)
+        );
+    }
+
+    static Set<Module> initialState(ModuleGraph moduleGraph) {
+        return Set.of(
+                new Module("lwjgl-glfw-3.3.6.jar"),
+                new Module("lwjgl-glfw-3.3.6-natives-macos-arm64.jar"),
+                new Module("lwjgl-opengl-3.3.6.jar"),
+                new Module("lwjgl-opengl-3.3.6-natives-macos-arm64.jar"),
+                new Module("lwjgl-stb-3.3.6.jar"),
+                new Module("lwjgl-stb-3.3.6-natives-macos-arm64.jar"),
+                moduleGraph.get("base-model.jar"),
+                moduleGraph.get("base-engine.jar"),
+                moduleGraph.get("renderer-lwjgl.jar"),
+                moduleGraph.get("slf4j-api-2.0.17.jar"),
+                moduleGraph.get("slf4j-simple-2.0.17.jar"),
+                moduleGraph.get("lwjgl-3.3.6.jar"),
+                moduleGraph.get("lwjgl-3.3.6-natives-macos-arm64.jar")
+        );
+    }
+
+    static List<Topic> topics() {
+        return List.of(
+                new Topic("Module Dependency Definition"),
+                new Topic("Module\nVersion\nManagement"),
+                new Topic("Retrieving\n& Building JARs"),
+                new Topic("Version\n& Variant Conflicts"), // Management
+                new Topic("Dependency Consistency Checks"),
+                new Topic("Version\nUpdate Management")
+        );
+    }
+
+    static Set<ShellCommand> shellCommands() {
+        var javaMP = new ShellCommand("java --module-path lib --module de.javarca.base.engine", "", true, JAVA, WORK_FOLDER, null);
+        var javaCP = new ShellCommand("java --class-path  lib/* de.javarca.base.engine.Engine", "", false, JAVA, WORK_FOLDER, null);
+        return Set.of(
+                javaMP,
+                javaCP,
+                new ShellCommand("./gradlew build", "", true, GRADLE, APP_ROOT_FOLDER, javaMP),
+                new ShellCommand("./gradlew build", "", false, GRADLE, APP_NO_MODULES_FOLDER, javaCP),
+                new ShellCommand("./mvnw clean verify", " --batch-mode -Dmaven.repo.local=" + WORK_FOLDER.resolve("home/.m2/repo"), true, MAVEN, APP_ROOT_FOLDER, javaMP),
+                new ShellCommand("./mvnw clean verify", " --batch-mode -Dmaven.repo.local=" + WORK_FOLDER.resolve("home/.m2/repo"), false, MAVEN, APP_NO_MODULES_FOLDER, javaCP),
+                new ShellCommand("renovate jjohannes/javarcade", "", true, RENOVATE, null, null),
+                new ShellCommand("renovate jjohannes/javarcade", "", false, RENOVATE, null, null)
+        );
+    }
+}
