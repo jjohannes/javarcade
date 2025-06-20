@@ -85,7 +85,6 @@ public class LWJGLRenderer implements Renderer {
         gameLoop.stop();
 
         glfwSwapBuffers(window);
-        saveScreenshot(PRESENTATION_FOLDER, 2 * GAME_WIDTH, 2 * GAME_HEIGHT);
 
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -94,6 +93,8 @@ public class LWJGLRenderer implements Renderer {
     }
 
     private void init() {
+        int SCALE = PRESENTATION_FOLDER == null ? 3 : 1;
+
         Configuration.GLFW_LIBRARY_NAME.set("glfw_async");
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit()) {
@@ -103,7 +104,7 @@ public class LWJGLRenderer implements Renderer {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // not top bar
-        window = glfwCreateWindow(GAME_WIDTH * 3, GAME_HEIGHT * 3, "Javarcade", NULL /* glfwGetPrimaryMonitor() */, NULL);
+        window = glfwCreateWindow(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE, "Javarcade", NULL /* glfwGetPrimaryMonitor() */, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -159,7 +160,7 @@ public class LWJGLRenderer implements Renderer {
     private void loop() {
         glClearColor(0f, 0f, 0f, 0.0f);
 
-        final int targetFPS = 60;
+        final int targetFPS = PRESENTATION_FOLDER == null ? 60 : 10;
         final long frameTime = 1_000_000_000 / targetFPS;
 
         while (!glfwWindowShouldClose(window)) {
@@ -170,14 +171,11 @@ public class LWJGLRenderer implements Renderer {
             glfwPollEvents();
             glfwSwapBuffers(window);
 
-            if (PRESENTATION_FOLDER != null) {
-                break;
-            }
-
             long endTime = System.nanoTime();
             long elapsedTime = endTime - startTime;
             long sleepTime = frameTime - elapsedTime;
 
+            saveScreenshot(PRESENTATION_FOLDER, 2 * GAME_WIDTH, 2 * GAME_HEIGHT);
             if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime / 1_000_000, (int) (sleepTime % 1_000_000));
