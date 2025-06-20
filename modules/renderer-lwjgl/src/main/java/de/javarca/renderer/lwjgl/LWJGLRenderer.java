@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.javarca.base.engine.GameParameters.CELL_SIZE;
-import static de.javarca.base.engine.GameParameters.GAME_HEIGHT;
-import static de.javarca.base.engine.GameParameters.GAME_WIDTH;
+import static de.javarca.base.model.GameParameters.CELL_SIZE;
+import static de.javarca.base.model.GameParameters.GAME_HEIGHT;
+import static de.javarca.base.model.GameParameters.GAME_WIDTH;
 import static de.javarca.renderer.lwjgl.textures.TextureManagement.saveScreenshot;
 import static java.util.Objects.requireNonNull;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;

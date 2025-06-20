@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static de.javarca.base.engine.GameParameters.STAGE_SIZE;
+import static de.javarca.base.model.GameParameters.STAGE_SIZE;
 
 public class InhabitantStatesImpl implements InhabitantStates {
 
@@ -67,6 +67,16 @@ public class InhabitantStatesImpl implements InhabitantStates {
     @Override
     public int getMaxY() {
         return spots.stream().map(Spot::getY).max(Integer::compareTo).orElse(STAGE_SIZE);
+    }
+
+    @Override
+    public int getMinX() {
+        return spots.stream().map(Spot::getX).min(Integer::compareTo).orElse(0);
+    }
+
+    @Override
+    public int getMaxX() {
+        return spots.stream().map(Spot::getX).max(Integer::compareTo).orElse(STAGE_SIZE);
     }
 
     @Override

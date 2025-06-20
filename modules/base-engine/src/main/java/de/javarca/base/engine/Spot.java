@@ -13,15 +13,15 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.javarca.base.engine.GameParameters.STAGE_SIZE;
+import static de.javarca.base.model.GameParameters.PRECISION;
+import static de.javarca.base.model.GameParameters.STAGE_SIZE;
+import static de.javarca.base.model.GameParameters.SYMBOL_EMPTY_SPOT;
 import static de.javarca.base.model.InhabitantProperty.BLOCKING;
 import static de.javarca.base.model.InhabitantProperty.DESTRUCTIBLE;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class Spot implements InhabitantState {
-    public static final int PRECISION = 10000;
-
     private final Map<Character, InhabitantCollision> collisionFunctions = new LinkedHashMap<>();
     private final Map<InhabitantProperty, Integer> initialValues = new LinkedHashMap<>();
     private final Map<InhabitantProperty, Integer> values = new LinkedHashMap<>();
@@ -120,26 +120,25 @@ public class Spot implements InhabitantState {
         return getValue(p);
     }
 
-
     @Override
     public int getX() {
-        return x / PRECISION;
+        return x;
     }
 
     @Override
     public int setX(int x) {
-        this.x = x * PRECISION;
+        this.x = x;
         return x;
     }
 
     @Override
     public int getY() {
-        return y / PRECISION;
+        return y;
     }
 
     @Override
     public int setY(int y) {
-        this.y = y * PRECISION;
+        this.y = y;
         return y;
     }
 
@@ -175,6 +174,9 @@ public class Spot implements InhabitantState {
         if (!alive) {
             return;
         }
+
+        collideSelf(all);
+
         if (deltaX == 0 && deltaY == 0) {
             return;
         }
@@ -184,7 +186,7 @@ public class Spot implements InhabitantState {
 
         List<Spot> collisions = allSpots.stream().filter(s -> s.alive && s.blocks() && s != this && doesCollide(deltaX, deltaY, s)).toList();
         if (!collisions.isEmpty()) {
-            collisions.forEach(s -> collides(s, all));
+            collisions.forEach(s -> collide(s, all));
 
             // maybe we can still move part of the way
             if (deltaX != 0) {
@@ -219,7 +221,7 @@ public class Spot implements InhabitantState {
                 y + deltaY + PRECISION > other.y;
     }
 
-    private void collides(Spot other, InhabitantStates all) {
+    private void collide(Spot other, InhabitantStates all) {
         if (collisionFunctions.containsKey(other.symbol)) {
             collisionFunctions.get(other.symbol).collide(this, other, all);
             if (symbol == other.symbol) {
@@ -228,6 +230,12 @@ public class Spot implements InhabitantState {
         }
         if (other.collisionFunctions.containsKey(symbol)) {
             other.collisionFunctions.get(symbol).collide(other, this, all);
+        }
+    }
+
+    private void collideSelf(InhabitantStates all) {
+        if (collisionFunctions.containsKey(SYMBOL_EMPTY_SPOT)) {
+            collisionFunctions.get(SYMBOL_EMPTY_SPOT).collide(this, this, all);
         }
     }
 }

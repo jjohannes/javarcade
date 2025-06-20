@@ -11,18 +11,21 @@ import de.javarca.base.model.InhabitantPropertyModifier;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-import static de.javarca.base.engine.GameParameters.EMPTY_DEFAULT;
-import static de.javarca.base.engine.GameParameters.SYMBOL_EMPTY_SPOT;
+import static de.javarca.base.model.GameParameters.STAGE_SIZE;
+import static de.javarca.base.model.GameParameters.SYMBOL_EMPTY_SPOT;
 import static java.util.function.Function.identity;
 
 public class GameState {
+    Stage EMPTY_DEFAULT = () -> ("1" + ".".repeat(STAGE_SIZE) + "3")
+            + (".".repeat(STAGE_SIZE) + "\n").repeat(STAGE_SIZE)
+            + ("4" + ".".repeat(STAGE_SIZE) + "2");
+
     private boolean up;
     private boolean down;
     private boolean left;

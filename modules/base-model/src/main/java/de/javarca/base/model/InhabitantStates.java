@@ -18,5 +18,10 @@ public interface InhabitantStates {
 
     int getMaxY();
 
+    int getMinX();
+
+    int getMaxX();
+
     void spawn(char symbole, int x, int y);
+
 }

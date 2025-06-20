@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static de.javarca.base.engine.GameParameters.TRUE;
+import static de.javarca.base.model.GameParameters.TRUE;
 import static de.javarca.base.model.InhabitantProperty.PLAYER;
 import static de.javarca.base.model.InhabitantProperty.SPEEDX;
 import static de.javarca.base.model.InhabitantProperty.SPEEDY;
