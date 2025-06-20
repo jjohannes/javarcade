@@ -1,4 +1,6 @@
-plugins { id("java") }
+plugins {
+  id("java")
+}
 
 tasks.test {
   useJUnitPlatform()

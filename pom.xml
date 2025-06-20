@@ -19,9 +19,9 @@
         <module>modules/base-model</module>
         <module>modules/base-engine</module>
         <module>modules/renderer-lwjgl</module>
-        <module>modules/classic-assets</module>
-        <module>modules/classic-items</module>
-        <module>modules/classic-levels</module>
-        <module>apps/app-desktop</module>
+        <module>modules/jamcatch-assets</module>
+        <module>modules/jamcatch-inhabitants</module>
+        <module>modules/jamcatch-stage</module>
+        <module>apps/app-jamcatch</module>
     </modules>
 </project>

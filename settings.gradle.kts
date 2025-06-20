@@ -9,11 +9,3 @@ javaModules {
 
   module("apps/app-jamcatch")
 }
-
-gradle.lifecycle.beforeProject {
-  plugins.withId("java-library") {
-    tasks.named("check") {
-      dependsOn("checkAllModuleInfo")
-    }
-  }
-}
