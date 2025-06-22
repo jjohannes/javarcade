@@ -13,7 +13,7 @@
     <dependencies>
       <dependency>
         <groupId>de.javarca</groupId>
-        <artifactId>base-engine</artifactId>
+        <artifactId>javarca-engine</artifactId>
         <exclusions>
           <exclusion>
             <groupId>org.slf4j</groupId>

@@ -6,7 +6,7 @@
     <groupId>de.javarca</groupId>
     <version>${revision}</version>
   </parent>
-  <artifactId>base-engine</artifactId>
+  <artifactId>javarca-engine</artifactId>
 
   <!-- org.gradlex:java-module-dependencies-maven-extension active -->
 

@@ -16,8 +16,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>modules/base-model</module>
-        <module>modules/base-engine</module>
+        <module>modules/javarca-model</module>
+        <module>modules/javarca-engine</module>
         <module>modules/renderer-lwjgl</module>
         <module>modules/jamcatch-assets</module>
         <module>modules/jamcatch-inhabitants</module>

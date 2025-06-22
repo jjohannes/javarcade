@@ -6,7 +6,7 @@
     <groupId>de.javarca</groupId>
     <version>${revision}</version>
   </parent>
-  <artifactId>classic-items</artifactId>
+  <artifactId>jamcatch-inhabitants</artifactId>
 
   <!-- org.gradlex:java-module-dependencies-maven-extension active -->
 </project>
