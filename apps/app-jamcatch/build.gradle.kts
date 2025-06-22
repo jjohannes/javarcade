@@ -9,8 +9,8 @@ application {
   mainClass = "de.javarca.engine.Engine"
 }
 
-distributions.main {
-  contents.from(configurations.runtimeClasspath)
+tasks.jar {
+  enabled = false
 }
 
 tasks.assemble {

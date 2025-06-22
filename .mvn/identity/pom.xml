@@ -9,7 +9,7 @@
 
     <!-- Configuration -->
     <properties>
-        <revision>1.2</revision>
+        <revision>1.0</revision>
     </properties>
 
     <groupId>de.javarca</groupId>

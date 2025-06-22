@@ -6,7 +6,7 @@
     <groupId>de.javarca</groupId>
     <version>${revision}</version>
   </parent>
-  <artifactId>app-desktop</artifactId>
+  <artifactId>app-jamcatch</artifactId>
 
   <dependencies>
     <dependency>
@@ -58,7 +58,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/install/app-desktop</outputDirectory>
+              <outputDirectory>${project.build.directory}/install/app-jamcatch/lib</outputDirectory>
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>
               <overWriteIfNewer>true</overWriteIfNewer>

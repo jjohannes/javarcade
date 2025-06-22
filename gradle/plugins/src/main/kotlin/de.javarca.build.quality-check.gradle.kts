@@ -1,5 +1,5 @@
 import com.autonomousapps.DependencyAnalysisSubExtension
-import org.gradlex.javamodule.dependencies.tasks.ModuleDirectivesScopeCheck
+import org.gradlex.javamodule.dependencies.tasks.*
 
 plugins {
   id("base")
