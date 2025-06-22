@@ -18,8 +18,8 @@ public class JamCatchAssets implements AssetSet {
         assets = Set.of(
                 new Asset('.', readImage("bg")),
                 new Asset('x', readImage("wall")),
+                new Asset('X', readImage("solid")),
                 new Asset('J', readImage("jar")),
-                new Asset('~', readImage("solid")),
                 new Asset('p', readImage("catcher")));
     }
 

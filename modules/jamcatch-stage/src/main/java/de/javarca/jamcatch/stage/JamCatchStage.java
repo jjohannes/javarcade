@@ -28,7 +28,7 @@ public class JamCatchStage implements Stage {
                 x . . . . . . . . . . . . . . x
                 x . . . . . . . . . . . . . . x
                 x . . . . p . . . . . . . . . x
-                x ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ x
+                x X X X X X X X X X X X X X X x
                 """;
     }
 }
