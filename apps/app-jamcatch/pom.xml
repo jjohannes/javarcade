@@ -11,7 +11,7 @@
   <dependencies>
     <dependency>
       <groupId>de.javarca</groupId>
-      <artifactId>base-engine</artifactId>
+      <artifactId>javarca-engine</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>
@@ -23,19 +23,19 @@
     </dependency>
     <dependency>
       <groupId>de.javarca</groupId>
-      <artifactId>classic-assets</artifactId>
+      <artifactId>jamcatch-assets</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>de.javarca</groupId>
-      <artifactId>classic-items</artifactId>
+      <artifactId>jamcatch-inhabitants</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>de.javarca</groupId>
-      <artifactId>classic-levels</artifactId>
+      <artifactId>jamcatch-stage</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>

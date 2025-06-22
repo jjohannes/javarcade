@@ -13,9 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.javarca.model.GameParameters.CELL_SIZE;
-import static de.javarca.model.GameParameters.GAME_HEIGHT;
-import static de.javarca.model.GameParameters.GAME_WIDTH;
 import static de.javarca.renderer.lwjgl.textures.TextureManagement.saveScreenshot;
 import static java.util.Objects.requireNonNull;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -65,6 +62,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class LWJGLRenderer implements Renderer {
     private static final Logger LOG = LoggerFactory.getLogger(LWJGLRenderer.class);
+
+    private static final int CELL_SIZE = 16;
+    private static final int STAGE_SIZE = 16;
+    private static final int GAME_SIZE = STAGE_SIZE * CELL_SIZE;
+
     private static final String PRESENTATION_FOLDER = System.getenv("PRESENTATION_FOLDER");
 
     private final GameLoop gameLoop = new GameLoop();
@@ -104,7 +106,7 @@ public class LWJGLRenderer implements Renderer {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // not resizable
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // not top bar
-        window = glfwCreateWindow(GAME_WIDTH * SCALE, GAME_HEIGHT * SCALE, "Javarcade", NULL /* glfwGetPrimaryMonitor() */, NULL);
+        window = glfwCreateWindow(GAME_SIZE * SCALE, GAME_SIZE * SCALE, "Javarcade", NULL /* glfwGetPrimaryMonitor() */, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -150,7 +152,7 @@ public class LWJGLRenderer implements Renderer {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0, GAME_WIDTH, GAME_HEIGHT, 0, -1, 1);
+        glOrtho(0, GAME_SIZE, GAME_SIZE, 0, -1, 1);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
@@ -175,7 +177,7 @@ public class LWJGLRenderer implements Renderer {
             long elapsedTime = endTime - startTime;
             long sleepTime = frameTime - elapsedTime;
 
-            saveScreenshot(PRESENTATION_FOLDER, 2 * GAME_WIDTH, 2 * GAME_HEIGHT);
+            saveScreenshot(PRESENTATION_FOLDER, 2 * GAME_SIZE, 2 * GAME_SIZE);
             if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime / 1_000_000, (int) (sleepTime % 1_000_000));
