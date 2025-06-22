@@ -1,9 +1,9 @@
 package de.javarca.renderer.lwjgl;
 
-import de.javarca.base.engine.GameLoop;
-import de.javarca.base.engine.GameState;
-import de.javarca.base.engine.Renderer;
-import de.javarca.base.engine.Spot;
+import de.javarca.engine.GameLoop;
+import de.javarca.engine.GameState;
+import de.javarca.engine.Renderer;
+import de.javarca.engine.Spot;
 import de.javarca.renderer.lwjgl.textures.TextureManagement;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.system.Configuration;
@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.javarca.base.model.GameParameters.CELL_SIZE;
-import static de.javarca.base.model.GameParameters.GAME_HEIGHT;
-import static de.javarca.base.model.GameParameters.GAME_WIDTH;
+import static de.javarca.model.GameParameters.CELL_SIZE;
+import static de.javarca.model.GameParameters.GAME_HEIGHT;
+import static de.javarca.model.GameParameters.GAME_WIDTH;
 import static de.javarca.renderer.lwjgl.textures.TextureManagement.saveScreenshot;
 import static java.util.Objects.requireNonNull;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;

@@ -2,8 +2,8 @@ package de.javarca.jamcatch.assets;
 
 import static java.util.Objects.requireNonNull;
 
-import de.javarca.base.model.Asset;
-import de.javarca.base.model.AssetSet;
+import de.javarca.model.Asset;
+import de.javarca.model.AssetSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;

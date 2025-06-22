@@ -1,9 +1,9 @@
 package de.javarca.jamcatch.inhabitants;
 
-import de.javarca.base.model.Inhabitant;
-import de.javarca.base.model.InhabitantProperty;
-import de.javarca.base.model.InhabitantPropertyModifier;
-import de.javarca.base.model.InhabitantSet;
+import de.javarca.model.Inhabitant;
+import de.javarca.model.InhabitantProperty;
+import de.javarca.model.InhabitantPropertyModifier;
+import de.javarca.model.InhabitantSet;
 import de.javarca.jamcatch.inhabitants.collisions.Collisions;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;

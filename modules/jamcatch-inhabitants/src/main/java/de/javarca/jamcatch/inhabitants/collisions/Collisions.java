@@ -1,13 +1,13 @@
 package de.javarca.jamcatch.inhabitants.collisions;
 
-import de.javarca.base.model.InhabitantCollision;
+import de.javarca.model.InhabitantCollision;
 
 import java.util.Map;
 import java.util.Random;
 
-import static de.javarca.base.model.GameParameters.PRECISION;
-import static de.javarca.base.model.InhabitantProperty.POINTS;
-import static de.javarca.base.model.InhabitantProperty.SPEEDY;
+import static de.javarca.model.GameParameters.PRECISION;
+import static de.javarca.model.InhabitantProperty.POINTS;
+import static de.javarca.model.InhabitantProperty.SPEEDY;
 
 public interface Collisions {
 

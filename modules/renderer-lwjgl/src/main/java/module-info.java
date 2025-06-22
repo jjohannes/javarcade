@@ -1,9 +1,9 @@
-import de.javarca.base.engine.Renderer;
+import de.javarca.engine.Renderer;
 import de.javarca.renderer.lwjgl.LWJGLRenderer;
 
 module de.javarca.renderer.lwjgl {
-  requires transitive de.javarca.base.engine;
-  requires de.javarca.base.model;
+  requires transitive de.javarca.engine;
+  requires de.javarca.model;
   requires org.lwjgl.glfw;
   requires org.lwjgl.opengl;
   requires org.lwjgl.stb;

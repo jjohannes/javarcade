@@ -1,6 +1,6 @@
 package de.javarca.jamcatch.stage;
 
-import de.javarca.base.model.Stage;
+import de.javarca.model.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

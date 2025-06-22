@@ -5,8 +5,8 @@ plugins {
 }
 
 application {
-  mainModule = "de.javarca.base.engine"
-  mainClass = "de.javarca.base.engine.Engine"
+  mainModule = "de.javarca.engine"
+  mainClass = "de.javarca.engine.Engine"
 }
 
 distributions.main {
@@ -18,7 +18,7 @@ tasks.assemble {
 }
 
 dependencies {
-  runtimeOnly(project(":base-engine"))
+  runtimeOnly(project(":javarca-engine"))
   runtimeOnly(project(":renderer-lwjgl"))
   runtimeOnly(project(":jamcatch-assets"))
   runtimeOnly(project(":jamcatch-inhabitants"))
