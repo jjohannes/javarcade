@@ -20,7 +20,7 @@
         <module>modules/javarca-engine</module>
         <module>modules/renderer-lwjgl</module>
         <module>modules/jamcatch-assets</module>
-        <module>modules/jamcatch-inhabitants</module>
+        <module>modules/jamcatch-actors</module>
         <module>modules/jamcatch-stage</module>
         <module>apps/app-jamcatch</module>
     </modules>

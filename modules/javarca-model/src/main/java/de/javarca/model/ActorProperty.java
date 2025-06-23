@@ -1,6 +1,6 @@
 package de.javarca.model;
 
-public enum InhabitantProperty {
+public enum ActorProperty {
     PLAYER,
     SPEEDX,
     SPEEDY,

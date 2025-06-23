@@ -1,10 +1,10 @@
 package de.javarca.model;
 
-public interface InhabitantStates {
+public interface ActorStates {
 
-    InhabitantStates filter(char symbol);
+    ActorStates filter(char symbol);
 
-    InhabitantStates filter(InhabitantProperty p, int value);
+    ActorStates filter(ActorProperty p, int value);
 
     void print(String value);
 

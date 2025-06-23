@@ -1,13 +1,13 @@
 package de.javarca.engine;
 
-import de.javarca.engine.impl.InhabitantStatesImpl;
+import de.javarca.engine.impl.ActorStatesImpl;
 import de.javarca.model.Asset;
 import de.javarca.model.AssetSet;
-import de.javarca.model.Inhabitant;
-import de.javarca.model.InhabitantSet;
-import de.javarca.model.InhabitantStates;
+import de.javarca.model.Actor;
+import de.javarca.model.ActorSet;
+import de.javarca.model.ActorStates;
 import de.javarca.model.Stage;
-import de.javarca.model.InhabitantPropertyModifier;
+import de.javarca.model.ActorPropertyModifier;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -31,19 +31,19 @@ public class GameState {
     private boolean left;
     private boolean right;
 
-    private final Map<Character, Inhabitant> itemInfo = new LinkedHashMap<>();
+    private final Map<Character, Actor> itemInfo = new LinkedHashMap<>();
 
     private final List<Spot> spots = new CopyOnWriteArrayList<>();
     private final Map<Character, byte[]> images = new HashMap<>();
-    private InhabitantStates all;
+    private ActorStates all;
 
     public GameState() {
         init();
     }
 
     private void init() {
-        ServiceLoader.load(InhabitantSet.class).forEach(set -> {
-            itemInfo.putAll(set.items().stream().collect(Collectors.toMap(Inhabitant::symbol, identity())));
+        ServiceLoader.load(ActorSet.class).forEach(set -> {
+            itemInfo.putAll(set.items().stream().collect(Collectors.toMap(Actor::symbol, identity())));
         });
         ServiceLoader.load(AssetSet.class)
                 .forEach(set ->
@@ -56,7 +56,7 @@ public class GameState {
                 spots.addFirst(spot.clone(SYMBOL_EMPTY_SPOT));
                 var item = itemInfo.get(spot.getSymbol());
                 spot.init(
-                        item.modifiers().stream().collect(Collectors.toMap(InhabitantPropertyModifier::p, InhabitantPropertyModifier::value)),
+                        item.modifiers().stream().collect(Collectors.toMap(ActorPropertyModifier::p, ActorPropertyModifier::value)),
                         item.collisionFunctions()
                 );
                 spots.add(spot);
@@ -65,14 +65,14 @@ public class GameState {
                 spots.addFirst(spot);
             }
         });
-        all = new InhabitantStatesImpl(spots, spots, prototypes);
+        all = new ActorStatesImpl(spots, spots, prototypes);
     }
 
     public List<Spot> getSpots() {
         return spots;
     }
 
-    public InhabitantStates getAll() {
+    public ActorStates getAll() {
         return all;
     }
 

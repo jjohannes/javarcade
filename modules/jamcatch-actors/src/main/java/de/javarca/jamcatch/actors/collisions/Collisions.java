@@ -1,17 +1,17 @@
-package de.javarca.jamcatch.inhabitants.collisions;
+package de.javarca.jamcatch.actors.collisions;
 
-import de.javarca.model.InhabitantCollision;
+import de.javarca.model.ActorCollision;
 
 import java.util.Map;
 import java.util.Random;
 
 import static de.javarca.model.GameParameters.PRECISION;
-import static de.javarca.model.InhabitantProperty.POINTS;
-import static de.javarca.model.InhabitantProperty.SPEEDY;
+import static de.javarca.model.ActorProperty.POINTS;
+import static de.javarca.model.ActorProperty.SPEEDY;
 
 public interface Collisions {
 
-    Map<Character, InhabitantCollision> p = Map.of(
+    Map<Character, ActorCollision> p = Map.of(
             'J', (myState, otherState, allStates) -> {
                 otherState.destroy();
                 myState.addToValue(POINTS, otherState.getValue(POINTS));
@@ -27,7 +27,7 @@ public interface Collisions {
                 }
             }
     );
-    Map<Character, InhabitantCollision> j = Map.of(
+    Map<Character, ActorCollision> j = Map.of(
             'J', (myState, otherState, allStates) -> {
                 myState.setValue(SPEEDY, 0);
                 allStates.spawn('J', new Random().nextInt(14) + 1, 0);
@@ -40,5 +40,5 @@ public interface Collisions {
             }
     );
 
-    Map<Character, Map<Character, InhabitantCollision>> ALL = Map.of('p', p, 'J', j);
+    Map<Character, Map<Character, ActorCollision>> ALL = Map.of('p', p, 'J', j);
 }

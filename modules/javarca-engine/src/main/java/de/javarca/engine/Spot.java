@@ -1,9 +1,9 @@
 package de.javarca.engine;
 
-import de.javarca.model.InhabitantCollision;
-import de.javarca.model.InhabitantProperty;
-import de.javarca.model.InhabitantState;
-import de.javarca.model.InhabitantStates;
+import de.javarca.model.ActorCollision;
+import de.javarca.model.ActorProperty;
+import de.javarca.model.ActorState;
+import de.javarca.model.ActorStates;
 import de.javarca.model.Stage;
 
 import java.util.Arrays;
@@ -16,15 +16,15 @@ import java.util.stream.Stream;
 import static de.javarca.model.GameParameters.PRECISION;
 import static de.javarca.model.GameParameters.STAGE_SIZE;
 import static de.javarca.model.GameParameters.SYMBOL_EMPTY_SPOT;
-import static de.javarca.model.InhabitantProperty.BLOCKING;
-import static de.javarca.model.InhabitantProperty.DESTRUCTIBLE;
+import static de.javarca.model.ActorProperty.BLOCKING;
+import static de.javarca.model.ActorProperty.DESTRUCTIBLE;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class Spot implements InhabitantState {
-    private final Map<Character, InhabitantCollision> collisionFunctions = new LinkedHashMap<>();
-    private final Map<InhabitantProperty, Integer> initialValues = new LinkedHashMap<>();
-    private final Map<InhabitantProperty, Integer> values = new LinkedHashMap<>();
+public class Spot implements ActorState {
+    private final Map<Character, ActorCollision> collisionFunctions = new LinkedHashMap<>();
+    private final Map<ActorProperty, Integer> initialValues = new LinkedHashMap<>();
+    private final Map<ActorProperty, Integer> values = new LinkedHashMap<>();
 
     private final char symbol;
     private char assetSymbol;
@@ -74,7 +74,7 @@ public class Spot implements InhabitantState {
         return symbol + "(" + (x * 1f) / PRECISION + "|" + (y * 1f) / PRECISION + ")";
     }
 
-    public void init(Map<InhabitantProperty, Integer> initialValues, Map<Character, InhabitantCollision> collisionFunctions) {
+    public void init(Map<ActorProperty, Integer> initialValues, Map<Character, ActorCollision> collisionFunctions) {
         this.initialValues.putAll(initialValues);
         this.collisionFunctions.putAll(collisionFunctions);
     }
@@ -92,30 +92,30 @@ public class Spot implements InhabitantState {
     }
 
     @Override
-    public int getValue(InhabitantProperty p) {
+    public int getValue(ActorProperty p) {
         return values.getOrDefault(p, initialValues.getOrDefault(p, 0));
     }
 
     @Override
-    public int setValue(InhabitantProperty p, int value) {
+    public int setValue(ActorProperty p, int value) {
         values.put(p, value);
         return getValue(p);
     }
 
     @Override
-    public int resetValue(InhabitantProperty p) {
+    public int resetValue(ActorProperty p) {
         values.remove(p);
         return getValue(p);
     }
 
     @Override
-    public int addToValue(InhabitantProperty p, int increment) {
+    public int addToValue(ActorProperty p, int increment) {
         values.put(p, getValue(p) + increment);
         return getValue(p);
     }
 
     @Override
-    public int multiplyValue(InhabitantProperty p, int multiplier) {
+    public int multiplyValue(ActorProperty p, int multiplier) {
         values.put(p, getValue(p) * multiplier);
         return getValue(p);
     }
@@ -170,7 +170,7 @@ public class Spot implements InhabitantState {
         return getValue(BLOCKING) == 1 || getValue(DESTRUCTIBLE) == 1;
     }
 
-    public void move(int deltaX, int deltaY, List<Spot> allSpots, InhabitantStates all) {
+    public void move(int deltaX, int deltaY, List<Spot> allSpots, ActorStates all) {
         if (!alive) {
             return;
         }
@@ -221,7 +221,7 @@ public class Spot implements InhabitantState {
                 y + deltaY + PRECISION > other.y;
     }
 
-    private void collide(Spot other, InhabitantStates all) {
+    private void collide(Spot other, ActorStates all) {
         if (collisionFunctions.containsKey(other.symbol)) {
             collisionFunctions.get(other.symbol).collide(this, other, all);
             if (symbol == other.symbol) {
@@ -233,7 +233,7 @@ public class Spot implements InhabitantState {
         }
     }
 
-    private void collideSelf(InhabitantStates all) {
+    private void collideSelf(ActorStates all) {
         if (collisionFunctions.containsKey(SYMBOL_EMPTY_SPOT)) {
             collisionFunctions.get(SYMBOL_EMPTY_SPOT).collide(this, this, all);
         }

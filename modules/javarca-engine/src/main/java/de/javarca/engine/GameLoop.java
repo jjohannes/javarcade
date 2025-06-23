@@ -9,9 +9,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static de.javarca.model.GameParameters.TRUE;
-import static de.javarca.model.InhabitantProperty.PLAYER;
-import static de.javarca.model.InhabitantProperty.SPEEDX;
-import static de.javarca.model.InhabitantProperty.SPEEDY;
+import static de.javarca.model.ActorProperty.PLAYER;
+import static de.javarca.model.ActorProperty.SPEEDX;
+import static de.javarca.model.ActorProperty.SPEEDY;
 
 public class GameLoop {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameLoop.class);

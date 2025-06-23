@@ -1,10 +1,10 @@
-package de.javarca.jamcatch.inhabitants;
+package de.javarca.jamcatch.actors;
 
-import de.javarca.model.Inhabitant;
-import de.javarca.model.InhabitantProperty;
-import de.javarca.model.InhabitantPropertyModifier;
-import de.javarca.model.InhabitantSet;
-import de.javarca.jamcatch.inhabitants.collisions.Collisions;
+import de.javarca.model.Actor;
+import de.javarca.model.ActorProperty;
+import de.javarca.model.ActorPropertyModifier;
+import de.javarca.model.ActorSet;
+import de.javarca.jamcatch.actors.collisions.Collisions;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -23,18 +23,18 @@ import java.util.stream.Collectors;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
-public class JamCatchInhabitantSet implements InhabitantSet {
-    private static final Logger LOG = LoggerFactory.getLogger(JamCatchInhabitantSet.class);
+public class JamCatchActorSet implements ActorSet {
+    private static final Logger LOG = LoggerFactory.getLogger(JamCatchActorSet.class);
 
-    private final Set<Inhabitant> inhabitants;
+    private final Set<Actor> actors;
 
-    public JamCatchInhabitantSet() {
-        var itemsCsv = requireNonNull(JamCatchInhabitantSet.class.getResourceAsStream("res/jamcatch.csv"));
+    public JamCatchActorSet() {
+        var itemsCsv = requireNonNull(JamCatchActorSet.class.getResourceAsStream("res/jamcatch.csv"));
         LOG.debug("Parsing 'jamcatch.csv'");
-        inhabitants = parse(itemsCsv).stream()
-                .map(record -> new Inhabitant(
+        actors = parse(itemsCsv).stream()
+                .map(record -> new Actor(
                         record.get("SYMBOL").charAt(0),
-                        Arrays.stream(InhabitantProperty.values())
+                        Arrays.stream(ActorProperty.values())
                                 .map(property -> parsePropertyValue(record, property))
                                 .filter(Objects::nonNull)
                                 .collect(Collectors.toSet()),
@@ -42,10 +42,10 @@ public class JamCatchInhabitantSet implements InhabitantSet {
                 )).collect(Collectors.toSet());
     }
 
-    private static InhabitantPropertyModifier parsePropertyValue(CSVRecord record, InhabitantProperty property) {
+    private static ActorPropertyModifier parsePropertyValue(CSVRecord record, ActorProperty property) {
         String value = record.get(property);
         if (!value.isBlank()) {
-            return new InhabitantPropertyModifier(property, Integer.parseInt(value));
+            return new ActorPropertyModifier(property, Integer.parseInt(value));
         }
         return null;
     }
@@ -64,7 +64,7 @@ public class JamCatchInhabitantSet implements InhabitantSet {
     }
 
     @Override
-    public Set<Inhabitant> items() {
-        return inhabitants;
+    public Set<Actor> items() {
+        return actors;
     }
 }

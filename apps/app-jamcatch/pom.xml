@@ -29,7 +29,7 @@
     </dependency>
     <dependency>
       <groupId>de.javarca</groupId>
-      <artifactId>jamcatch-inhabitants</artifactId>
+      <artifactId>jamcatch-actors</artifactId>
       <version>${revision}</version>
       <scope>runtime</scope>
     </dependency>

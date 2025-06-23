@@ -1,8 +1,8 @@
 package de.javarca.engine.impl;
 
 import de.javarca.engine.Spot;
-import de.javarca.model.InhabitantProperty;
-import de.javarca.model.InhabitantStates;
+import de.javarca.model.ActorProperty;
+import de.javarca.model.ActorStates;
 
 import java.util.List;
 import java.util.Map;
@@ -10,26 +10,26 @@ import java.util.stream.Collectors;
 
 import static de.javarca.model.GameParameters.STAGE_SIZE;
 
-public class InhabitantStatesImpl implements InhabitantStates {
+public class ActorStatesImpl implements ActorStates {
 
     private final List<Spot> root;
     private final List<Spot> spots;
     private final Map<Character, Spot> prototypes;
 
-    public InhabitantStatesImpl(List<Spot> spots, List<Spot> root, Map<Character, Spot> prototypes) {
+    public ActorStatesImpl(List<Spot> spots, List<Spot> root, Map<Character, Spot> prototypes) {
         this.spots = spots;
         this.root = root;
         this.prototypes = prototypes;
     }
 
     @Override
-    public InhabitantStates filter(char symbol) {
-        return new InhabitantStatesImpl(spots.stream().filter(s -> s.isAlive() && s.getSymbol() == symbol).collect(Collectors.toList()), root, prototypes);
+    public ActorStates filter(char symbol) {
+        return new ActorStatesImpl(spots.stream().filter(s -> s.isAlive() && s.getSymbol() == symbol).collect(Collectors.toList()), root, prototypes);
     }
 
     @Override
-    public InhabitantStates filter(InhabitantProperty p, int value) {
-        return new InhabitantStatesImpl(spots.stream().filter(s -> s.isAlive() && s.getValue(p) == value).collect(Collectors.toList()), root, prototypes);
+    public ActorStates filter(ActorProperty p, int value) {
+        return new ActorStatesImpl(spots.stream().filter(s -> s.isAlive() && s.getValue(p) == value).collect(Collectors.toList()), root, prototypes);
     }
 
     @Override

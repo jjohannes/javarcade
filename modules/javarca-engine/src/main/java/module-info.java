@@ -1,3 +1,4 @@
+import de.javarca.model.ActorSet;
 import de.javarca.model.Stage;
 
 module de.javarca.engine {
@@ -8,6 +9,6 @@ module de.javarca.engine {
 
   uses de.javarca.model.AssetSet;
   uses Stage;
-  uses de.javarca.model.InhabitantSet;
+  uses ActorSet;
   uses de.javarca.engine.Renderer;
 }
