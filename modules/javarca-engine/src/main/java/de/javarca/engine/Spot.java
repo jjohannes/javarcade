@@ -27,7 +27,7 @@ public class Spot implements ActorState {
     private final Map<ActorProperty, Integer> values = new LinkedHashMap<>();
 
     private final char symbol;
-    private char assetSymbol;
+    private char skin;
     private boolean alive;
     private int x;
     private int y;
@@ -43,7 +43,7 @@ public class Spot implements ActorState {
 
     public Spot(char symbol, int x, int y) {
         this.symbol = symbol;
-        this.assetSymbol = symbol;
+        this.skin = symbol;
         this.alive = true;
         this.x = PRECISION * x;
         this.y = PRECISION * y;
@@ -79,12 +79,13 @@ public class Spot implements ActorState {
         this.collisionFunctions.putAll(collisionFunctions);
     }
 
-    public char getAssetSymbol() {
-        return assetSymbol;
+    public char getSkin() {
+        return skin;
     }
 
-    public void setAssetSymbol(char assetSymbol) {
-        this.assetSymbol = assetSymbol;
+    public char setSkin(char skin) {
+        this.skin = skin;
+        return this.skin;
     }
 
     public char getSymbol() {

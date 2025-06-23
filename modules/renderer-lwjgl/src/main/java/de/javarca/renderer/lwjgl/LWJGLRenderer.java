@@ -160,7 +160,7 @@ public class LWJGLRenderer implements Renderer {
     }
 
     private void loop() {
-        glClearColor(0f, 0f, 0f, 0.0f);
+        glClearColor(1f, 1f, 1f, 0.0f);
 
         final int targetFPS = PRESENTATION_FOLDER == null ? 60 : 10;
         final long frameTime = 1_000_000_000 / targetFPS;
@@ -197,9 +197,9 @@ public class LWJGLRenderer implements Renderer {
 
     private Integer ensureTexture(Spot spot) {
         if (spot.getSymbol() == '.') {
-            return null;
+            return images.get(spot.getSymbol());
         }
-        return images.computeIfAbsent(spot.getAssetSymbol(), TextureManagement::renderCharacter);
+        return images.computeIfAbsent(spot.getSkin(), TextureManagement::renderCharacter);
     }
 
     private void drawSprite(Integer img, float x, float y) {

@@ -24,4 +24,6 @@ public interface ActorStates {
 
     void spawn(char symbole, int x, int y);
 
+    void spawn(char symbole, int x, int y, char skin);
+
 }

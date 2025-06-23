@@ -59,13 +59,6 @@ public class TextureManagement {
             int fontSize = 120;
             float scale = STBTruetype.stbtt_ScaleForPixelHeight(fontInfo, fontSize);
 
-            // Get font metrics
-            IntBuffer ascent = stack.mallocInt(1);
-            IntBuffer descent = stack.mallocInt(1);
-            IntBuffer lineGap = stack.mallocInt(1);
-            STBTruetype.stbtt_GetFontVMetrics(fontInfo, ascent, descent, lineGap);
-
-            // Get character bitmap
             IntBuffer widthBuffer = stack.mallocInt(1);
             IntBuffer heightBuffer = stack.mallocInt(1);
             IntBuffer xOffset = stack.mallocInt(1);
@@ -82,18 +75,35 @@ public class TextureManagement {
             int charWidth = widthBuffer.get(0);
             int charHeight = heightBuffer.get(0);
 
-            // Convert grayscale bitmap to RGBA
-            ByteBuffer rgbaBuffer = BufferUtils.createByteBuffer(charWidth * charHeight * 4);
-            for (int i = 0; i < charWidth * charHeight; i++) {
-                byte gray = bitmap.get(i);
-                rgbaBuffer.put((byte) 0); // Red
-                rgbaBuffer.put((byte) 0); // Green
-                rgbaBuffer.put((byte) 0); // Blue
-                rgbaBuffer.put(gray); // Alpha
-            }
-            rgbaBuffer.flip();
+            int border = 10; // Border size in pixels
+            int outWidth = charWidth + border * 2;
+            int outHeight = charHeight + border * 2;
 
-            return loadTextureFromBuffer(rgbaBuffer, widthBuffer.get(0), heightBuffer.get(0));
+            ByteBuffer rgbaBuffer = BufferUtils.createByteBuffer(outWidth * outHeight * 4);
+
+            // Fill with transparent pixels
+            for (int i = 0; i < outWidth * outHeight; i++) {
+                rgbaBuffer.put((byte)0); // R
+                rgbaBuffer.put((byte)0); // G
+                rgbaBuffer.put((byte)0); // B
+                rgbaBuffer.put((byte)0); // A
+            }
+
+            // Center the character bitmap in the new buffer
+            for (int y = 0; y < charHeight; y++) {
+                for (int x = 0; x < charWidth; x++) {
+                    int srcIndex = y * charWidth + x;
+                    int dstIndex = ((y + border) * outWidth + (x + border)) * 4;
+                    byte gray = bitmap.get(srcIndex);
+                    rgbaBuffer.put(dstIndex, (byte)0);     // R
+                    rgbaBuffer.put(dstIndex + 1, (byte)0); // G
+                    rgbaBuffer.put(dstIndex + 2, (byte)0); // B
+                    rgbaBuffer.put(dstIndex + 3, gray);    // A
+                }
+            }
+            rgbaBuffer.position(0);
+
+            return loadTextureFromBuffer(rgbaBuffer, outWidth, outHeight);
         }
     }
 

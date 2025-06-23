@@ -24,4 +24,5 @@ public interface ActorState {
 
     int multiplyValue(ActorProperty p, int multiplier);
 
+    char setSkin(char skin);
 }

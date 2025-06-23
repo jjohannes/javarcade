@@ -35,7 +35,7 @@ public class ActorStatesImpl implements ActorStates {
     @Override
     public void print(String value) {
         for (int i = 0; i < spots.size() && i < value.length(); i++) {
-            spots.get(i).setAssetSymbol(value.charAt(i));
+            spots.get(i).setSkin(value.charAt(i));
         }
     }
 
@@ -43,7 +43,7 @@ public class ActorStatesImpl implements ActorStates {
     public void print(int value) {
         String s = String.format("%1$" + spots.size() + "s", value).replace(' ', '0');
         for (int i = 0; i < spots.size() && i < s.length(); i++) {
-            spots.get(i).setAssetSymbol(s.charAt(i));
+            spots.get(i).setSkin(s.charAt(i));
         }
     }
 
@@ -79,13 +79,22 @@ public class ActorStatesImpl implements ActorStates {
         return spots.stream().map(Spot::getX).max(Integer::compareTo).orElse(STAGE_SIZE);
     }
 
+
     @Override
     public void spawn(char symbol, int x, int y) {
+        spawn(symbol, x, y, symbol);
+    }
+
+    @Override
+    public void spawn(char symbol, int x, int y, char skin) {
         var prototype = prototypes.get(symbol);
+        Spot newSpot;
         if (prototype == null) {
-            root.add(new Spot(symbol, x, y));
+            newSpot = new Spot(symbol, x, y);
         } else {
-            root.add(prototype.clone(symbol, x, y));
-        }
+            newSpot = prototype.clone(symbol, x, y);
+        };
+        newSpot.setSkin(skin);
+        root.add(newSpot);
     }
 }
