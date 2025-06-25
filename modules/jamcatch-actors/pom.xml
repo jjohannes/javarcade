@@ -8,5 +8,5 @@
   </parent>
   <artifactId>jamcatch-actors</artifactId>
 
-  <!-- org.gradlex:java-module-dependencies-maven-extension active -->
+  <!-- org.gradlex:java-module-dependencies-maven-extension -->
 </project>

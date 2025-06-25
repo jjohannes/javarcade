@@ -8,7 +8,7 @@
   </parent>
   <artifactId>javarca-engine</artifactId>
 
-  <!-- org.gradlex:java-module-dependencies-maven-extension active -->
+  <!-- org.gradlex:java-module-dependencies-maven-extension -->
 
   <dependencies>
     <dependency>
