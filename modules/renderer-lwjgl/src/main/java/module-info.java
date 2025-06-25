@@ -1,6 +1,3 @@
-import de.javarca.engine.Renderer;
-import de.javarca.renderer.lwjgl.LWJGLRenderer;
-
 module de.javarca.renderer.lwjgl {
   requires transitive de.javarca.engine;
   requires org.lwjgl.glfw;
@@ -15,6 +12,6 @@ module de.javarca.renderer.lwjgl {
 
   exports de.javarca.renderer.lwjgl;
 
-  provides Renderer with
-          LWJGLRenderer;
+  provides de.javarca.engine.Renderer with
+          de.javarca.renderer.lwjgl.LWJGLRenderer;
 }
