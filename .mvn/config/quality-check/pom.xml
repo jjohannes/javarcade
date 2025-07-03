@@ -1,0 +1,39 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>pom</packaging>
+  <parent>
+    <relativePath>../test</relativePath>
+    <groupId>de.javarca</groupId>
+    <artifactId>mavenbuild-test</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>mavenbuild-quality-check</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.9.0</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <id>analyze</id>
+            <goals>
+              <goal>analyze</goal>
+            </goals>
+            <configuration>
+              <ignoreUnusedRuntime>true</ignoreUnusedRuntime>
+              <failOnWarning>true</failOnWarning>
+              <ignoredUnusedDeclaredDependencies>
+                <unusedDeclaredDependency>
+                  org.lwjgl
+                </unusedDeclaredDependency>
+              </ignoredUnusedDeclaredDependencies>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
