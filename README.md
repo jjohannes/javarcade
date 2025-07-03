@@ -62,6 +62,12 @@ java --module-path 'lib' --module de.javarca.engine
 java --class-path 'lib/*' de.javarca.engine.Engine
 ```
 
+## Other Build Setup Topics
+
+If you follow the recipe based on this repository, you may have questions about certain other build configuration topics
+that are currently out of scope here. Please have a look at the [issues](https://github.com/jjohannes/javarcade/issues) and the 
+[gradle-project-setup-howto](https://github.com/jjohannes/gradle-project-setup-howto) project for further guidance.
+
 
 ## Modifying the Example Game or Developing Your Own
 
