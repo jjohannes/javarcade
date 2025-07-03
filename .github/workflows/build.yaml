@@ -19,3 +19,6 @@ jobs:
       - uses: testlens-app/setup-testlens@v1.6.0
       - name: Gradle
         run: ./gradlew build
+      - name: Maven
+        if: always()
+        run: ./mvnw -B -U -ntp clean verify

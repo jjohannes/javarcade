@@ -1,0 +1,47 @@
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>javarcade</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>engine/javarca-model</module>
+        <module>engine/javarca-engine</module>
+        <module>game/renderer-lwjgl</module>
+        <module>game/jamcatch-assets</module>
+        <module>game/jamcatch-actors</module>
+        <module>game/jamcatch-stage</module>
+        <module>apps/app-jamcatch</module>
+    </modules>
+
+    <!-- Configuration -->
+    <properties>
+        <revision>1.0</revision>
+    </properties>
+
+    <groupId>de.javarca</groupId>
+    <version>${revision}</version>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.14.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.5.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
