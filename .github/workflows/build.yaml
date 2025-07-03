@@ -7,7 +7,7 @@ on:
     branches: [ main, everything, no-module-info ]
 
 jobs:
-  build:
+  build-gradle:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -19,3 +19,14 @@ jobs:
       - uses: testlens-app/setup-testlens@v1.6.0
       - name: Gradle
         run: ./gradlew build
+  build-maven:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: testlens-app/setup-testlens@v1.6.0
+      - name: Maven
+        run: ./mvnw -B -U -ntp clean verify
