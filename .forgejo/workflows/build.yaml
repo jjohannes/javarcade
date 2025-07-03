@@ -22,3 +22,13 @@ jobs:
           build-scan-terms-of-use-agree: yes
       - name: Gradle
         run: ./gradlew build --continue
+  build-maven:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+      - name: Maven
+        run: ./mvnw -B -U -ntp clean verify -fae
