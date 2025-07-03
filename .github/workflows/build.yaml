@@ -21,3 +21,5 @@ jobs:
           instrumentation-version: 1.4.1-SNAPSHOT
       - name: Gradle
         run: ./gradlew build
+      - name: Maven
+        run: ./mvnw -B -U -ntp clean verify
