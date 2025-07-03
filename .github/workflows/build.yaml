@@ -18,3 +18,5 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
       - name: Gradle
         run: ./gradlew build
+      - name: Maven
+        run: ./mvnw -B -U -ntp clean verify
