@@ -76,14 +76,15 @@ The [javarca-engine](engine/javarca-engine) offers
 [javarca-model](engine/javarca-model).
 
 The example Game – **Jamcatch 🫙** – uses this to plug the game implementation into the engine.
-In the example this is split into three modules:
+It is split into three modules:
 
 - [jamcatch-stage](game/jamcatch-stage) - the stage setup in which the game takes place
 - [jamcatch-actors](game/jamcatch-actors) - the game logic
 - [jamcatch-assets](game/jamcatch-assets) - graphic assets for the game
 
-For convenience, there is an additional project [app-jamcatch](apps/app-jamcatch) for composing the game.
-In the [build.gradle.kts](apps/app-jamcatch/build.gradle.kts) or [pom.xml](apps/app-jamcatch/pom.xml) file of that
+For convenience, there is an additional project [app-jamcatch](apps/app-jamcatch) for composing the game. In the
+[build.gradle.kts](apps/app-jamcatch/build.gradle.kts) or 
+[pom.xml](https://github.com/jjohannes/javarcade/blob/everything/apps/app-jamcatch/pom.xml) file of that
 project you finde the list of modules that make up the game that is used by Gradle or Maven to fill
 the `install` folder when building.
 
@@ -94,7 +95,7 @@ Some things you can try:
 - Modify code or assets in one of the three `jamcatch-` modules to modify the game.
 - You can add additional modules to the `game` folder with your own implementations and assets and
   replace modules in [app-jamcatch](apps/app-jamcatch). Or add another `app-` project to the `apps` folder.
-  (Note: for Maven you need to register each additional module in the root [pom.xml](pom.xml))
+  (Note: for Maven you need to register each additional module in the root [pom.xml](https://github.com/jjohannes/javarcade/blob/everything/pom.xml))
 
 ## Inspiration
 
