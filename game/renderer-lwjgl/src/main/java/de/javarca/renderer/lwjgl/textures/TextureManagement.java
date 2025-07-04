@@ -36,7 +36,7 @@ public class TextureManagement {
             if (decodedImage == null) {
                 throw new RuntimeException("Failed to load image: " + STBImage.stbi_failure_reason());
             }
-            textureId = loadTextureFromBuffer(decodedImage, width.get(0), width.get(0));
+            textureId = loadTextureFromBuffer(decodedImage, width.get(0), width.get(0), true);
         }
 
         return textureId;
@@ -107,11 +107,11 @@ public class TextureManagement {
             }
             rgbaBuffer.position(0);
 
-            return loadTextureFromBuffer(rgbaBuffer, outWidth, outHeight);
+            return loadTextureFromBuffer(rgbaBuffer, outWidth, outHeight, false);
         }
     }
 
-    private static int loadTextureFromBuffer(ByteBuffer imageBuffer, int width, int height) {
+    private static int loadTextureFromBuffer(ByteBuffer imageBuffer, int width, int height, boolean freeWithStb) {
         int textureId = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
         GL11.glTexImage2D(
@@ -127,7 +127,9 @@ public class TextureManagement {
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
-        STBImage.stbi_image_free(imageBuffer);
+        if (freeWithStb) {
+            STBImage.stbi_image_free(imageBuffer);
+        }
         return textureId;
     }
 
