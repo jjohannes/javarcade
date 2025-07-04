@@ -1,3 +1,5 @@
 plugins { id("de.javarca.build.java-module") }
 
-// org.gradlex.java-module-dependencies
+dependencies {
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
+}

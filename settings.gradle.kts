@@ -1,12 +1,24 @@
 pluginManagement { includeBuild("gradle/plugins") }
 plugins { id("de.javarca.build") }
 
-rootProject.name = "javarcade"
-
-javaModules {
-  directory("engine") { group = "de.javarca" }
-  directory("game") { group = "de.javarca" }
-  versions("gradle/versions")
-
-  module("apps/app-jamcatch")
+File("engine").listFiles()!!.forEach {
+  if (File(it, "build.gradle.kts").exists()) {
+    include(":${it.name}")
+    project(":${it.name}").projectDir = file(it)
+  }
 }
+File("game").listFiles()!!.forEach {
+  if (File(it, "build.gradle.kts").exists()) {
+    include(":${it.name}")
+    project(":${it.name}").projectDir = file(it)
+  }
+}
+File("apps").listFiles()!!.forEach {
+  if (File(it, "build.gradle.kts").exists()) {
+    include(":${it.name}")
+    project(":${it.name}").projectDir = file(it)
+  }
+}
+
+include(":versions")
+project(":versions").projectDir = file("gradle/versions")
