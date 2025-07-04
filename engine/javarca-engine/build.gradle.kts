@@ -1,11 +1,9 @@
 plugins { id("de.javarca.build.java-module") }
 
-// org.gradlex.java-module-dependencies
+dependencies {
+  api(project(":javarca-model"))
+  implementation("org.slf4j:slf4j-api")
+  runtimeOnly("org.slf4j:slf4j-jdk14")
 
-mainModuleInfo {
-  runtimeOnly("org.slf4j.jul")
-}
-
-tasks.compileJava {
-  options.javaModuleMainClass = "de.javarca.engine.Engine"
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
 }
