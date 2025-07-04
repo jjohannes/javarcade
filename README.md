@@ -32,7 +32,13 @@ For more details on the structure of this Java project, and Java projects in gen
 
 ## Building and Running the Game Engine and the Example Game
 
-**With Gradle**
+**Compile and run with one command**
+
+```shell
+./gradlew run
+```
+
+**Build with Gradle and run with Java**
 
 ```shell
 # Compile code, run checks, run tests, assemble artifacts
@@ -47,7 +53,7 @@ java --module-path 'lib' --module de.javarca.engine
 java --class-path 'lib/*' de.javarca.engine.Engine
 ```
 
-**With Maven**
+**Build with Maven and run with Java**
 
 ```shell
 # Compile code, run checks, run tests, assemble artifacts
@@ -70,6 +76,10 @@ that are currently out of scope here. Please have a look at the [issues](https:/
 
 
 ## Modifying the Example Game or Developing Your Own
+
+> [!NOTE]
+>️ The game engine is in an early state as it primarily acts as an example here.
+> However, it is fully functional to the point it is and may evolve further.
 
 The [javarca-engine](engine/javarca-engine) offers 
 [a number of service endpoints](engine/javarca-engine/src/main/java/module-info.java) based on the
