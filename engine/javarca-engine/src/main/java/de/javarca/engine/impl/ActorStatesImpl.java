@@ -2,6 +2,7 @@ package de.javarca.engine.impl;
 
 import de.javarca.engine.Spot;
 import de.javarca.model.ActorProperty;
+import de.javarca.model.ActorState;
 import de.javarca.model.ActorStates;
 
 import java.util.List;
@@ -48,6 +49,16 @@ public class ActorStatesImpl implements ActorStates {
     }
 
     @Override
+    public void setSkin(char c) {
+        spots.forEach(s -> s.setSkin(c));
+    }
+
+    @Override
+    public void destroy() {
+        spots.forEach(ActorState::destroy);
+    }
+
+    @Override
     public int setX(int x) {
         spots.forEach(s -> s.setX(x));
         return x;
@@ -80,12 +91,12 @@ public class ActorStatesImpl implements ActorStates {
     }
 
     @Override
-    public void spawn(char symbol, int x, int y) {
-        spawn(symbol, x, y, symbol);
+    public ActorState spawn(char symbol, int x, int y) {
+        return spawn(symbol, x, y, symbol);
     }
 
     @Override
-    public void spawn(char symbol, int x, int y, char skin) {
+    public ActorState spawn(char symbol, int x, int y, char skin) {
         var prototype = prototypes.get(symbol);
         Spot newSpot;
         if (prototype == null) {
@@ -95,5 +106,6 @@ public class ActorStatesImpl implements ActorStates {
         }
         newSpot.setSkin(skin);
         root.add(newSpot);
+        return newSpot;
     }
 }

@@ -58,13 +58,22 @@ public interface ActorStates {
     void print(int value);
 
     /**
-     * Spawn a new actor on the stage.
+     * Change the skin of all actors in the set.
      */
-    void spawn(char symbole, int x, int y);
+    void setSkin(char c);
+
+    /**
+     * Destroy all actors in this set.
+     */
+    void destroy();
 
     /**
      * Spawn a new actor on the stage.
      */
-    void spawn(char symbole, int x, int y, char skin);
+    ActorState spawn(char symbole, int x, int y);
 
+    /**
+     * Spawn a new actor on the stage.
+     */
+    ActorState spawn(char symbole, int x, int y, char skin);
 }

@@ -8,6 +8,7 @@ import java.util.Random;
 import static de.javarca.model.GameConstants.PRECISION;
 import static de.javarca.model.ActorProperty.POINTS;
 import static de.javarca.model.ActorProperty.SPEEDY;
+import static de.javarca.model.GameConstants.SYMBOL_EMPTY_SPOT;
 
 public interface Collisions {
     String DEMO_MODE = System.getenv("DEMO_MODE");
@@ -17,11 +18,13 @@ public interface Collisions {
                 otherState.destroy();
                 myState.addToValue(POINTS, otherState.getValue(POINTS));
                 allStates.filter('0').print(myState.getValue(POINTS));
-                char skin = 'J';
-                skin += (char) new Random().nextInt(6);
-                allStates.spawn('J', new Random().nextInt(14) + 1, 0, skin);
+                char skin = 'H';
+                skin += (char) new Random().nextInt(5);
+                var newJar = allStates.spawn('J', new Random().nextInt(14) + 1, 0, skin);
+                newJar.setValue(SPEEDY, otherState.getValue(SPEEDY) + 100);
             },
-            '.', (myState, otherState, allStates) -> {
+            SYMBOL_EMPTY_SPOT, (myState, otherState, allStates) -> {
+                allStates.filter(':').setSkin(SYMBOL_EMPTY_SPOT); // make text row invisible
                 var target = allStates.filter('J').filter(SPEEDY, 1000).getMaxX();
                 if (DEMO_MODE != null) {
                     if (myState.getX() > target) {
@@ -35,8 +38,14 @@ public interface Collisions {
     Map<Character, ActorCollision> j = Map.of(
             'J', (myState, otherState, allStates) -> {
                 myState.setValue(SPEEDY, 0);
-                allStates.spawn('J', new Random().nextInt(14) + 1, 0);
-                allStates.filter('p').setY(allStates.filter('J').filter(SPEEDY, 0).getMinY() - PRECISION);
+                var player = allStates.filter('p');
+                player.setY(allStates.filter('J').filter(SPEEDY, 0).getMinY() - PRECISION);
+                if (player.getMinY() <= PRECISION * 2) {
+                    player.destroy();
+                    allStates.filter(':').print("GAME.OVER");
+                } else {
+                    allStates.spawn('J', new Random().nextInt(14) + 1, 0);
+                }
             },
             'X', (myState, otherState, allStates) -> {
                 myState.setValue(SPEEDY, 0);

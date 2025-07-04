@@ -20,12 +20,12 @@ public class JamCatchAssets implements AssetSet {
                 new Asset('p', readImage("catcher")),
                 new Asset('x', readImage("wall")),
                 new Asset('X', readImage("solid")),
+                new Asset('H', readImage("jar_4")),
+                new Asset('I', readImage("jar_5")),
                 new Asset('J', readImage("jar_0")),
-                new Asset('K', readImage("jar_1")),
-                new Asset('L', readImage("jar_2")),
-                new Asset('M', readImage("jar_3")),
-                new Asset('N', readImage("jar_4")),
-                new Asset('O', readImage("jar_5")));
+                new Asset('K', readImage("jar_2")),
+                new Asset('L', readImage("jar_3"))
+        );
     }
 
     private byte[] readImage(String name) {
