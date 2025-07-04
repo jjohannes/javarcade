@@ -6,7 +6,6 @@ plugins {
 }
 
 application {
-  mainModule = "de.javarca.engine"
   mainClass = "de.javarca.engine.Engine"
 }
 

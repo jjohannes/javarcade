@@ -1,3 +1,8 @@
 plugins { id("de.javarca.build.java-module") }
 
-// org.gradlex.java-module-dependencies
+dependencies {
+  api(project(":javarca-model"))
+  implementation("org.slf4j:slf4j-api")
+
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
+}

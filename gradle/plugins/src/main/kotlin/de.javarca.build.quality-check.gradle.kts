@@ -1,5 +1,4 @@
 import com.autonomousapps.DependencyAnalysisSubExtension
-import org.gradlex.javamodule.dependencies.tasks.*
 
 plugins {
   id("base")
@@ -10,5 +9,5 @@ configure<DependencyAnalysisSubExtension> {
   issues { onAny { severity("fail") } }
 }
 tasks.check {
-  dependsOn(tasks.withType<ModuleDirectivesScopeCheck>())
+  dependsOn(tasks.named { it == "projectHealth" })
 }
