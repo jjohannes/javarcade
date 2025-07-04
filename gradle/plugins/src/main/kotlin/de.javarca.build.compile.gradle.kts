@@ -10,3 +10,10 @@ tasks.withType<JavaCompile>().configureEach {
   options.compilerArgs.add("-Xlint:all")
   options.compilerArgs.add("-Werror")
 }
+
+tasks.withType<Javadoc>().configureEach {
+  options {
+    this as StandardJavadocDocletOptions
+    addStringOption("Xdoclint:all,-missing", "-Xwerror")
+  }
+}
