@@ -4,7 +4,8 @@ plugins { id("de.javarca.build") }
 rootProject.name = "javarcade"
 
 javaModules {
-  directory("modules") { group = "de.javarca" }
+  directory("engine") { group = "de.javarca" }
+  directory("game") { group = "de.javarca" }
   versions("gradle/versions")
 
   module("apps/app-jamcatch")

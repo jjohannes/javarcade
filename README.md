@@ -71,20 +71,20 @@ that are currently out of scope here. Please have a look at the [issues](https:/
 
 ## Modifying the Example Game or Developing Your Own
 
-The [javarca-engine](modules/javarca-engine) offers 
-[a number of service endpoints](modules/javarca-engine/src/main/java/module-info.java) based on the
-[javarca-model](modules/javarca-model).
+The [javarca-engine](engine/javarca-engine) offers 
+[a number of service endpoints](engine/javarca-engine/src/main/java/module-info.java) based on the
+[javarca-model](engine/javarca-model).
 
 The example Game – **Jamcatch 🫙** – uses this to plug the game implementation into the engine.
 In the example this is split into three modules:
 
-- [jamcatch-stage](modules/jamcatch-stage) - the stage setup in which the game takes place
-- [jamcatch-actors](modules/jamcatch-actors) - the game logic
-- [jamcatch-assets](modules/jamcatch-assets) - graphic assets for the game
+- [jamcatch-stage](game/jamcatch-stage) - the stage setup in which the game takes place
+- [jamcatch-actors](game/jamcatch-actors) - the game logic
+- [jamcatch-assets](game/jamcatch-assets) - graphic assets for the game
 
 For convenience, there is an additional project [app-jamcatch](apps/app-jamcatch) for composing the game.
 In the [build.gradle.kts](apps/app-jamcatch/build.gradle.kts) or [pom.xml](apps/app-jamcatch/pom.xml) file of that
-project you finde the list of projects/modules that make up the game that is used by Gradle or Maven to fill
+project you finde the list of modules that make up the game that is used by Gradle or Maven to fill
 the `install` folder when building.
 
 Some things you can try:
@@ -92,7 +92,7 @@ Some things you can try:
   [app-jamcatch/pom.xml](apps/app-jamcatch/pom.xml) to dynamically change the composition of the game.
   For example, you can remove the assets and the game still works without graphics.
 - Modify code or assets in one of the three `jamcatch-` modules to modify the game.
-- You can add additional modules to the `modules` folder with your own implementations and assets and
+- You can add additional modules to the `game` folder with your own implementations and assets and
   replace modules in [app-jamcatch](apps/app-jamcatch). Or add another `app-` project to the `apps` folder.
   (Note: for Maven you need to register each additional module in the root [pom.xml](pom.xml))
 
