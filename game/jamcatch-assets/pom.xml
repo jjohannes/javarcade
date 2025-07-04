@@ -8,5 +8,21 @@
   </parent>
   <artifactId>jamcatch-assets</artifactId>
 
-  <!-- org.gradlex:java-module-dependencies-maven-extension -->
+  <dependencies>
+    <dependency>
+      <groupId>de.javarca</groupId>
+      <artifactId>javarca-model</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
