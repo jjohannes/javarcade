@@ -7,8 +7,10 @@ import de.javarca.model.ActorStates;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static de.javarca.model.GameConstants.PRECISION;
 import static de.javarca.model.GameConstants.STAGE_SIZE;
 
 public class ActorStatesImpl implements ActorStates {
@@ -29,8 +31,8 @@ public class ActorStatesImpl implements ActorStates {
     }
 
     @Override
-    public ActorStates filter(ActorProperty p, int value) {
-        return new ActorStatesImpl(spots.stream().filter(s -> s.isAlive() && s.getValue(p) == value).collect(Collectors.toList()), root, prototypes);
+    public ActorStates filter(ActorProperty p, Predicate<Integer> predicate) {
+        return new ActorStatesImpl(spots.stream().filter(s -> s.isAlive() && predicate.test(s.getValue(p))).collect(Collectors.toList()), root, prototypes);
     }
 
     @Override
@@ -77,7 +79,7 @@ public class ActorStatesImpl implements ActorStates {
 
     @Override
     public int getMaxY() {
-        return spots.stream().map(Spot::getY).max(Integer::compareTo).orElse(STAGE_SIZE);
+        return spots.stream().map(Spot::getY).max(Integer::compareTo).orElse((STAGE_SIZE -1) * PRECISION);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class ActorStatesImpl implements ActorStates {
 
     @Override
     public int getMaxX() {
-        return spots.stream().map(Spot::getX).max(Integer::compareTo).orElse(STAGE_SIZE);
+        return spots.stream().map(Spot::getX).max(Integer::compareTo).orElse((STAGE_SIZE -1) * PRECISION);
     }
 
     @Override

@@ -25,7 +25,7 @@ public interface Collisions {
             },
             SYMBOL_EMPTY_SPOT, (myState, otherState, allStates) -> {
                 allStates.filter(':').setSkin(SYMBOL_EMPTY_SPOT); // make text row invisible
-                var target = allStates.filter('J').filter(SPEEDY, 1000).getMaxX();
+                var target = allStates.filter('J').filter(SPEEDY, v -> v > 0).getMaxX();
                 if (DEMO_MODE != null) {
                     if (myState.getX() > target) {
                         myState.setX(myState.getX() - 1500);
@@ -39,7 +39,7 @@ public interface Collisions {
             'J', (myState, otherState, allStates) -> {
                 myState.setValue(SPEEDY, 0);
                 var player = allStates.filter('p');
-                player.setY(allStates.filter('J').filter(SPEEDY, 0).getMinY() - PRECISION);
+                player.setY(allStates.filter('J').filter(SPEEDY, v -> v == 0).getMinY() - PRECISION);
                 if (player.getMinY() <= PRECISION * 2) {
                     player.destroy();
                     allStates.filter(':').print("GAME.OVER");
@@ -50,7 +50,7 @@ public interface Collisions {
             'X', (myState, otherState, allStates) -> {
                 myState.setValue(SPEEDY, 0);
                 allStates.spawn('J', new Random().nextInt(14) + 1, 0);
-                allStates.filter('p').setY(allStates.filter('J').filter(SPEEDY, 0).getMinY() - PRECISION);
+                allStates.filter('p').setY(allStates.filter('J').filter(SPEEDY, v -> v == 0).getMinY() - PRECISION);
             }
     );
 

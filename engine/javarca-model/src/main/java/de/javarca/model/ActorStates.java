@@ -1,5 +1,7 @@
 package de.javarca.model;
 
+import java.util.function.Predicate;
+
 /**
  * Represents the state of a set of {@link Actor}s on the {@link Stage} of a running game.
  * This allows for matching and modifying a set of {@link ActorState}s in a {@link ActorCollision} function.
@@ -13,9 +15,9 @@ public interface ActorStates {
     ActorStates filter(char symbol);
 
     /**
-     * A subset of characters in this set that have the given property set to the given value.
+     * A subset of characters in this set that have the given property matches the give predicate.
      */
-    ActorStates filter(ActorProperty p, int value);
+    ActorStates filter(ActorProperty p, Predicate<Integer> value);
 
     /**
      * Set the horizontal position of all actors in this set.
