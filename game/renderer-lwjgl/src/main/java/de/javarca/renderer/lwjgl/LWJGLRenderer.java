@@ -196,7 +196,7 @@ public class LWJGLRenderer implements Renderer {
     }
 
     private Integer ensureTexture(Spot spot) {
-        if (spot.getSymbol() == '.') {
+        if (spot.getSkin() == '.') {
             return images.get(spot.getSymbol());
         }
         return images.computeIfAbsent(spot.getSkin(), TextureManagement::renderCharacter);
