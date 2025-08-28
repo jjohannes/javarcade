@@ -1,4 +1,4 @@
-open module de.javarca.classic.assets.test {
-    requires de.javarca.classic.assets;
+open module de.javarca.jamcatch.assets.test {
+    requires de.javarca.jamcatch.assets;
     requires org.junit.jupiter.api;
 }

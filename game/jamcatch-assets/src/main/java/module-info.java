@@ -1,4 +1,4 @@
-module de.javarca.classic.assets {
+module de.javarca.jamcatch.assets {
   requires transitive de.javarca.model;
   requires org.apache.commons.io;
 
