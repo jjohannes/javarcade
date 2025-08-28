@@ -1,4 +1,4 @@
-open module de.javarca.classic.items.test {
-    requires de.javarca.classic.items;
+open module de.javarca.classic.actors.test {
+    requires de.javarca.classic.actors;
     requires org.junit.jupiter.api;
 }

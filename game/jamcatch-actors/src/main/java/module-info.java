@@ -1,4 +1,4 @@
-module de.javarca.classic.items {
+module de.javarca.classic.actors {
   requires transitive de.javarca.model;
   requires org.apache.commons.csv;
 
