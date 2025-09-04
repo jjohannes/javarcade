@@ -34,3 +34,22 @@ jvmDependencyConflicts {
     platform(":versions")
   }
 }
+
+version = "1"
+javaModulePackaging {
+  target("mac") {
+    operatingSystem = MACOS
+    architecture = X86_64
+    packageTypes = listOf("dmg")
+  }
+  target("macArm") {
+    operatingSystem = MACOS
+    architecture = ARM64
+    packageTypes = listOf("dmg")
+  }
+  target("win") {
+    operatingSystem = WINDOWS
+    architecture = X86_64
+    packageTypes = listOf("exe")
+  }
+}
