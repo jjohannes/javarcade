@@ -3,27 +3,40 @@
   "extends": [
     "config:recommended"
   ],
-  "baseBranches": ["main", "everything"],
+  "baseBranchPatterns": [
+    "main",
+    "everything"
+  ],
   "packageRules": [
     {
       "matchManagers": "github-actions",
-      "matchBaseBranches": ["main"]
+      "matchBaseBranches": [
+        "main"
+      ]
     },
     {
       "matchManagers": "gradle",
-      "matchBaseBranches": ["main"]
+      "matchBaseBranches": [
+        "main"
+      ]
     },
     {
       "matchManagers": "gradle-wrapper",
-      "matchBaseBranches": ["main"]
+      "matchBaseBranches": [
+        "main"
+      ]
     },
     {
       "matchManagers": "maven",
-      "matchBaseBranches": ["everything"]
+      "matchBaseBranches": [
+        "everything"
+      ]
     },
     {
       "matchManagers": "maven-wrapper",
-      "matchBaseBranches": ["everything"]
+      "matchBaseBranches": [
+        "everything"
+      ]
     }
   ]
 }
