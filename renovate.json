@@ -6,6 +6,10 @@
   "baseBranches": ["main", "everything"],
   "packageRules": [
     {
+      "matchManagers": "github-actions",
+      "matchBaseBranches": ["main"]
+    },
+    {
       "matchManagers": "gradle",
       "matchBaseBranches": ["main"]
     },
