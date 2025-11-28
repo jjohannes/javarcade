@@ -3,7 +3,16 @@
   "extends": [
     "config:recommended"
   ],
+  "baseBranches": ["main", "everything"],
   "packageRules": [
+    {
+      "matchManagers": "gradle",
+      "matchBaseBranches": ["main"]
+    },
+    {
+      "matchManagers": "gradle-wrapper",
+      "matchBaseBranches": ["main"]
+    },
     {
       "matchManagers": "maven",
       "matchBaseBranches": ["everything"]
