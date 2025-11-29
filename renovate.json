@@ -11,32 +11,23 @@
     {
       "matchManagers": "github-actions",
       "matchBaseBranches": [
-        "main"
-      ]
+        "everything"
+      ],
+      "enabled": false
     },
     {
       "matchManagers": "gradle",
       "matchBaseBranches": [
-        "main"
-      ]
+        "everything"
+      ],
+      "enabled": false
     },
     {
       "matchManagers": "gradle-wrapper",
       "matchBaseBranches": [
-        "main"
-      ]
-    },
-    {
-      "matchManagers": "maven",
-      "matchBaseBranches": [
         "everything"
-      ]
-    },
-    {
-      "matchManagers": "maven-wrapper",
-      "matchBaseBranches": [
-        "everything"
-      ]
+      ],
+      "enabled": false
     }
   ]
 }
