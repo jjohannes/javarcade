@@ -16,5 +16,8 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: gradle/actions/setup-gradle@v5
+      - uses: testlens-app/setup-testlens@main
+        with:
+          instrumentation-version: 1.4.1-SNAPSHOT
       - name: Gradle
         run: ./gradlew build
