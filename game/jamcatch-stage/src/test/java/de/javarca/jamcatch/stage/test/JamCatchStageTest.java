@@ -22,6 +22,6 @@ public class JamCatchStageTest {
         assertTrue(definition.contains("p"), "Stage should contain player character");
         assertTrue(definition.contains("J"), "Stage should contain jar character");
         assertTrue(definition.contains("X"), "Stage should contain solid blocks");
-        assertTrue(definition.contains("x"), "Stage should contain wall blocks");
+        assertTrue(definition.contains("O"), "Stage should contain wall blocks");
     }
 }
