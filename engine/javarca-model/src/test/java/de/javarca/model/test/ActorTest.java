@@ -25,7 +25,7 @@ public class ActorTest {
         Actor actor = new Actor(symbol, modifiers, collisionFunctions);
 
         // Assert
-        assertEquals(symbol, actor.symbol());
+        assertEquals('C', actor.symbol());
         assertEquals(modifiers, actor.modifiers());
         assertEquals(collisionFunctions, actor.collisionFunctions());
     }
