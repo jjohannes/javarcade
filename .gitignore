@@ -1,6 +1,5 @@
 .gradle
+.mvn/.develocity/
 .idea
 build
 target
-
-/docs/presentation/src/main/assets/work
