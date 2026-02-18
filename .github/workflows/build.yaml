@@ -17,11 +17,17 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v5
         with:
+          cache-encryption-key: xblZhCtt0aC+qrKf0z/vJw==
+          cache-read-only: false
           build-scan-publish: true
           build-scan-terms-of-use-url: https://gradle.com/terms-of-service
           build-scan-terms-of-use-agree: yes
       - uses: testlens-app/setup-testlens@v1.7.0
+      - name: Print Debug
+        run: cat $GRADLE_USER_HOME/init.d/testlens-init.gradle
       - name: Gradle
+        run: ./gradlew build --continue
+      - name: Gradle (2nd run)
         run: ./gradlew build --continue
   build-maven:
     runs-on: ubuntu-latest
