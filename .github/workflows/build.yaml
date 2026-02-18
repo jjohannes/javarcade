@@ -22,8 +22,8 @@ jobs:
           build-scan-publish: true
           build-scan-terms-of-use-url: https://gradle.com/terms-of-service
           build-scan-terms-of-use-agree: yes
-      - uses: testlens-app/setup-testlens@v1.7.0
-      - name: Print Debug
+      - uses: testlens-app/setup-testlens@cc-compatibility
+      - name: Print Init
         run: cat $GRADLE_USER_HOME/init.d/testlens-init.gradle
       - name: Gradle
         run: ./gradlew build --continue
@@ -37,6 +37,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - uses: testlens-app/setup-testlens@v1.7.0
+      - uses: testlens-app/setup-testlens@cc-compatibility
       - name: Maven
         run: ./mvnw -B -U -ntp clean verify -fae
