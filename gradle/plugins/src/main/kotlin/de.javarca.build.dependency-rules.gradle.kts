@@ -32,4 +32,5 @@ javaModulePackaging {
     architecture = X86_64
     packageTypes = listOf("exe")
   }
+  jlinkOptions.add("--bind-services")
 }
