@@ -1,13 +1,16 @@
-<project>
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+  <modelVersion>4.2.0</modelVersion>
   <packaging>pom</packaging>
   <parent>
-    <relativePath>../../pom.xml</relativePath>
-    <groupId>de.javarca</groupId>
     <artifactId>javarcade</artifactId>
+    <groupId>de.javarca</groupId>
     <version>${revision}</version>
   </parent>
-  <artifactId>mavenbuild-versions</artifactId>
+
+  <groupId>de.javarca.mavenbuild</groupId>
+  <artifactId>versions</artifactId>
+  <version>1</version>
 
   <dependencyManagement>
     <dependencies>
