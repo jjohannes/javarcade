@@ -1,13 +1,48 @@
-<project>
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+  <modelVersion>4.2.0</modelVersion>
   <packaging>pom</packaging>
   <parent>
-    <relativePath>../quality-check</relativePath>
+    <artifactId>javarcade</artifactId>
     <groupId>de.javarca</groupId>
-    <artifactId>mavenbuild-quality-check</artifactId>
     <version>${revision}</version>
   </parent>
 
-  <artifactId>mavenbuild-java-module</artifactId>
+  <groupId>de.javarca.mavenbuild</groupId>
+  <artifactId>java-module</artifactId>
+  <version>1</version>
+
+  <mixins>
+    <mixin>
+      <groupId>de.javarca.mavenbuild</groupId>
+      <artifactId>versions</artifactId>
+      <version>1</version>
+    </mixin>
+    <mixin>
+      <groupId>de.javarca.mavenbuild</groupId>
+      <artifactId>repositories</artifactId>
+      <version>1</version>
+    </mixin>
+    <mixin>
+      <groupId>de.javarca.mavenbuild</groupId>
+      <artifactId>dependency-rules</artifactId>
+      <version>1</version>
+    </mixin>
+    <mixin>
+      <groupId>de.javarca.mavenbuild</groupId>
+      <artifactId>compile</artifactId>
+      <version>1</version>
+    </mixin>
+    <mixin>
+      <groupId>de.javarca.mavenbuild</groupId>
+      <artifactId>test</artifactId>
+      <version>1</version>
+    </mixin>
+    <mixin>
+      <groupId>de.javarca.mavenbuild</groupId>
+      <artifactId>quality-check</artifactId>
+      <version>1</version>
+    </mixin>
+  </mixins>
 
 </project>
