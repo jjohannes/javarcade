@@ -1,12 +1,21 @@
-<project>
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+  <modelVersion>4.2.0</modelVersion>
   <parent>
-    <relativePath>../../.mvn/config/java-module</relativePath>
-    <artifactId>mavenbuild-java-module</artifactId>
+    <artifactId>javarcade</artifactId>
     <groupId>de.javarca</groupId>
     <version>${revision}</version>
   </parent>
+
   <artifactId>javarca-engine</artifactId>
+
+  <mixins>
+    <mixin>
+      <groupId>de.javarca.mavenbuild</groupId>
+      <artifactId>java-module</artifactId>
+      <version>1</version>
+    </mixin>
+  </mixins>
 
   <!-- org.gradlex:java-module-dependencies-maven-extension -->
 
