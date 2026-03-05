@@ -12,7 +12,7 @@ dependencies {
 
 dependencies.constraints {
   // org.apache.commons.io
-  api("commons-io:commons-io:2.16.1")
+  api("commons-io:commons-io:2.21.0")
   // org.apache.commons.csv
   api("org.apache.commons:commons-csv:1.14.0")
 }
