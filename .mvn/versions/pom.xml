@@ -37,7 +37,7 @@
         <!-- org.apache.commons.io -->
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.18.0</version> <!-- 2.16.1 fails -->
+        <version>2.21.0</version> <!-- 2.16.1 fails -->
       </dependency>
       <dependency>
         <!-- org.apache.commons.csv -->
