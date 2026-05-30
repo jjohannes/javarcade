@@ -7,5 +7,5 @@ dependencies {
     implementation("org.gradlex:jvm-dependency-conflict-resolution:2.5")
     implementation("org.gradlex:java-module-dependencies:1.12")
     implementation("org.gradlex:java-module-packaging:1.2.1")
-    implementation("org.gradlex:java-module-testing:1.8")
+    implementation("org.gradlex:java-module-testing:1.8.1")
 }
