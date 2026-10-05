@@ -7,7 +7,7 @@ javaPlatform { allowDependencies() }
 dependencies {
   api(platform("org.lwjgl:lwjgl-bom:3.4.3"))
   api(platform("org.slf4j:slf4j-bom:2.0.18"))
-  api(platform("org.junit:junit-bom:6.1.0"))
+  api(platform("org.junit:junit-bom:6.1.3"))
 }
 
 dependencies.constraints {
