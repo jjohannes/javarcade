@@ -20,10 +20,10 @@ There are:
 - 🧩 [`main`](https://codeberg.org/jjohannes/javarcade)
   This is **my favorite choice**: use the `module-info.java` for dependency declaration and **Gradle** as build tool.
   (Gradle being the most performant and feature-rich build tool currently available for Java projects.)
-- 🥯 [`everything`](https://codeberg.org/jjohannes/javarcade/tree/everything) This is same as `main` but with the setup for **Maven**
+- 🥯 [`everything`](https://codeberg.org/jjohannes/javarcade/src/branch/everything) This is same as `main` but with the setup for **Maven**
   added. The Gradle setup is kept on the branch as the two definitions do not collide. You can use that branch with
   both build tools and compare.
-- 👵🏼 [`no-module-info`](https://codeberg.org/jjohannes/javarcade/tree/no-module-info)
+- 👵🏼 [`no-module-info`](https://codeberg.org/jjohannes/javarcade/src/branch/no-module-info)
   This is **old school Java**: no `module-info.java` files and **dependencies are declared directly in the build tools**.
   Both **Gradle** and **Maven** setups can be inspected next to each other.
 
